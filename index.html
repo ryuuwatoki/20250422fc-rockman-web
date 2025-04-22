@@ -1044,7 +1044,9 @@
         
         // ===== 遊戲主循環 =====
         let lastFrameTime = 0;
-        const FRAME_DURATION = 1000 / MAX_FPS;
+        function getFrameDuration() {
+            return 1000 / MAX_FPS;
+        }
 
         /**
          * 遊戲主循環，每一幀呼叫一次
@@ -1053,7 +1055,7 @@
         function gameLoop(now) {
             requestAnimationFrame(gameLoop);
             if (isPaused) return; // 暫停時不更新遊戲
-            if (now - lastFrameTime < FRAME_DURATION) return;
+            if (now - lastFrameTime < getFrameDuration()) return;
             lastFrameTime = now;
             update();
             render();
