@@ -471,6 +471,7 @@
         let playerDead = false; // 新增：玩家死亡狀態
         let playerDeadX = 0;   // 新增：死亡時的X
         let playerDeadY = 0;   // 新增：死亡時的Y
+        let weaponPower = 100;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         
         // 顯示/隱藏狀態
         let showFPS = 1;
@@ -1270,9 +1271,9 @@
                     const enemy = enemies[j];
                     if (checkCollision(bullet, enemy)) {
                         if (bullet.isCharge) {
-                            enemy.health -= 5; // 集氣彈攻擊力5倍
+                            enemy.health -= weaponPower * 5; // 集氣彈攻擊力5倍
                         } else {
-                            enemy.health--;
+                            enemy.health -= weaponPower; // 普通子彈攻擊力
                         }
                         enemyHitFlash.set(enemy, 12); // 0.2秒閃爍
                         // 播放boom音效（集氣彈也有）
@@ -1296,10 +1297,10 @@
                 // 檢測Boss碰撞
                 if (bossActive && checkCollision(bullet, boss)) {
                     if (bullet.isCharge) {
-                        boss.health -= 15; // 集氣彈攻擊力5倍
+                        boss.health -= weaponPower * 3; // 集氣彈攻擊力3倍
                         boss.pauseTimer = 42; // 新增：暫停0.7秒
                     } else {
-                        boss.health -= 5;
+                        boss.health -= weaponPower; // 普通子彈攻擊力
                     }
                     bossHitFlash = 12; // 0.2秒閃爍
                     updateBossHealthBar();
@@ -1886,7 +1887,7 @@
         }
 
         // ===== 玩家飛行模式 =====
-        let isFlyingMode = 0; // 預設關閉
+        let isFlyingMode = 1; // 預設關閉
 
         let isWinScreen = false;
         let bossDefeated = false;
