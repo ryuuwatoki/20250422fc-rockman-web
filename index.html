@@ -230,24 +230,27 @@
             <div id="nxy-display" style="position:absolute;top:110px;right:10px;color:#fff;font-size:14px;z-index:5;"></div>
             <div id="entity-counts" style="position:absolute;top:130px;right:10px;color:#fff;font-size:14px;z-index:5;"></div>
             
+            <!-- 遊戲開始畫面（Start Screen） -->
             <div id="start-screen">
-                <h1>億千万億千万</h1>
-                <p>空白鍵射擊</p>
-                <p>左右移動</p>
-                <p>上跳躍</p>
+                <h1>okusennmann</h1>
+                <p>space key</p>
+                <p>reft right</p>
+                <p>jump</p>
                 <button id="start-button">START</button>
             </div>
             
+            <!-- 遊戲結束畫面（Game Over Screen） -->
             <div id="game-over-screen">
-                <h1 style="color:#800;">打不倒的空氣人</h1>
+                <h1 style="color:#800;">gameover</h1>
                 <p id="final-score">score: 0</p>
-                <button id="restart-button">再trytry</button>
+                <button id="restart-button">again?</button>
             </div>
             
+            <!-- 勝利畫面（Win Screen） -->
             <div id="win-screen">
-                <h1>勝利!</h1>
-                <p id="win-score">score: 0</p>
-                <button id="play-again-button">你想再玩一次也是可以...</button>
+                <h1>win!</h1>
+                <p id="win-score">score: </p>
+                <button id="play-again-button">play again</button>
                 <div id="by-watoki" style="position:absolute;right:18px;bottom:10px;color:#fff;font-size:18px;z-index:20;text-shadow:0 0 4px #000a;">by Watoki</div>
             </div>
         </div>
@@ -295,10 +298,10 @@
         const JUMP_EXTRA      = -0.35 * 1.3; // 長按跳躍時每幀額外加速度，數值越負跳越高
         const JUMP_EXTRA_FRAMES = 12; // 0.2秒@60fps（不變）
         const WORLD_WIDTH     = 2700 * 2;  // 世界寬度2倍
-        const WORLD_HEIGHT    = 500;
+        const WORLD_HEIGHT    = 500; // 世界高度
         const BOSS_AREA_X     = 4600; // Boss區域起點4600
-        const CHARGE_MIN_FRAME = 42; // 0.7秒
-        const CHARGE_CANCEL_FRAME = 12; // 0.2秒
+        const CHARGE_MIN_FRAME = 42; // 0.7秒，集氣彈最少需要的幀數
+        const CHARGE_CANCEL_FRAME = 12; // 0.2秒，集氣取消的最短幀數
         // 以格數設計的平台資料
         const platformGrid = [
             // 第一區（0~2700）
@@ -446,25 +449,25 @@
         const cameraDebugElement  = document.getElementById('camera-debug');
         
         // ===== 遊戲狀態 =====
-        let gameRunning  = false;
-        let score        = 0;
+        let gameRunning  = false; // 遊戲是否正在進行中
+        let score        = 0;     // 玩家分數
         let playerMaxHealth = 10000; // 新增最大血量
-        let playerHealth = playerMaxHealth;
+        let playerHealth = playerMaxHealth; // 玩家目前血量
         let bossHealth   = 300;  // 增強Boss血量
-        let bossActive   = false;
-        let bossTimer    = 0;
+        let bossActive   = false; // Boss是否啟動
+        let bossTimer    = 0;     // Boss出場動畫計時器
         let reachedBossArea = false; // 玩家是否已經抵達過boss區域
         let charging = false; // 是否正在集氣
         let chargeFrame = 0; // 集氣持續幀數
         let chargeReady = false; // 是否集氣完成
         let bossHitFlash = 0; // Boss被擊中閃爍計數
         let upPressed = false; // 追蹤上鍵是否已經按下
-        let chargeAudioTimeout = null;
-        let bossCanAttack = false;
-        let bossCanMove = false;
-        let bossHpAnimating = false;
-        let canShoot = true;
-        let midEventTriggered = false;
+        let chargeAudioTimeout = null; // 集氣音效延遲計時器
+        let bossCanAttack = false; // Boss是否可以攻擊
+        let bossCanMove = false; // Boss是否可以移動
+        let bossHpAnimating = false; // Boss血條是否正在動畫
+        let canShoot = true; // 玩家是否可以射擊
+        let midEventTriggered = false; // 中途事件是否已觸發
         let playerDead = false; // 新增：玩家死亡狀態
         let playerDeadX = 0;   // 新增：死亡時的X
         let playerDeadY = 0;   // 新增：死亡時的Y
