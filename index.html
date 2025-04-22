@@ -627,6 +627,7 @@
                 }
             }
         };
+        const players = [player];
         
         // ===== 子彈系統 =====
         const bullets = [];
@@ -1822,7 +1823,7 @@
             if (entityCounts) {
                 // Boss 數量與小怪一樣規則：場上存活且 active 的 boss 數
                 const bossCount = bosses.filter(b => b && bossActive).length;
-                entityCounts.textContent = `玩家: 1, 玩家子彈: ${bullets.length}, 敵人: ${enemies.length}, 敵人子彈: ${enemyBullets.length}, Boss: ${bossCount}`;
+                entityCounts.textContent = `P: ${players.length}, PS: ${bullets.length}, E: ${enemies.length}, EP: ${enemyBullets.length}, B: ${bossCount}`;
             }
         }
 
