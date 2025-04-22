@@ -449,6 +449,7 @@
         const cameraDebugElement  = document.getElementById('camera-debug');
         
         // ===== 遊戲狀態 =====
+        let MAX_FPS = 70; // 最大FPS設定
         let gameRunning  = false; // 遊戲是否正在進行中
         let score        = 0;     // 玩家分數
         let playerMaxHealth = 100; // 新增最大血量
@@ -474,12 +475,11 @@
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
         let showScore = 1; // score:0 顯示1 隱藏0
-        let showMoved = 1; // moved:(0) 顯示1 隱藏0
+        let showMoved = 0; // moved:(0) 顯示1 隱藏0
         let showFPS = 1; //showfps
-        let showXY = 1; //show xy
-        let showNXY = 1; //show new xy
-        let showEntityCounts = 1; //show 人物怪物子彈數量
-        let MAX_FPS = 70; // 最大FPS設定
+        let showXY = 0; //show xy
+        let showNXY = 0; //show new xy
+        let showEntityCounts = 0; //show 人物怪物子彈數量
         
         
         // ===== 鏡頭系統 =====
