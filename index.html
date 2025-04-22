@@ -225,10 +225,10 @@
             
             <div id="score">score: 0</div>
             <div id="camera-debug"></div>
-            <div id="fps-display" style="position:absolute;top:70px;right:10px;color:#fff;font-size:14px;z-index:5;">FPS: 0</div>
-            <div id="xy-display" style="position:absolute;top:90px;right:10px;color:#fff;font-size:14px;z-index:5;">X: 0, Y: 0</div>
-            <div id="nxy-display" style="position:absolute;top:110px;right:10px;color:#fff;font-size:14px;z-index:5;">NX: 0, NY: 0</div>
-            <div id="entity-counts" style="position:absolute;top:130px;right:10px;color:#fff;font-size:14px;z-index:5;">玩家: 1, 玩家子彈: 0, 敵人: 0, 敵人子彈: 0</div>
+            <div id="fps-display" style="position:absolute;top:70px;right:10px;color:#fff;font-size:14px;z-index:5;"></div>
+            <div id="xy-display" style="position:absolute;top:90px;right:10px;color:#fff;font-size:14px;z-index:5;"></div>
+            <div id="nxy-display" style="position:absolute;top:110px;right:10px;color:#fff;font-size:14px;z-index:5;"></div>
+            <div id="entity-counts" style="position:absolute;top:130px;right:10px;color:#fff;font-size:14px;z-index:5;"></div>
             
             <div id="start-screen">
                 <h1>億千万億千万</h1>
@@ -464,6 +464,12 @@
         let bossHpAnimating = false;
         let canShoot = true;
         let midEventTriggered = false;
+        
+        // 顯示/隱藏狀態布林
+        let showFPS = 1;
+        let showXY = 1;
+        let showNXY = 1;
+        let showEntityCounts = 0;
         
         // 最大FPS設定
         const MAX_FPS = 70;
@@ -1810,12 +1816,17 @@
                 fps = frameCount;
                 frameCount = 0;
                 lastFPSTime = now;
-                document.getElementById('fps-display').textContent = `FPS: ${fps}`;
+                const fpsDiv = document.getElementById('fps-display');
+                if (fpsDiv) {
+                    fpsDiv.textContent = `FPS: ${fps}`;
+                    fpsDiv.style.display = showFPS == 1 ? 'block' : 'none';
+                }
             }
             // 每幀更新玩家座標
             const xy = document.getElementById('xy-display');
             if (xy) {
                 xy.textContent = `X: ${Math.round(player.x)}, Y: ${Math.round(player.y)}`;
+                xy.style.display = showXY == 1 ? 'block' : 'none';
             }
             // 每幀更新玩家格數座標
             const nxy = document.getElementById('nxy-display');
@@ -1823,13 +1834,14 @@
                 const nx = Math.floor(player.x / 50);
                 const ny = Math.floor((500 - player.y) / 50);
                 nxy.textContent = `NX: ${nx}, NY: ${ny}`;
+                nxy.style.display = showNXY == 1 ? 'block' : 'none';
             }
             // 每幀更新數量資訊
             const entityCounts = document.getElementById('entity-counts');
             if (entityCounts) {
-                // Boss 數量與小怪一樣規則：場上存活且 active 的 boss 數
                 const bossCount = bosses.filter(b => b && bossActive).length;
                 entityCounts.textContent = `P: ${players.length}, PS: ${bullets.length}, E: ${enemies.length}, EP: ${enemyBullets.length}, B: ${bossCount}`;
+                entityCounts.style.display = showEntityCounts == 1 ? 'block' : 'none';
             }
         }
 
