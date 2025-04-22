@@ -464,12 +464,15 @@
         let bossHpAnimating = false;
         let canShoot = true;
         let midEventTriggered = false;
+        let playerDead = false; // 新增：玩家死亡狀態
+        let playerDeadX = 0;   // 新增：死亡時的X
+        let playerDeadY = 0;   // 新增：死亡時的Y
         
-        // 顯示/隱藏監控
+        // 顯示/隱藏狀態布林
         let showFPS = 1;
         let showXY = 1;
         let showNXY = 1;
-        let showEntityCounts = 0;
+        let showEntityCounts = 1;
         
         // 最大FPS設定
         const MAX_FPS = 70;
@@ -521,6 +524,11 @@
             
             // 更新玩家位置
             update: function() {
+                if (playerDead) {
+                    this.x = playerDeadX;
+                    this.y = playerDeadY;
+                    return; // 死亡時不能動作且維持在死亡位置
+                }
                 // 是否抵達過boss區域
                 if (this.x >= BOSS_AREA_X) {
                     reachedBossArea = true;
@@ -595,6 +603,7 @@
             
             // 玩家射擊
             shoot: function() {
+                if (playerDead) return; // 死亡時不能射擊
                 if (!canShoot) return;
                 if (this.shootCooldown > 0) {
                     this.shootCooldown--;
@@ -1004,6 +1013,9 @@
             chargeReady = false;
             if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
             setTimeout(() => { canShoot = true; }, 200);
+            playerDead = false; // 重設死亡狀態
+            playerDeadX = 0;
+            playerDeadY = 0;
         }
         
         // ===== 遊戲主循環 =====
@@ -1413,27 +1425,28 @@
             });
             
             // 繪製玩家 (無敵時閃爍)
-            // 集氣時閃爍（只有集氣超過0.7秒才閃爍）
-            if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
-                if (Math.floor(Date.now() / 100) % 2 === 0) {
-                    ctx.fillStyle = '#cfbb3a'; // 淺黃色
+            if (!playerDead) { // 死亡時不繪製
+                if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
+                    if (Math.floor(Date.now() / 100) % 2 === 0) {
+                        ctx.fillStyle = '#cfbb3a'; // 淺黃色
+                    } else {
+                        ctx.fillStyle = player.color;
+                    }
                 } else {
                     ctx.fillStyle = player.color;
                 }
-            } else {
-                ctx.fillStyle = player.color;
-            }
-            if (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0) {
-                ctx.fillRect(player.x, player.y, player.width, player.height);
-                // 只畫大眼白，不畫眼珠
-                ctx.beginPath();
-                if (player.direction === 1) {
-                    ctx.ellipse(player.x + player.width - 12, player.y + 18, 8, 10, 0, 0, Math.PI * 2);
-                } else {
-                    ctx.ellipse(player.x + 12, player.y + 18, 8, 10, 0, 0, Math.PI * 2);
+                if (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0) {
+                    ctx.fillRect(player.x, player.y, player.width, player.height);
+                    // 只畫大眼白，不畫眼珠
+                    ctx.beginPath();
+                    if (player.direction === 1) {
+                        ctx.ellipse(player.x + player.width - 12, player.y + 18, 8, 10, 0, 0, Math.PI * 2);
+                    } else {
+                        ctx.ellipse(player.x + 12, player.y + 18, 8, 10, 0, 0, Math.PI * 2);
+                    }
+                    ctx.fillStyle = '#fff';
+                    ctx.fill();
                 }
-                ctx.fillStyle = '#fff';
-                ctx.fill();
             }
             ctx.globalAlpha = 1;
             
@@ -1642,6 +1655,9 @@
         
         function gameOver() {
             gameRunning = false;
+            playerDeadX = player.x; // 記錄死亡時位置
+            playerDeadY = player.y;
+            playerDead = true; // 設為死亡狀態
             finalScoreElement.textContent = `score: ${score}`;
             gameOverScreen.style.display = 'flex';
             langToggle.style.display = 'block';
