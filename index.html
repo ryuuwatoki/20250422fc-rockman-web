@@ -472,7 +472,7 @@
         let playerDeadX = 0;   // 新增：死亡時的X
         let playerDeadY = 0;   // 新增：死亡時的Y
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
+        let playerMoveSpeed = 60; // 玩家移動速度設定，數值越大移動越快，預設6
         let showScore = 1; // score:0 顯示1 隱藏0
         let showMoved = 1; // moved:(0) 顯示1 隱藏0
         let showFPS = 1; //showfps
@@ -1151,8 +1151,8 @@
             // 計時器運行，3 秒後激活 BOSS
             if (bossTimer > 0 && bossTimer < 250) {
                 bossTimer++;
-                if (bossTimer === 200) {
-                    // 播放boss出場音效
+                if (bossTimer === 100) {
+                    // 播放boss出場音效 bosstimer 是boss出場延遲時間
                     const bossAudio = document.getElementById('boss-audio');
                     if (bossAudio) {
                         bossAudio.currentTime = 0;
