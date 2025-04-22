@@ -671,70 +671,71 @@
         const enemyBullets = [];
         
         // ===== 敵人類型 =====
+        // 除錯：定義所有小兵的屬性與行為，方便統一管理與擴充
         const ENEMY_TYPES = {
             // 飛行系列（圓形）
             FLY_RED: {
-                color: '#f44',
-                speed: 1.5 * 1.1,
-                health: 1,
-                score: 60,
-                behavior: function(enemy) {
+                color: '#f44', // 顏色
+                speed: 1.5 * 1.1, // 移動速度
+                health: 1, // 血量
+                score: 60, // 擊殺得分
+                behavior: function(enemy) { // 行為函數
                     enemy.x -= enemy.speed;
                     // 小幅度上下
                     if (!enemy.floatBaseY) enemy.floatBaseY = enemy.y;
                     enemy.y = enemy.floatBaseY + Math.sin(Date.now() / 600 + enemy._id) * 18;
                 },
-                isFlying: true,
-                eye: { color: '#222', type: 'circle' }
+                isFlying: true, // 是否為飛行敵人
+                eye: { color: '#222', type: 'circle' } // 眼睛樣式
             },
             FLY_ORANGE: {
-                color: '#f84',
-                speed: 2.25 * 1.1, // 比紅色快0.5倍
-                health: 1,
-                score: 80,
-                behavior: function(enemy) {
+                color: '#f84', // 顏色
+                speed: 2.25 * 1.1, // 移動速度
+                health: 1, // 血量
+                score: 80, // 擊殺得分
+                behavior: function(enemy) { // 行為函數
                     enemy.x -= enemy.speed;
                     // 大幅度上下
                     if (!enemy.floatBaseY) enemy.floatBaseY = enemy.y;
                     enemy.y = enemy.floatBaseY + Math.sin(Date.now() / 300 + enemy._id) * 48;
                 },
-                isFlying: true,
-                eye: { color: '#222', type: 'circle' }
+                isFlying: true, // 是否為飛行敵人
+                eye: { color: '#222', type: 'circle' } // 眼睛樣式
             },
             // 地上系列（半圓形）
             GROUND_RED: {
-                color: '#f44',
-                speed: 0.75 * 1.1, // 原本1.5，現在慢一倍
-                health: 1,
-                score: 50,
-                behavior: function(enemy) {
+                color: '#f44', // 顏色
+                speed: 0.75 * 1.1, // 移動速度
+                health: 1, // 血量
+                score: 50, // 擊殺得分
+                behavior: function(enemy) { // 行為函數
                     enemy.x -= enemy.speed;
                 },
-                isFlying: false,
-                eye: { color: '#222', type: 'semi' }
+                isFlying: false, // 是否為飛行敵人
+                eye: { color: '#222', type: 'semi' } // 眼睛樣式
             },
             GROUND_ORANGE: {
-                color: '#f84',
-                speed: 0.75 * 1.1, // 原本1.5，現在慢一倍
-                health: 1,
-                score: 70,
-                behavior: function(enemy) {
+                color: '#f84', // 顏色
+                speed: 0.75 * 1.1, // 移動速度
+                health: 1, // 血量
+                score: 70, // 擊殺得分
+                behavior: function(enemy) { // 行為函數
                     enemy.x -= enemy.speed;
                     if (enemy.onGround && Math.random() < 0.02) {
                         enemy.vy = -12;
                         enemy.onGround = false;
                     }
                 },
-                isFlying: false,
-                eye: { color: '#222', type: 'semi' }
+                isFlying: false, // 是否為飛行敵人
+                eye: { color: '#222', type: 'semi' } // 眼睛樣式
             },
             GROUND_PINK: {
-                color: '#f8c',
-                speed: 0,
-                health: 1,
-                score: 100,
-                shootDelay: Math.round(180 / 1.1), // 射擊間隔縮短
-                behavior: function(enemy) {
+                color: '#f8c', // 顏色
+                speed: 0, // 移動速度
+                health: 1, // 血量
+                score: 100, // 擊殺得分
+                shootDelay: Math.round(180 / 1.1), // 射擊間隔
+                behavior: function(enemy) { // 行為函數
                     // 固定點射擊
                     if (enemy.shootCooldown > 0) {
                         enemy.shootCooldown--;
@@ -760,8 +761,8 @@
                         enemy.shootCooldown = enemy.shootDelay;
                     }
                 },
-                isFlying: false,
-                eye: { color: '#fff', type: 'semi' }
+                isFlying: false, // 是否為飛行敵人
+                eye: { color: '#fff', type: 'semi' } // 眼睛樣式
             }
         };
         
@@ -1178,23 +1179,23 @@
                 } while (tryCount < 10);
                 // 給每隻敵人一個唯一 id 供飄浮用
                 const enemy = {
-                    x: camera.x + camera.width + 50,
-                    y: type.isFlying ? (Math.random() * (WORLD_HEIGHT - 200) + 50) : (Math.random() * (WORLD_HEIGHT - 100) + 50),
-                    width: 30,
-                    height: 30,
-                    speed: type.speed,
-                    health: 3, // 小兵血量統一為10
-                    maxHealth: 3, // 小兵最大血量統一為10
-                    score: type.score,
-                    color: type.color,
-                    behavior: type.behavior,
-                    onGround: false,
-                    vy: 0,
-                    shootCooldown: 0,
-                    shootDelay: type.shootDelay || 0,
-                    isFlying: type.isFlying,
-                    eye: type.eye,
-                    _id: Math.random() * 1000000 | 0, // 飄浮用
+                    x: camera.x + camera.width + 50, // 初始X座標（生成在鏡頭右側）
+                    y: type.isFlying ? (Math.random() * (WORLD_HEIGHT - 200) + 50) : (Math.random() * (WORLD_HEIGHT - 100) + 50), // 初始Y座標
+                    width: 30, // 寬度
+                    height: 30, // 高度
+                    speed: type.speed, // 移動速度
+                    health: 3, // 當前血量
+                    maxHealth: 3, // 最大血量
+                    score: type.score, // 擊殺得分
+                    color: type.color, // 顏色
+                    behavior: type.behavior, // 行為函數
+                    onGround: false, // 是否在地面上
+                    vy: 0, // 垂直速度
+                    shootCooldown: 0, // 射擊冷卻計時器
+                    shootDelay: type.shootDelay || 0, // 射擊間隔
+                    isFlying: type.isFlying, // 是否為飛行敵人
+                    eye: type.eye, // 眼睛樣式
+                    _id: Math.random() * 1000000 | 0, // 唯一ID（飄浮用）
                     dying: false, // 是否進入死亡閃爍
                     dyingFrame: 0 // 死亡閃爍計數
                 };
