@@ -302,7 +302,7 @@
         const BOSS_AREA_X     = 4600;      // Boss區域起點X座標
         const CHARGE_MIN_FRAME = 42;       // 集氣彈最少需要的幀數
         const CHARGE_CANCEL_FRAME = 12;    // 集氣取消的最短幀數
-        // 以格數設計的平台資料
+        // 以格數設計的平台資料 地板
         const platformGrid = [
             // 第一區（0~2700）
             { x: 0, y: 1, color: COLOR_PLATFORM_NORMAL },
@@ -416,7 +416,7 @@
             { x: 105, y: 1, color: COLOR_PLATFORM_BOSS },
             { x: 106, y: 1, color: COLOR_PLATFORM_BOSS },
             { x: 107, y: 1, color: COLOR_PLATFORM_BOSS },
-            // { x: 108, y: 1, color: COLOR_PLATFORM_BOSS },
+            { x: 108, y: 1, color: COLOR_PLATFORM_BOSS },
         ];
         // 自動轉換
         const basePlatforms = platformGrid.map(p => ({
@@ -472,7 +472,7 @@
         let playerDeadX = 0;   // 新增：死亡時的X
         let playerDeadY = 0;   // 新增：死亡時的Y
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerMoveSpeed = 60; // 玩家移動速度設定，數值越大移動越快，預設6
+        let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
         let showScore = 1; // score:0 顯示1 隱藏0
         let showMoved = 1; // moved:(0) 顯示1 隱藏0
         let showFPS = 1; //showfps
