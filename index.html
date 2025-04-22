@@ -471,7 +471,7 @@
         let playerDead = false; // 新增：玩家死亡狀態
         let playerDeadX = 0;   // 新增：死亡時的X
         let playerDeadY = 0;   // 新增：死亡時的Y
-        let weaponPower = 100;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
+        let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
         let showFPS = 1; //showfps
         let showXY = 1; //show xy
@@ -1181,8 +1181,8 @@
                     width: 30,
                     height: 30,
                     speed: type.speed,
-                    health: type.health,
-                    maxHealth: type.health, // 新增最大血量
+                    health: 3, // 小兵血量統一為10
+                    maxHealth: 3, // 小兵最大血量統一為10
                     score: type.score,
                     color: type.color,
                     behavior: type.behavior,
@@ -1193,8 +1193,8 @@
                     isFlying: type.isFlying,
                     eye: type.eye,
                     _id: Math.random() * 1000000 | 0, // 飄浮用
-                    hitToDie: 0, // 被擊中次數
-                    hitFlashCount: 0 // 閃爍次數
+                    dying: false, // 是否進入死亡閃爍
+                    dyingFrame: 0 // 死亡閃爍計數
                 };
                 enemies.push(enemy);
             }
@@ -1244,6 +1244,17 @@
                     // enemies.splice(i, 1); // 移除此行，讓小兵不會因碰撞玩家而消失
                     continue;
                 }
+                // 在敵人更新時，處理死亡閃爍與自動消失
+                if (enemy.dying) {
+                    enemy.dyingFrame++;
+                    // 閃爍兩下（24幀，約0.4秒）後自動消失
+                    if (enemy.dyingFrame >= 24) {
+                        enemies.splice(i, 1);
+                        score += enemy.score;
+                        updateScore();
+                        continue;
+                    }
+                }
             }
             
             // 更新Boss
@@ -1274,7 +1285,7 @@
                         if (bullet.isCharge) {
                             enemy.health -= weaponPower * 5; // 集氣彈攻擊力5倍
                         } else {
-                            enemy.health -= weaponPower; // 普通子彈攻擊力
+                            enemy.health -= weaponPower * 1.5; // 普通子彈攻擊力
                         }
                         enemyHitFlash.set(enemy, 12); // 0.2秒閃爍
                         // 播放boom音效（集氣彈也有）
@@ -1284,15 +1295,9 @@
                             clone.volume = VOLUME_BOOM;
                             clone.play();
                         }
-                        enemy.hitToDie++;
-                        if (enemy.health <= 0) {
-                            enemy.hitFlashCount++;
-                            if (enemy.hitFlashCount >= 2) {
-                                enemy.health = 0;
-                                enemies.splice(j, 1);
-                                score += enemy.score;
-                                updateScore();
-                            }
+                        if (enemy.health <= 0 && !enemy.dying) {
+                            enemy.dying = true;
+                            enemy.dyingFrame = 0;
                         }
                         bullets.splice(i, 1);
                         break;
@@ -1540,6 +1545,14 @@
                     ctx.restore();
                 }
                 ctx.globalAlpha = 1;
+                // 在 render() 繪製敵人時，若 enemy.dying，根據 dyingFrame 閃爍
+                if (enemy.dying) {
+                    if (Math.floor(enemy.dyingFrame / 6) % 2 === 0) {
+                        ctx.globalAlpha = 0.3;
+                    } else {
+                        ctx.globalAlpha = 1;
+                    }
+                }
             });
             
             // 繪製Boss
