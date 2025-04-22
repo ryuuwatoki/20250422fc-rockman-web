@@ -2063,23 +2063,41 @@
 
         // 3. 設定按鈕事件
         settingsBtn.onclick = function() {
-            // 顯示面板時同步 input 值
-            document.getElementById('setting-move-speed').value = playerMoveSpeed;
-            document.getElementById('setting-weapon-power').value = weaponPower;
-            document.getElementById('setting-max-fps').value = MAX_FPS;
-            document.getElementById('setting-gravity').value = GRAVITY;
-            document.getElementById('setting-jump-power').value = JUMP_POWER;
-            document.getElementById('setting-jump-extra').value = JUMP_EXTRA;
-            document.getElementById('setting-jump-extra-frames').value = JUMP_EXTRA_FRAMES;
-            // 新增：checkbox 狀態同步
-            document.getElementById('setting-show-score').checked = !!showScore;
-            document.getElementById('setting-show-moved').checked = !!showMoved;
-            document.getElementById('setting-show-fps').checked = !!showFPS;
-            document.getElementById('setting-show-xy').checked = !!showXY;
-            document.getElementById('setting-show-nxy').checked = !!showNXY;
-            document.getElementById('setting-show-entity-counts').checked = !!showEntityCounts;
-            settingsPanel.style.display = 'block';
-            isPaused = true; // 開啟設定時暫停
+            if (settingsPanel.style.display === 'block') {
+                // 面板已開啟，等同於按OK
+                playerMoveSpeed = parseInt(document.getElementById('setting-move-speed').value) || 1;
+                weaponPower = parseInt(document.getElementById('setting-weapon-power').value) || 1;
+                MAX_FPS = parseInt(document.getElementById('setting-max-fps').value) || 10;
+                GRAVITY = parseFloat(document.getElementById('setting-gravity').value) || 1;
+                JUMP_POWER = parseFloat(document.getElementById('setting-jump-power').value) || -11.5*1.3;
+                JUMP_EXTRA = parseFloat(document.getElementById('setting-jump-extra').value) || -0.35*1.3;
+                JUMP_EXTRA_FRAMES = parseInt(document.getElementById('setting-jump-extra-frames').value) || 12;
+                showScore = document.getElementById('setting-show-score').checked ? 1 : 0;
+                showMoved = document.getElementById('setting-show-moved').checked ? 1 : 0;
+                showFPS = document.getElementById('setting-show-fps').checked ? 1 : 0;
+                showXY = document.getElementById('setting-show-xy').checked ? 1 : 0;
+                showNXY = document.getElementById('setting-show-nxy').checked ? 1 : 0;
+                showEntityCounts = document.getElementById('setting-show-entity-counts').checked ? 1 : 0;
+                settingsPanel.style.display = 'none';
+                isPaused = false;
+            } else {
+                // 顯示面板時同步 input 值
+                document.getElementById('setting-move-speed').value = playerMoveSpeed;
+                document.getElementById('setting-weapon-power').value = weaponPower;
+                document.getElementById('setting-max-fps').value = MAX_FPS;
+                document.getElementById('setting-gravity').value = GRAVITY;
+                document.getElementById('setting-jump-power').value = JUMP_POWER;
+                document.getElementById('setting-jump-extra').value = JUMP_EXTRA;
+                document.getElementById('setting-jump-extra-frames').value = JUMP_EXTRA_FRAMES;
+                document.getElementById('setting-show-score').checked = !!showScore;
+                document.getElementById('setting-show-moved').checked = !!showMoved;
+                document.getElementById('setting-show-fps').checked = !!showFPS;
+                document.getElementById('setting-show-xy').checked = !!showXY;
+                document.getElementById('setting-show-nxy').checked = !!showNXY;
+                document.getElementById('setting-show-entity-counts').checked = !!showEntityCounts;
+                settingsPanel.style.display = 'block';
+                isPaused = true; // 開啟設定時暫停
+            }
         };
         document.getElementById('settings-close-btn').onclick = function() {
             // 關閉時才套用新值
