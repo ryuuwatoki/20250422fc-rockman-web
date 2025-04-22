@@ -228,6 +228,7 @@
             <div id="fps-display" style="position:absolute;top:70px;right:10px;color:#fff;font-size:14px;z-index:5;">FPS: 0</div>
             <div id="xy-display" style="position:absolute;top:90px;right:10px;color:#fff;font-size:14px;z-index:5;">X: 0, Y: 0</div>
             <div id="nxy-display" style="position:absolute;top:110px;right:10px;color:#fff;font-size:14px;z-index:5;">NX: 0, NY: 0</div>
+            <div id="entity-counts" style="position:absolute;top:130px;right:10px;color:#fff;font-size:14px;z-index:5;">玩家: 1, 玩家子彈: 0, 敵人: 0, 敵人子彈: 0</div>
             
             <div id="start-screen">
                 <h1>億千万億千万</h1>
@@ -822,6 +823,7 @@
                 this.y = Math.max(0, Math.min(WORLD_HEIGHT - this.height, this.y));
             }
         };
+        const bosses = [boss];
         
         // ===== 平台陣列 =====
         const platforms = basePlatforms.slice();
@@ -1808,14 +1810,22 @@
             if (xy) {
                 xy.textContent = `X: ${Math.round(player.x)}, Y: ${Math.round(player.y)}`;
             }
-            // 新增：每幀更新玩家格數座標
+            // 每幀更新玩家格數座標
             const nxy = document.getElementById('nxy-display');
             if (nxy) {
                 const nx = Math.floor(player.x / 50);
                 const ny = Math.floor((500 - player.y) / 50);
                 nxy.textContent = `NX: ${nx}, NY: ${ny}`;
             }
+            // 每幀更新數量資訊
+            const entityCounts = document.getElementById('entity-counts');
+            if (entityCounts) {
+                // Boss 數量與小怪一樣規則：場上存活且 active 的 boss 數
+                const bossCount = bosses.filter(b => b && bossActive).length;
+                entityCounts.textContent = `玩家: 1, 玩家子彈: ${bullets.length}, 敵人: ${enemies.length}, 敵人子彈: ${enemyBullets.length}, Boss: ${bossCount}`;
+            }
         }
+
     </script>
 </body>
 </html>
