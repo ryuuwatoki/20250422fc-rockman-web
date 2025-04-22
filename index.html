@@ -472,7 +472,7 @@
         let playerDeadX = 0;   // 新增：死亡時的X
         let playerDeadY = 0;   // 新增：死亡時的Y
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerMoveSpeed = 30; // 玩家移動速度設定，數值越大移動越快，預設6
+        let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
         let showScore = 1; // score:0 顯示1 隱藏0
         let showMoved = 1; // moved:(0) 顯示1 隱藏0
         let showFPS = 1; //showfps
@@ -2036,6 +2036,86 @@
             render();
             updateFPS();
         }
+
+        // ====== 設定面板 ======
+        // 1. 新增設定按鈕
+        const settingsBtn = document.createElement('div');
+        settingsBtn.id = 'settings-btn';
+        settingsBtn.style.position = 'absolute';
+        settingsBtn.style.right = '30px';
+        settingsBtn.style.bottom = '90px';
+        settingsBtn.style.width = '50px';
+        settingsBtn.style.height = '50px';
+        settingsBtn.style.borderRadius = '50%';
+        settingsBtn.style.background = 'rgba(255,255,255,0.85)';
+        settingsBtn.style.boxShadow = '0 2px 8px #0006';
+        settingsBtn.style.zIndex = 1000;
+        settingsBtn.style.display = 'flex';
+        settingsBtn.style.alignItems = 'center';
+        settingsBtn.style.justifyContent = 'center';
+        settingsBtn.style.cursor = 'pointer';
+        settingsBtn.style.userSelect = 'none';
+        settingsBtn.innerHTML = '<svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#bbb" stroke="#222" stroke-width="2"/><path d="M14 8a6 6 0 1 1 0 12a6 6 0 0 1 0-12zm0 2a4 4 0 1 0 0 8a4 4 0 0 0 0-8z" fill="#222"/></svg>';
+        document.body.appendChild(settingsBtn);
+
+        // 2. 新增設定面板
+        const settingsPanel = document.createElement('div');
+        settingsPanel.id = 'settings-panel';
+        settingsPanel.style.position = 'fixed';
+        settingsPanel.style.left = '50%';
+        settingsPanel.style.top = '50%';
+        settingsPanel.style.transform = 'translate(-50%, -50%)';
+        settingsPanel.style.background = '#222';
+        settingsPanel.style.color = '#fff';
+        settingsPanel.style.padding = '32px 32px 24px 32px';
+        settingsPanel.style.borderRadius = '16px';
+        settingsPanel.style.boxShadow = '0 4px 32px #000a';
+        settingsPanel.style.zIndex = 2000;
+        settingsPanel.style.display = 'none';
+        settingsPanel.style.minWidth = '320px';
+        settingsPanel.innerHTML = `
+            <h2 style="margin-top:0;margin-bottom:18px;font-size:22px;text-align:center;">Settings</h2>
+            <div style="margin-bottom:16px;">
+                <label>Player Move Speed <input id="setting-move-speed" type="number" min="1" max="100" step="1" style="width:60px;"> </label>
+            </div>
+            <div style="margin-bottom:16px;">
+                <label>Weapon Power <input id="setting-weapon-power" type="number" min="1" max="20" step="1" style="width:60px;"> </label>
+            </div>
+            <div style="margin-bottom:16px;">
+                <label>Max FPS <input id="setting-max-fps" type="number" min="10" max="240" step="1" style="width:60px;"> </label>
+            </div>
+            <div style="text-align:center;margin-top:18px;">
+                <button id="settings-close-btn" style="padding:6px 24px;font-size:16px;background:#4af;color:#fff;border:none;border-radius:6px;">OK</button>
+            </div>
+        `;
+        document.body.appendChild(settingsPanel);
+
+        // 3. 設定按鈕事件
+        settingsBtn.onclick = function() {
+            // 顯示面板時同步 input 值
+            document.getElementById('setting-move-speed').value = playerMoveSpeed;
+            document.getElementById('setting-weapon-power').value = weaponPower;
+            document.getElementById('setting-max-fps').value = MAX_FPS;
+            settingsPanel.style.display = 'block';
+        };
+        document.getElementById('settings-close-btn').onclick = function() {
+            // 關閉時才套用新值
+            playerMoveSpeed = parseInt(document.getElementById('setting-move-speed').value) || 1;
+            weaponPower = parseInt(document.getElementById('setting-weapon-power').value) || 1;
+            MAX_FPS = parseInt(document.getElementById('setting-max-fps').value) || 10;
+            settingsPanel.style.display = 'none';
+        };
+
+        // 4. 參數 input 綁定（移除即時套用）
+        document.getElementById('setting-move-speed').addEventListener('input', function() {
+            playerMoveSpeed = parseInt(this.value) || 1;
+        });
+        document.getElementById('setting-weapon-power').addEventListener('input', function() {
+            weaponPower = parseInt(this.value) || 1;
+        });
+        document.getElementById('setting-max-fps').addEventListener('input', function() {
+            MAX_FPS = parseInt(this.value) || 10;
+        });
     </script>
 </body>
 </html>
