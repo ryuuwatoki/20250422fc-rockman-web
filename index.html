@@ -2081,6 +2081,10 @@
         settingsPanel.innerHTML = `
             <h2 style="margin-top:0;margin-bottom:18px;font-size:22px;text-align:center;">Settings</h2>
             <div style="margin-bottom:16px;">
+                <label><input type="checkbox" id="setting-bgm-on"> Muisc</label>
+                <label style="margin-left:16px;"><input type="checkbox" id="setting-sfx-on"> Effects Sound</label>
+            </div>
+            <div style="margin-bottom:16px;">
                 <label>Player Move Speed <input id="setting-move-speed" type="number" min="1" max="100" step="1" style="width:60px;"> </label>
             </div>
             <div style="margin-bottom:16px;">
@@ -2124,6 +2128,8 @@
         settingsBtn.onclick = function() {
             if (settingsPanel.style.display === 'block') {
                 // 面板已開啟，等同於按OK
+                isBgmOn = document.getElementById('setting-bgm-on').checked ? 1 : 0;
+                isSfxOn = document.getElementById('setting-sfx-on').checked ? 1 : 0;
                 playerMoveSpeed = parseInt(document.getElementById('setting-move-speed').value) || 1;
                 weaponPower = parseInt(document.getElementById('setting-weapon-power').value) || 1;
                 MAX_FPS = parseInt(document.getElementById('setting-max-fps').value) || 10;
@@ -2142,6 +2148,8 @@
                 isPaused = false;
             } else {
                 // 顯示面板時同步 input 值
+                document.getElementById('setting-bgm-on').checked = !!isBgmOn;
+                document.getElementById('setting-sfx-on').checked = !!isSfxOn;
                 document.getElementById('setting-move-speed').value = playerMoveSpeed;
                 document.getElementById('setting-weapon-power').value = weaponPower;
                 document.getElementById('setting-max-fps').value = MAX_FPS;
@@ -2162,6 +2170,8 @@
         };
         document.getElementById('settings-close-btn').onclick = function() {
             // 關閉時才套用新值
+            isBgmOn = document.getElementById('setting-bgm-on').checked ? 1 : 0;
+            isSfxOn = document.getElementById('setting-sfx-on').checked ? 1 : 0;
             playerMoveSpeed = parseInt(document.getElementById('setting-move-speed').value) || 1;
             weaponPower = parseInt(document.getElementById('setting-weapon-power').value) || 1;
             MAX_FPS = parseInt(document.getElementById('setting-max-fps').value) || 10;
@@ -2193,6 +2203,22 @@
                     case 'setting-show-mobile-touch': showMobileTouch = this.checked ? 1 : 0; updateMobileTouchDisplay(); break;
                 }
             });
+        });
+        // 音樂/效果音即時同步
+        document.getElementById('setting-bgm-on').addEventListener('change', function() {
+            isBgmOn = this.checked ? 1 : 0;
+            // 立即控制 BGM/OUTRO
+            const bgm = document.getElementById('bgm');
+            const outroAudio = document.getElementById('outro-audio');
+            if (isBgmOn) {
+                if (bgm && gameRunning) { bgm.currentTime = 0; bgm.volume = VOLUME_BGM; bgm.play(); }
+            } else {
+                if (bgm) { bgm.pause(); }
+                if (outroAudio) { outroAudio.pause(); }
+            }
+        });
+        document.getElementById('setting-sfx-on').addEventListener('change', function() {
+            isSfxOn = this.checked ? 1 : 0;
         });
 
         // 4. 參數 input 綁定（移除即時套用）
