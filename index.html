@@ -1182,6 +1182,7 @@
                     height: 30,
                     speed: type.speed,
                     health: type.health,
+                    maxHealth: type.health, // 新增最大血量
                     score: type.score,
                     color: type.color,
                     behavior: type.behavior,
@@ -1191,7 +1192,9 @@
                     shootDelay: type.shootDelay || 0,
                     isFlying: type.isFlying,
                     eye: type.eye,
-                    _id: Math.random() * 1000000 | 0 // 飄浮用
+                    _id: Math.random() * 1000000 | 0, // 飄浮用
+                    hitToDie: 0, // 被擊中次數
+                    hitFlashCount: 0 // 閃爍次數
                 };
                 enemies.push(enemy);
             }
@@ -1277,15 +1280,19 @@
                         // 播放boom音效（集氣彈也有）
                         const boomAudio = document.getElementById('boom-audio');
                         if (boomAudio) {
-                            boomAudio.currentTime = 0;
-                            boomAudio.volume = VOLUME_BOOM;
-                            boomAudio.play();
+                            const clone = boomAudio.cloneNode();
+                            clone.volume = VOLUME_BOOM;
+                            clone.play();
                         }
+                        enemy.hitToDie++;
                         if (enemy.health <= 0) {
-                            enemy.health = 0;
-                            enemies.splice(j, 1);
-                            score += enemy.score;
-                            updateScore();
+                            enemy.hitFlashCount++;
+                            if (enemy.hitFlashCount >= 2) {
+                                enemy.health = 0;
+                                enemies.splice(j, 1);
+                                score += enemy.score;
+                                updateScore();
+                            }
                         }
                         bullets.splice(i, 1);
                         break;
