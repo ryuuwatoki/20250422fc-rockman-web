@@ -472,7 +472,7 @@
         let playerDeadX = 0;   // 新增：死亡時的X
         let playerDeadY = 0;   // 新增：死亡時的Y
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerMoveSpeed = 60; // 玩家移動速度設定，數值越大移動越快，預設6
+        let playerMoveSpeed = 30; // 玩家移動速度設定，數值越大移動越快，預設6
         let showScore = 1; // score:0 顯示1 隱藏0
         let showMoved = 1; // moved:(0) 顯示1 隱藏0
         let showFPS = 1; //showfps
@@ -1324,9 +1324,11 @@
                 if (bossActive && checkCollision(bullet, boss)) {
                     if (bullet.isCharge) {
                         boss.health -= weaponPower * 3; // 集氣彈攻擊力3倍
-                        boss.pauseTimer = 42; // 新增：暫停0.7秒
+                        boss.pauseTimer = 42; // 暫停42偵
+                        boss.lastHitCharge = true; // 集氣彈
                     } else {
                         boss.health -= weaponPower; // 普通子彈攻擊力
+                        boss.lastHitCharge = false; // 新增：記錄這次不是集氣彈
                     }
                     bossHitFlash = 12; // 0.2秒閃爍
                     updateBossHealthBar();
@@ -1578,10 +1580,22 @@
             // 繪製Boss
             if (bossActive && !isWinScreen) {
                 if (bossHitFlash > 0) {
-                    if (Math.floor(Date.now() / 50) % 2 === 0) {
-                        ctx.globalAlpha = 0.3;
-                    } else {
+                    if (boss.lastHitCharge) {
+                        // 集氣彈：黃白閃爍
                         ctx.globalAlpha = 1;
+                        ctx.save();
+                        if (Math.floor(Date.now() / 50) % 2 === 0) {
+                            ctx.filter = 'brightness(1.5) sepia(1) hue-rotate(60deg)'; // 黃色
+                        } else {
+                            ctx.filter = 'brightness(2)'; // 白色
+                        }
+                    } else {
+                        // 普通彈：原本的透明閃爍
+                        if (Math.floor(Date.now() / 50) % 2 === 0) {
+                            ctx.globalAlpha = 0.3;
+                        } else {
+                            ctx.globalAlpha = 1;
+                        }
                     }
                 }
                 // 主體：圓角矩形
@@ -1646,6 +1660,11 @@
                 ctx.fillStyle = '#fff';
                 ctx.fill();
                 ctx.restore();
+                ctx.globalAlpha = 1;
+                // boss 繪製結束後恢復 filter
+                if (bossHitFlash > 0 && boss.lastHitCharge) {
+                    ctx.restore();
+                }
                 ctx.globalAlpha = 1;
             }
             
