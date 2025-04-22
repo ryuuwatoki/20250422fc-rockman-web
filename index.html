@@ -200,6 +200,53 @@
             position: relative;
             top: -100px;
         }
+        #settings-panel {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #222;
+            color: #fff;
+            padding: 32px 32px 24px 32px;
+            border-radius: 16px;
+            box-shadow: 0 4px 32px #000a;
+            z-index: 2000;
+            display: none;
+            min-width: 320px;
+            max-width: 96vw;
+            max-height: 96vh;
+            overflow: auto;
+            font-size: calc(16px + 1vw);
+        }
+        @media (max-width: 600px) {
+            #settings-panel {
+                min-width: 0;
+                width: 98vw;
+                padding: 2vw 2vw 2vw 2vw;
+                font-size: calc(12px + 2vw);
+            }
+            #settings-panel h2 {
+                font-size: calc(18px + 2vw);
+            }
+        }
+        #settings-panel *:not(h2) {
+            font-size: 70% !important;
+        }
+        #language-select {
+            position:absolute;
+            top:40px;
+            right:10px;
+            z-index:29;
+            background:#222;
+            padding:12px 24px;
+            border-radius:10px;
+            box-shadow:0 2px 12px #0008;
+            display:none;
+            flex-direction:column;
+            align-items:center;
+            transform: scale(0.75);
+            transform-origin: top right;
+        }
     </style>
 </head>
 <body>
