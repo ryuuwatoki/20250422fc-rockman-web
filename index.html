@@ -1031,6 +1031,7 @@
             playerDead = false; // 重設死亡狀態
             playerDeadX = 0;
             playerDeadY = 0;
+            bossDefeated = false;
         }
         
         // ===== 遊戲主循環 =====
@@ -1087,7 +1088,7 @@
             camera.follow(player);
             
             // Boss區域效果
-            if (player.x >= BOSS_AREA_X && !bossActive && bossTimer === 0) {
+            if (player.x >= BOSS_AREA_X && !bossActive && bossTimer === 0 && !isWinScreen && !bossDefeated) {
                 // 先不顯示正式boss血條
                 bossHealthContainer.style.display = 'none';
                 // 先移除所有舊的 fake hp 條
@@ -1314,6 +1315,7 @@
                         boss.health = 0;
                         updateBossHealthBar();
                         bossActive = false;
+                        bossDefeated = true;
                         gameRunning = false;
                         // 停止BGM
                         if (bgm) {
@@ -1532,7 +1534,7 @@
             });
             
             // 繪製Boss
-            if (bossActive) {
+            if (bossActive && !isWinScreen) {
                 if (bossHitFlash > 0) {
                     if (Math.floor(Date.now() / 50) % 2 === 0) {
                         ctx.globalAlpha = 0.3;
@@ -1691,6 +1693,10 @@
         }
         
         function winGame() {
+            bossActive = false;
+            // 將玩家移出畫面
+            player.x = -9999;
+            player.y = -9999;
             gameRunning = false;
             if (currentLang === 'zh') {
                 winScoreElement.innerHTML = '<div>score: 分數高到無法計算</div>';
@@ -1877,7 +1883,10 @@
         }
 
         // ===== 玩家飛行模式 =====
-        let isFlyingMode = 1; // 預設關閉
+        let isFlyingMode = 0; // 預設關閉
+
+        let isWinScreen = false;
+        let bossDefeated = false;
 
     </script>
 </body>
