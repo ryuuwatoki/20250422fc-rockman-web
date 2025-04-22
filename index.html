@@ -1240,8 +1240,10 @@
                 }
                 // 檢測玩家碰撞
                 if (checkCollision(player, enemy)) {
-                    player.takeDamage(10);
-                    // enemies.splice(i, 1); // 移除此行，讓小兵不會因碰撞玩家而消失
+                    if (enemy.health > 0) {
+                        player.takeDamage(10);
+                    }
+                    // 小兵不會因碰撞玩家而消失
                     continue;
                 }
                 // 在敵人更新時，處理死亡閃爍與自動消失
