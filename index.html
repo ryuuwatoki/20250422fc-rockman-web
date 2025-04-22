@@ -185,9 +185,9 @@
         }
         @media (max-width: 900px) {
             #game-container { width: 800px; height: 500px; }
-            #touch-controls { height: 60px; }
+            #touch-controls { height: 90px; }
             #touch-controls .touch-left, #touch-controls .touch-right { margin: 0 6vw; }
-            #touch-controls button { width: 44px; height: 44px; font-size: 16px; }
+            #touch-controls button { width: 90px; height: 90px; font-size: 24.2px; }
         }
     </style>
 </head>
@@ -256,7 +256,7 @@
         <div id="flash-effect" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100;display:none;"></div>
         <img id="tornado-img" src="tornadoes.png" style="display:none" />
         <!-- 觸控操作區 -->
-        <!-- <div id="touch-controls">
+        <div id="touch-controls">
             <div class="touch-left">
                 <button id="btn-left">←</button>
                 <button id="btn-right">→</button>
@@ -265,7 +265,7 @@
                 <button id="btn-jump">↑</button>
                 <button id="btn-shoot">S</button>
             </div>
-        </div> -->
+        </div>
     </div>
     <script>
         // ===== 遊戲設定（集中整理） =====
@@ -2150,6 +2150,77 @@
         });
 
         let isPaused = false; // 新增全域暫停旗標
+
+        // 補上 simulateKey 實作
+        function simulateKey(key, pressed) {
+            if (keys.hasOwnProperty(key)) {
+                keys[key] = pressed;
+            }
+            // 若需要觸發跳躍的特殊行為
+            if (key === 'ArrowUp') {
+                if (pressed) {
+                    if (!jumpKeyPressed) {
+                        jumpKeyDownTime = Date.now();
+                        jumpKeyPressed = true;
+                    }
+                } else {
+                    if (jumpKeyPressed) {
+                        const pressDuration = Date.now() - jumpKeyDownTime;
+                        if (pressDuration < 200 && player.vy < 0) {
+                            player.vy /= 4;
+                        } else if (pressDuration < 300 && player.vy < 0) {
+                            player.vy /= 3;
+                        } else if (pressDuration < 400 && player.vy < 0) {
+                            player.vy /= 2;
+                        }
+                        jumpKeyPressed = false;
+                    }
+                }
+            }
+            // 射擊鍵特殊處理
+            if (key === ' ') {
+                if (pressed) {
+                    if (!charging && gameRunning) {
+                        charging = true;
+                        chargeFrame = 0;
+                        chargeReady = false;
+                        player.isShooting = true;
+                        const shootAudio = document.getElementById('shoot-audio');
+                        if (shootAudio) {
+                            shootAudio.currentTime = 0;
+                            shootAudio.volume = VOLUME_SHOOT;
+                            shootAudio.play();
+                        }
+                        if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
+                        chargeAudioTimeout = setTimeout(() => {
+                            if (charging) {
+                                const chargeAudio = document.getElementById('charge-audio');
+                                if (chargeAudio) {
+                                    chargeAudio.currentTime = 0;
+                                    chargeAudio.volume = VOLUME_CHARGE;
+                                    chargeAudio.play();
+                                }
+                            }
+                        }, 500);
+                    }
+                } else {
+                    if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
+                        chargeReady = true;
+                    } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
+                        player.isShooting = true;
+                    }
+                    charging = false;
+                    setTimeout(() => { player.isShooting = false; }, 0);
+                    if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
+                    const chargeAudio = document.getElementById('charge-audio');
+                    if (chargeAudio) {
+                        chargeAudio.pause();
+                        chargeAudio.currentTime = 0;
+                        chargeAudio.volume = VOLUME_CHARGE;
+                    }
+                }
+            }
+        }
     </script>
 </body>
 </html>
