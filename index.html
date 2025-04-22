@@ -2049,6 +2049,16 @@
             <div style="margin-bottom:16px;">
                 <label>Jump Extra Frames <input id="setting-jump-extra-frames" type="number" min="1" max="60" step="1" style="width:80px;"> </label>
             </div>
+            <div style="margin-bottom:16px;">
+                <label><input type="checkbox" id="setting-show-score"> Show Score</label>
+                <label style="margin-left:16px;"><input type="checkbox" id="setting-show-moved"> Show Moved</label>
+                <label style="margin-left:16px;"><input type="checkbox" id="setting-show-fps"> Show FPS</label>
+            </div>
+            <div style="margin-bottom:16px;">
+                <label><input type="checkbox" id="setting-show-xy"> Show XY</label>
+                <label style="margin-left:16px;"><input type="checkbox" id="setting-show-nxy"> Show NXY</label>
+                <label style="margin-left:16px;"><input type="checkbox" id="setting-show-entity-counts"> Show Entity Counts</label>
+            </div>
             <div style="text-align:center;margin-top:18px;">
                 <button id="settings-close-btn" style="padding:6px 24px;font-size:16px;background:#4af;color:#fff;border:none;border-radius:6px;">OK</button>
             </div>
@@ -2067,6 +2077,13 @@
             document.getElementById('setting-jump-power').value = JUMP_POWER;
             document.getElementById('setting-jump-extra').value = JUMP_EXTRA;
             document.getElementById('setting-jump-extra-frames').value = JUMP_EXTRA_FRAMES;
+            // 新增：checkbox 狀態同步
+            document.getElementById('setting-show-score').checked = !!showScore;
+            document.getElementById('setting-show-moved').checked = !!showMoved;
+            document.getElementById('setting-show-fps').checked = !!showFPS;
+            document.getElementById('setting-show-xy').checked = !!showXY;
+            document.getElementById('setting-show-nxy').checked = !!showNXY;
+            document.getElementById('setting-show-entity-counts').checked = !!showEntityCounts;
             settingsPanel.style.display = 'block';
             isPaused = true; // 開啟設定時暫停
         };
@@ -2081,9 +2098,29 @@
             JUMP_POWER = parseFloat(document.getElementById('setting-jump-power').value) || -11.5*1.3;
             JUMP_EXTRA = parseFloat(document.getElementById('setting-jump-extra').value) || -0.35*1.3;
             JUMP_EXTRA_FRAMES = parseInt(document.getElementById('setting-jump-extra-frames').value) || 12;
+            // 新增：checkbox 狀態同步
+            showScore = document.getElementById('setting-show-score').checked ? 1 : 0;
+            showMoved = document.getElementById('setting-show-moved').checked ? 1 : 0;
+            showFPS = document.getElementById('setting-show-fps').checked ? 1 : 0;
+            showXY = document.getElementById('setting-show-xy').checked ? 1 : 0;
+            showNXY = document.getElementById('setting-show-nxy').checked ? 1 : 0;
+            showEntityCounts = document.getElementById('setting-show-entity-counts').checked ? 1 : 0;
             settingsPanel.style.display = 'none';
             isPaused = false; // 關閉設定時恢復
         };
+        // 新增：checkbox 變動即時同步
+        ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts'].forEach(id => {
+            document.getElementById(id).addEventListener('change', function() {
+                switch(id) {
+                    case 'setting-show-score': showScore = this.checked ? 1 : 0; break;
+                    case 'setting-show-moved': showMoved = this.checked ? 1 : 0; break;
+                    case 'setting-show-fps': showFPS = this.checked ? 1 : 0; break;
+                    case 'setting-show-xy': showXY = this.checked ? 1 : 0; break;
+                    case 'setting-show-nxy': showNXY = this.checked ? 1 : 0; break;
+                    case 'setting-show-entity-counts': showEntityCounts = this.checked ? 1 : 0; break;
+                }
+            });
+        });
 
         // 4. 參數 input 綁定（移除即時套用）
         document.getElementById('setting-move-speed').addEventListener('input', function() {
