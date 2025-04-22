@@ -1983,60 +1983,6 @@
         let isWinScreen = false;
         let bossDefeated = false;
 
-        // 1. 新增暫停按鈕到畫面右下角
-        const pauseBtn = document.createElement('div');
-        pauseBtn.id = 'pause-btn';
-        pauseBtn.style.position = 'absolute';
-        pauseBtn.style.right = '30px';
-        pauseBtn.style.bottom = '30px';
-        pauseBtn.style.width = '50px';
-        pauseBtn.style.height = '50px';
-        pauseBtn.style.borderRadius = '50%';
-        pauseBtn.style.background = 'rgba(255,255,255,0.85)';
-        pauseBtn.style.boxShadow = '0 2px 8px #0006';
-        pauseBtn.style.zIndex = 1000;
-        pauseBtn.style.display = 'flex';
-        pauseBtn.style.alignItems = 'center';
-        pauseBtn.style.justifyContent = 'center';
-        pauseBtn.style.cursor = 'pointer';
-        pauseBtn.style.userSelect = 'none';
-        pauseBtn.innerHTML = '<svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#ffd600" stroke="#222" stroke-width="2"/><rect x="8" y="8" width="4" height="12" rx="2" fill="#222"/><rect x="16" y="8" width="4" height="12" rx="2" fill="#222"/></svg>';
-        document.body.appendChild(pauseBtn);
-
-        // 2. 遊戲暫停/恢復狀態
-        let isPaused = false;
-        let pauseFrame = null;
-
-        function togglePause() {
-            isPaused = !isPaused;
-            if (isPaused) {
-                pauseFrame = null;
-                pauseBtn.style.opacity = '0.7';
-                pauseBtn.style.background = 'rgba(255,255,255,0.7)';
-            } else {
-                lastFrameTime = performance.now(); // 避免恢復時跳幀
-                requestAnimationFrame(gameLoop);
-                pauseBtn.style.opacity = '1';
-                pauseBtn.style.background = 'rgba(255,255,255,0.85)';
-            }
-        }
-        pauseBtn.onclick = togglePause;
-
-        // 3. 修改 gameLoop 讓暫停時停止更新與渲染
-        const _gameLoop = gameLoop;
-        function gameLoop(now) {
-            if (isPaused) {
-                pauseFrame = now;
-                return;
-            }
-            requestAnimationFrame(gameLoop);
-            if (now - lastFrameTime < FRAME_DURATION) return;
-            lastFrameTime = now;
-            update();
-            render();
-            updateFPS();
-        }
-
         // ====== 設定面板 ======
         // 1. 新增設定按鈕
         const settingsBtn = document.createElement('div');
