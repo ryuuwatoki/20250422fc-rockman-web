@@ -469,7 +469,7 @@
         let playerDeadX = 0;   // 新增：死亡時的X
         let playerDeadY = 0;   // 新增：死亡時的Y
         
-        // 顯示/隱藏狀態布林
+        // 顯示/隱藏狀態
         let showFPS = 1;
         let showXY = 1;
         let showNXY = 1;
@@ -529,6 +529,20 @@
                     this.x = playerDeadX;
                     this.y = playerDeadY;
                     return; // 死亡時不能動作且維持在死亡位置
+                }
+                // ===== 飛行模式 =====
+                if (isFlyingMode === 1) {
+                    // 左右移動
+                    if (keys.ArrowLeft)  { this.x -= this.speed; this.direction = -1; }
+                    if (keys.ArrowRight) { this.x += this.speed; this.direction =  1; }
+                    // 上下移動
+                    if (keys.ArrowUp)    { this.y -= this.speed; }
+                    if (keys.ArrowDown)  { this.y += this.speed; }
+                    // 邊界限制
+                    this.x = Math.max(0, Math.min(WORLD_WIDTH - this.width, this.x));
+                    this.y = Math.max(0, Math.min(WORLD_HEIGHT - this.height, this.y));
+                    this.onGround = false;
+                    return;
                 }
                 // 是否抵達過boss區域
                 if (this.x >= BOSS_AREA_X) {
@@ -1861,6 +1875,9 @@
                 entityCounts.style.display = showEntityCounts == 1 ? 'block' : 'none';
             }
         }
+
+        // ===== 玩家飛行模式 =====
+        let isFlyingMode = 1; // 預設關閉
 
     </script>
 </body>
