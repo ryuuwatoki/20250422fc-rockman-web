@@ -1370,12 +1370,7 @@
             
             // 繪製平台
             platforms.forEach(platform => {
-                // x>4500 改成暗紅色
-                if (platform.x > 4500) {
-                    ctx.fillStyle = '#800';
-                } else {
-                    ctx.fillStyle = platform.color;
-                }
+                ctx.fillStyle = platform.color;
                 ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
             });
             
