@@ -479,6 +479,7 @@
         let showEntityCounts = 1; //show 人物怪物子彈數量
         let MAX_FPS = 70; // 最大FPS設定
         
+        
         // ===== 鏡頭系統 =====
         const camera = {
             x: 0,
@@ -1237,7 +1238,7 @@
                 // 檢測玩家碰撞
                 if (checkCollision(player, enemy)) {
                     player.takeDamage(10);
-                    enemies.splice(i, 1);
+                    // enemies.splice(i, 1); // 移除此行，讓小兵不會因碰撞玩家而消失
                     continue;
                 }
             }
@@ -1884,7 +1885,7 @@
         }
 
         // ===== 玩家飛行模式 =====
-        let isFlyingMode = 1; // 預設關閉
+        let isFlyingMode = 0; // 預設關閉
 
         let isWinScreen = false;
         let bossDefeated = false;
