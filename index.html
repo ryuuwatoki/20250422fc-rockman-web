@@ -465,6 +465,9 @@
         let canShoot = true;
         let midEventTriggered = false;
         
+        // 最大FPS設定
+        const MAX_FPS = 70;
+        
         // ===== 鏡頭系統 =====
         const camera = {
             x: 0,
@@ -998,13 +1001,16 @@
         }
         
         // ===== 遊戲主循環 =====
-        function gameLoop() {
-            if (!gameRunning) return;
+        let lastFrameTime = 0;
+        const FRAME_DURATION = 1000 / MAX_FPS;
+
+        function gameLoop(now) {
+            requestAnimationFrame(gameLoop);
+            if (now - lastFrameTime < FRAME_DURATION) return;
+            lastFrameTime = now;
             update();
             render();
-            // FPS 計算
             updateFPS();
-            requestAnimationFrame(gameLoop);
         }
         
         // ===== 遊戲狀態更新 =====
