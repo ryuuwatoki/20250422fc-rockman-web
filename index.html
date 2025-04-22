@@ -734,7 +734,7 @@
                 speed: 0, // 移動速度
                 health: 1, // 血量
                 score: 100, // 擊殺得分
-                shootDelay: Math.round(180 / 1.1), // 射擊間隔
+                shootDelay: Math.round(120), // 射擊間隔 數字越小射擊越快
                 behavior: function(enemy) { // 行為函數
                     // 固定點射擊
                     if (enemy.shootCooldown > 0) {
@@ -1202,7 +1202,7 @@
                     behavior: type.behavior, // 行為函數
                     onGround: false, // 是否在地面上
                     vy: 0, // 垂直速度
-                    shootCooldown: 0, // 射擊冷卻計時器
+                    shootCooldown: (type === ENEMY_TYPES.GROUND_PINK) ? 50 : 0, // 粉色小兵第一發延遲50偵，其餘為0
                     shootDelay: type.shootDelay || 0, // 射擊間隔
                     isFlying: type.isFlying, // 是否為飛行敵人
                     eye: type.eye, // 眼睛樣式
