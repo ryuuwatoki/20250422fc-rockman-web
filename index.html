@@ -472,7 +472,7 @@
         let playerDeadX = 0;   // 新增：死亡時的X
         let playerDeadY = 0;   // 新增：死亡時的Y
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
+        let playerMoveSpeed = 60; // 玩家移動速度設定，數值越大移動越快，預設6
         let showScore = 1; // score:0 顯示1 隱藏0
         let showMoved = 1; // moved:(0) 顯示1 隱藏0
         let showFPS = 1; //showfps
@@ -807,7 +807,7 @@
                 switch (this.pattern) {
                     case 0: // 上下移動
                         this.y += this.speed;
-                        if (this.y < 50 || this.y > WORLD_HEIGHT - this.height - 50) {
+                        if (this.y < 50 || this.y > 350) { // boss出場後的最底範圍
                             this.speed *= -1;
                         }
                         break;
@@ -818,14 +818,14 @@
                             this.y -= this.speed;
                         }
                         break;
-                    case 2: // 跳躍攻擊（改為快速上下移動）
+                    case 2: // 快速上下移動
                         if (this.patternTimer % 60 < 30) {
                             this.y -= 8; // 向上飄
                         } else {
                             this.y += 8; // 向下飄
                         }
                         // 限制範圍
-                        this.y = Math.max(50, Math.min(WORLD_HEIGHT - this.height - 50, this.y));
+                        this.y = Math.max(50, Math.min(350, this.y)); // boss出場後的最底範圍
                         break;
                     case 3: // 衝刺攻擊
                         if (this.patternTimer < 60) {
@@ -859,7 +859,7 @@
                 }
                 // === 加入邊界限制 ===
                 this.x = Math.max(BOSS_AREA_X, Math.min(WORLD_WIDTH - this.width, this.x));
-                this.y = Math.max(0, Math.min(WORLD_HEIGHT - this.height, this.y));
+                this.y = Math.max(0, Math.min(350, this.y)); // boss出場後的最底範圍
             }
         };
         const bosses = [boss];
@@ -1959,7 +1959,7 @@
         }
 
         // ===== 玩家飛行模式 =====
-        let isFlyingMode = 0; // 預設關閉
+        let isFlyingMode = 1; // 預設關閉
 
         let isWinScreen = false;
         let bossDefeated = false;
