@@ -1249,8 +1249,8 @@
                 // 在敵人更新時，處理死亡閃爍與自動消失
                 if (enemy.dying) {
                     enemy.dyingFrame++;
-                    // 閃爍兩下（24幀，約0.4秒）後自動消失
-                    if (enemy.dyingFrame >= 24) {
+                    // 閃爍兩下（12幀，約0.2秒）後自動消失
+                    if (enemy.dyingFrame >= 12) {
                         enemies.splice(i, 1);
                         score += enemy.score;
                         updateScore();
