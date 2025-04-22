@@ -149,9 +149,9 @@
             position: absolute;
             left: 0;
             right: 0;
-            top: 250px;
+            top: 270px; /*整體按鈕高度*/
             width: 100%;
-            height: 80px;
+            height: 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -165,8 +165,8 @@
         }
         #touch-controls button {
             pointer-events: auto;
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             font-size: 24.2px;
             border-radius: 50%;
             border: none;
@@ -188,6 +188,17 @@
             #touch-controls { height: 90px; }
             #touch-controls .touch-left, #touch-controls .touch-right { margin: 0 6vw; }
             #touch-controls button { width: 90px; height: 90px; font-size: 24.2px; }
+        }
+        #touch-controls .touch-right {
+            display: flex;
+            gap: 8px;
+            margin: 0 2vw;
+            /* position: relative; */
+            /* top: -100px; */
+        }
+        #btn-shoot {
+            position: relative;
+            top: -100px;
         }
     </style>
 </head>
@@ -479,6 +490,7 @@
         let showXY = 0; //show xy
         let showNXY = 0; //show new xy
         let showEntityCounts = 0; //show 人物怪物子彈數量
+        let showMobileTouch = 1; // 新增：是否顯示手機觸控按鈕（1=顯示，0=隱藏）
         
         
         // ===== 鏡頭系統 =====
@@ -2049,6 +2061,9 @@
                 <label style="margin-left:16px;"><input type="checkbox" id="setting-show-nxy"> Show NXY</label>
                 <label style="margin-left:16px;"><input type="checkbox" id="setting-show-entity-counts"> Show Entity Counts</label>
             </div>
+            <div style="margin-bottom:16px;">
+                <label><input type="checkbox" id="setting-show-mobile-touch"> Show Mobile Touch</label>
+            </div>
             <div style="text-align:center;margin-top:18px;">
                 <button id="settings-close-btn" style="padding:6px 24px;font-size:16px;background:#4af;color:#fff;border:none;border-radius:6px;">OK</button>
             </div>
@@ -2072,6 +2087,7 @@
                 showXY = document.getElementById('setting-show-xy').checked ? 1 : 0;
                 showNXY = document.getElementById('setting-show-nxy').checked ? 1 : 0;
                 showEntityCounts = document.getElementById('setting-show-entity-counts').checked ? 1 : 0;
+                showMobileTouch = document.getElementById('setting-show-mobile-touch').checked ? 1 : 0;
                 settingsPanel.style.display = 'none';
                 isPaused = false;
             } else {
@@ -2089,6 +2105,7 @@
                 document.getElementById('setting-show-xy').checked = !!showXY;
                 document.getElementById('setting-show-nxy').checked = !!showNXY;
                 document.getElementById('setting-show-entity-counts').checked = !!showEntityCounts;
+                document.getElementById('setting-show-mobile-touch').checked = !!showMobileTouch;
                 settingsPanel.style.display = 'block';
                 isPaused = true; // 開啟設定時暫停
             }
@@ -2109,11 +2126,12 @@
             showXY = document.getElementById('setting-show-xy').checked ? 1 : 0;
             showNXY = document.getElementById('setting-show-nxy').checked ? 1 : 0;
             showEntityCounts = document.getElementById('setting-show-entity-counts').checked ? 1 : 0;
+            showMobileTouch = document.getElementById('setting-show-mobile-touch').checked ? 1 : 0;
             settingsPanel.style.display = 'none';
             isPaused = false; // 關閉設定時恢復
         };
         // 新增：checkbox 變動即時同步
-        ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts'].forEach(id => {
+        ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch'].forEach(id => {
             document.getElementById(id).addEventListener('change', function() {
                 switch(id) {
                     case 'setting-show-score': showScore = this.checked ? 1 : 0; break;
@@ -2122,6 +2140,7 @@
                     case 'setting-show-xy': showXY = this.checked ? 1 : 0; break;
                     case 'setting-show-nxy': showNXY = this.checked ? 1 : 0; break;
                     case 'setting-show-entity-counts': showEntityCounts = this.checked ? 1 : 0; break;
+                    case 'setting-show-mobile-touch': showMobileTouch = this.checked ? 1 : 0; updateMobileTouchDisplay(); break;
                 }
             });
         });
@@ -2221,6 +2240,16 @@
                 }
             }
         }
+
+        // 新增：根據 showMobileTouch 顯示/隱藏觸控按鈕
+        function updateMobileTouchDisplay() {
+            const touchControls = document.getElementById('touch-controls');
+            if (touchControls) {
+                touchControls.style.display = showMobileTouch ? 'flex' : 'none';
+            }
+        }
+        // 預設載入時也要呼叫一次
+        updateMobileTouchDisplay();
     </script>
 </body>
 </html>
