@@ -43,9 +43,9 @@ email: ryuuwatoki@gmail.com
 
 ### 画像プレビュー：
 
-![ゲーム画面 1](readme/01.png)  
-![ゲーム画面 2](readme/02.png)  
-![ゲーム画面 3](readme/03.png)
+![ゲーム画面 1](readme/01.PNG)  
+![ゲーム画面 2](readme/02.PNG)  
+![ゲーム画面 3](readme/03.PNG)
 
 ### 🎥 ゲーム動画プレビュー：
 
@@ -76,9 +76,9 @@ Simply open `index.html` to start playing.
 
 ### Image Previews:
 
-![Game Screen 1](readme/01.png)  
-![Game Screen 2](readme/02.png)  
-![Game Screen 3](readme/03.png)
+![Game Screen 1](readme/01.PNG)  
+![Game Screen 2](readme/02.PNG)  
+![Game Screen 3](readme/03.PNG)
 
 ### 🎥 Game Video Preview:
 
