@@ -373,16 +373,35 @@
         const BOSS_AREA_X     = 4600;      // Boss區域起點X座標
         let CHARGE_MIN_FRAME = 42;       // 集氣彈最少需要的幀數
         let CHARGE_CANCEL_FRAME = 12;    // 集氣取消的最短幀數
+        
 
         // ===== 遊戲狀態 =====
         let MAX_FPS = 70; // 最大FPS設定
+
+        let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
+        let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
+
         let startx = 0;
         let starty = 0;
-        let gameRunning  = false; // 遊戲是否正在進行中
+        let playerMaxHealth = 100; // Player血量
+        let bossHealth   = 300;  // Boss血量
+
         let score        = 0;     // 玩家分數
-        let playerMaxHealth = 100; // 新增最大血量
-        let playerHealth = playerMaxHealth; // 玩家目前血量
-        let bossHealth   = 300;  // 增強Boss血量
+
+
+        let showScore = 1; // score:0 顯示1 隱藏0
+        let showMoved = 0; // moved:(0) 顯示1 隱藏0
+        let showFPS = 1; //showfps
+        let showXY = 0; //show xy
+        let showNXY = 0; //show new xy
+        let showEntityCounts = 0; //show 人物怪物子彈數量
+        let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）
+
+        let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉
+        let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉
+
+
+        let gameRunning  = false; // 遊戲是否正在進行中
         let bossActive   = false; // Boss是否啟動
         let bossTimer    = 0;     // Boss出場動畫計時器
         let reachedBossArea = false; // 玩家是否已經抵達過boss區域
@@ -397,22 +416,20 @@
         let bossHpAnimating = false; // Boss血條是否正在動畫
         let canShoot = true; // 玩家是否可以射擊
         let midEventTriggered = false; // 中途事件是否已觸發
-        let playerDead = false; // 新增：玩家死亡狀態
-        let playerDeadX = 0;   // 新增：死亡時的X
-        let playerDeadY = 0;   // 新增：死亡時的Y
-        let weaponPower = 100;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
-        let showScore = 1; // score:0 顯示1 隱藏0
-        let showMoved = 0; // moved:(0) 顯示1 隱藏0
-        let showFPS = 1; //showfps
-        let showXY = 0; //show xy
-        let showNXY = 0; //show new xy
-        let showEntityCounts = 0; //show 人物怪物子彈數量
-        let showMobileTouch = 1; // 新增：是否顯示手機觸控按鈕（1=顯示，0=隱藏）
-        let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉
-        let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉
+        let playerDead = false; // 玩家死亡狀態
+        let playerDeadX = 0;   // 死亡時的X
+        let playerDeadY = 0;   // 死亡時的Y
 
-        // ===== 新增 fakeBoss 全域變數 =====
+        let isWinInvincible = false; // 勝利畫面無敵狀態
+        let isPaused = false; // 全域暫停旗標
+
+            // ===== 玩家飛行模式 =====
+        let isFlyingMode = 0; // 預設關閉
+
+        let isWinScreen = false;
+        let bossDefeated = false;
+
+        // ===== fakeBoss 全域變數 =====
         let fakeBoss = null;
         let fakeBossFlashFrame = 0;
 
@@ -593,6 +610,8 @@
         };
         
         // ===== 玩家物件 =====
+        let playerHealth = playerMaxHealth; // 玩家目前血量
+
         let player = {
             x: startx,                // 玩家X座標（連動 startx）
             y: starty,                // 玩家Y座標（連動 starty）
@@ -869,11 +888,11 @@
             health: 300,
             maxHealth: 300,
             onGround: false, // 不再需要onGround
-            pauseTimer: 0, // 新增：暫停計時器
+            pauseTimer: 0, // 暫停計時器
             
             // Boss 行為模式
             update: function() {
-                // 新增：暫停狀態
+                // 暫停狀態
                 if (this.pauseTimer > 0) {
                     this.pauseTimer--;
                     return;
@@ -1414,7 +1433,7 @@
                         boss.lastHitCharge = true; // 集氣彈
                     } else {
                         boss.health -= weaponPower; // 普通子彈攻擊力
-                        boss.lastHitCharge = false; // 新增：記錄這次不是集氣彈
+                        boss.lastHitCharge = false; // 記錄這次不是集氣彈
                     }
                     bossHitFlash = 12; // 0.2秒閃爍
                     updateBossHealthBar();
@@ -1435,7 +1454,7 @@
                         bossActive = false;
                         bossDefeated = true;
                         gameRunning = false;
-                        enemyBullets.length = 0; // 新增：Boss死亡時清空所有敵方子彈
+                        enemyBullets.length = 0; // Boss死亡時清空所有敵方子彈
                         // 停止BGM
                         if (bgm) {
                             bgm.pause();
@@ -1451,7 +1470,7 @@
                         // 1. 黃白閃爍2秒
                         const flashDiv = document.getElementById('flash-effect');
                         const winScreen = document.getElementById('win-screen');
-                        // ===== 新增 fakeBoss =====
+                        // ===== fakeBoss =====
                         fakeBoss = {
                             x: boss.x,
                             y: boss.y,
@@ -1779,7 +1798,7 @@
                 }
                 ctx.globalAlpha = 1;
             }
-            // ===== 新增 fakeBoss 閃爍效果 =====
+            // ===== fakeBoss 閃爍效果 =====
             if (fakeBoss) {
                 fakeBossFlashFrame++;
                 ctx.save();
@@ -2096,7 +2115,7 @@
         
         // ===== 觸控操作模擬鍵盤 =====
         /**
-         * 新增觸控按鈕事件，模擬對應鍵盤事件
+         * 觸控按鈕事件，模擬對應鍵盤事件
          * @param {string} btnId - 按鈕的DOM id
          * @param {string} key - 對應的鍵盤key值
          */
@@ -2183,14 +2202,9 @@
             }
         }
 
-        // ===== 玩家飛行模式 =====
-        let isFlyingMode = 0; // 預設關閉
-
-        let isWinScreen = false;
-        let bossDefeated = false;
 
         // ====== 設定面板 ======
-        // 1. 新增設定按鈕
+        // 1. 設定按鈕
         const settingsBtn = document.createElement('div');
         settingsBtn.id = 'settings-btn';
         settingsBtn.style.position = 'absolute';
@@ -2212,7 +2226,7 @@
         settingsBtn.innerHTML = '<span style="font-size:22px;font-weight:bold;line-height:45px;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#fff;">⚙️</span>';
         document.getElementById('game-wrapper').appendChild(settingsBtn);
 
-        // 2. 新增設定面板
+        // 2. 設定面板
         const settingsPanel = document.createElement('div');
         settingsPanel.id = 'settings-panel';
         settingsPanel.style.position = 'fixed';
@@ -2419,7 +2433,7 @@
                 if (startYInput) starty = parseInt(startYInput.value) || 0;
             };
         }
-        // 新增：checkbox 變動即時同步
+        // checkbox 變動即時同步
         ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch'].forEach(id => {
             var el = document.getElementById(id);
             if (el) {
@@ -2488,7 +2502,6 @@
             JUMP_EXTRA_FRAMES = parseInt(this.value) || 12;
         });
 
-        let isPaused = false; // 新增全域暫停旗標
 
         // 補上 simulateKey 實作
         function simulateKey(key, pressed) {
@@ -2561,7 +2574,7 @@
             }
         }
 
-        // 新增：根據 showMobileTouch 顯示/隱藏觸控按鈕
+        // 根據 showMobileTouch 顯示/隱藏觸控按鈕
         function updateMobileTouchDisplay() {
             const touchControls = document.getElementById('touch-controls');
             if (touchControls) {
@@ -2578,10 +2591,9 @@
             starty = parseInt(this.value) || 0;
         });
 
-        let isWinInvincible = false; // 勝利畫面無敵狀態
 
 
-        // 新增：設定面板語言下拉選單切換
+        // 設定面板語言下拉選單切換
         // var settingsLangSelect = document.getElementById('settings-lang-select');
         // settingsLangSelect.value = currentLang;
         // settingsLangSelect.onchange = function() {
@@ -2589,7 +2601,7 @@
         //     updateSettingsPanelLang();
         // };
 
-        // 新增：根據語言切換設定面板所有文字
+        // 根據語言切換設定面板所有文字
         function updateSettingsPanelLang() {
             const L = LANGUAGES[currentLang].settings;
             document.querySelector('#settings-panel h2').textContent = L.title;
