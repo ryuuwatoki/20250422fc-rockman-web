@@ -479,6 +479,13 @@
         // 新增floor圖片物件
         const floorImg = new Image(); floorImg.src = 'img/01floor.png';
         const floorBossImg = new Image(); floorBossImg.src = 'img/02floor.png';
+        // FLY_RED 兩張動畫圖
+        const flyRedImgs = [
+            new Image(),
+            new Image()
+        ];
+        flyRedImgs[0].src = 'img/e01-1.png';
+        flyRedImgs[1].src = 'img/e01-2.png';
 
 
 
@@ -834,6 +841,14 @@
                     // 小幅度上下
                     if (!enemy.floatBaseY) enemy.floatBaseY = enemy.y;
                     enemy.y = enemy.floatBaseY + Math.sin(Date.now() / 600 + enemy._id) * 18;
+                    // === 動畫計數 ===
+                    if (enemy._animFrame === undefined) enemy._animFrame = 0;
+                    if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
+                    enemy._animFrame++;
+                    // 幾幀切換動畫（這裡是6幀切換一次）
+                    if (enemy._animFrame % 6 === 0) {
+                        enemy._imgIndex = 1 - enemy._imgIndex;
+                    }
                 },
                 isFlying: true, // 是否為飛行敵人
                 eye: { color: '#222', type: 'circle' } // 眼睛樣式
@@ -1364,6 +1379,11 @@
                     dying: false, // 是否進入死亡閃爍
                     dyingFrame: 0 // 死亡閃爍計數
                 };
+                // FLY_RED 初始化動畫屬性
+                if (type === ENEMY_TYPES.FLY_RED) {
+                    enemy._animFrame = 0;
+                    enemy._imgIndex = 0;
+                }
                 enemies.push(enemy);
             }
             
@@ -1723,18 +1743,24 @@
                     }
                 }
                 if (enemy.isFlying) {
-                    // 飛行敵人：圓形
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.ellipse(enemy.x + enemy.width/2, enemy.y + enemy.height/2, enemy.width/2, enemy.height/2, 0, 0, Math.PI*2);
-                    ctx.fillStyle = enemy.color;
-                    ctx.fill();
-                    // 眼睛（橢圓右前方）
-                    ctx.beginPath();
-                    ctx.arc(enemy.x + enemy.width*0.75, enemy.y + enemy.height/2, enemy.width/8, 0, Math.PI*2);
-                    ctx.fillStyle = '#fff';
-                    ctx.fill();
-                    ctx.restore();
+                    // FLY_RED 用圖片動畫
+                    if (enemy.color === '#f44') {
+                        const idx = enemy._imgIndex || 0;
+                        ctx.drawImage(flyRedImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
+                    } else {
+                        // 其他飛行敵人維持原本畫圓
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.ellipse(enemy.x + enemy.width/2, enemy.y + enemy.height/2, enemy.width/2, enemy.height/2, 0, 0, Math.PI*2);
+                        ctx.fillStyle = enemy.color;
+                        ctx.fill();
+                        // 眼睛
+                        ctx.beginPath();
+                        ctx.arc(enemy.x + enemy.width*0.75, enemy.y + enemy.height/2, enemy.width/8, 0, Math.PI*2);
+                        ctx.fillStyle = '#fff';
+                        ctx.fill();
+                        ctx.restore();
+                    }
                 } else {
                     // 路面敵人：半圓（朝右）
                     ctx.save();
