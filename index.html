@@ -405,6 +405,10 @@
         let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉
         let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉
 
+        // ===== 新增 fakeBoss 全域變數 =====
+        let fakeBoss = null;
+        let fakeBossFlashFrame = 0;
+
         // 以格數設計的平台資料 地板
         const platformGrid = [
             // 第一區（0~2700）
@@ -1438,6 +1442,17 @@
                         // 1. 黃白閃爍2秒
                         const flashDiv = document.getElementById('flash-effect');
                         const winScreen = document.getElementById('win-screen');
+                        // ===== 新增 fakeBoss =====
+                        fakeBoss = {
+                            x: boss.x,
+                            y: boss.y,
+                            width: boss.width,
+                            height: boss.height,
+                            color: boss.color
+                        };
+                        fakeBossFlashFrame = 0;
+                        setTimeout(() => { fakeBoss = null; }, 2000);
+                        // =========================
                         if (flashDiv) {
                             flashDiv.style.display = 'block';
                             let flashFrame = 0;
@@ -1744,6 +1759,33 @@
                 }
                 ctx.globalAlpha = 1;
             }
+            // ===== 新增 fakeBoss 閃爍效果 =====
+            if (fakeBoss) {
+                fakeBossFlashFrame++;
+                ctx.save();
+                if (Math.floor(fakeBossFlashFrame / 6) % 2 === 0) {
+                    ctx.globalAlpha = 1;
+                    ctx.fillStyle = "#fff";
+                } else {
+                    ctx.globalAlpha = 0.2;
+                    ctx.fillStyle = fakeBoss.color;
+                }
+                // 主體：圓角矩形
+                const r = 28;
+                ctx.beginPath();
+                ctx.moveTo(fakeBoss.x + r, fakeBoss.y);
+                ctx.lineTo(fakeBoss.x + fakeBoss.width - r, fakeBoss.y);
+                ctx.quadraticCurveTo(fakeBoss.x + fakeBoss.width, fakeBoss.y, fakeBoss.x + fakeBoss.width, fakeBoss.y + r);
+                ctx.lineTo(fakeBoss.x + fakeBoss.width, fakeBoss.y + fakeBoss.height - r);
+                ctx.quadraticCurveTo(fakeBoss.x + fakeBoss.width, fakeBoss.y + fakeBoss.height, fakeBoss.x + fakeBoss.width - r, fakeBoss.y + fakeBoss.height);
+                ctx.lineTo(fakeBoss.x + r, fakeBoss.y + fakeBoss.height);
+                ctx.quadraticCurveTo(fakeBoss.x, fakeBoss.y + fakeBoss.height, fakeBoss.x, fakeBoss.y + fakeBoss.height - r);
+                ctx.lineTo(fakeBoss.x, fakeBoss.y + r);
+                ctx.quadraticCurveTo(fakeBoss.x, fakeBoss.y, fakeBoss.x + r, fakeBoss.y);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
             
             // 繪製敵方子彈
             enemyBullets.forEach(bullet => {
@@ -2044,7 +2086,7 @@
             const entityCounts = document.getElementById('entity-counts');
             if (entityCounts) {
                 const bossCount = bosses.filter(b => b && bossActive).length;
-                entityCounts.textContent = `P: ${players.length}, PS: ${bullets.length}, E: ${enemies.length}, EP: ${enemyBullets.length}, B: ${bossCount}`;
+                entityCounts.textContent = `P: ${players.length}, PS: ${bullets.length}, E: ${enemies.length}, ES: ${enemyBullets.length}, B: ${bossCount}`;
                 entityCounts.style.display = showEntityCounts == 1 ? 'block' : 'none';
             }
         }
