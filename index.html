@@ -423,8 +423,6 @@
 
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
-        // 是否自動水平翻轉角色圖片（true=按方向鍵時自動翻轉，false=永遠朝右），預設true
-        let autoFlipPlayer = true;
 
         let startx = 0;
         let starty = 0;
@@ -444,6 +442,8 @@
 
         let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉
         let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉
+
+        let autoFlipPlayer = true; // 是否自動水平翻轉角色圖片（true=按方向鍵時自動翻轉，false=永遠朝右），預設true
 
 
         let gameRunning  = false; // 遊戲是否正在進行中
