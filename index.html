@@ -325,6 +325,7 @@
                 <button id="btn-shoot">S</button>
             </div>
         </div>
+        <div id="settings-btn" style="position:absolute;right:10px;bottom:10px;width:45px;height:45px;border-radius:50%;background:#333a;color:#fff;box-shadow:0 2px 8px #0006;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;z-index:1000;font-size:22px;">⚙️</div>
     </div>
     <script>
         // ===== 遊戲設定（集中整理） =====
@@ -2048,21 +2049,23 @@
         const settingsBtn = document.createElement('div');
         settingsBtn.id = 'settings-btn';
         settingsBtn.style.position = 'absolute';
-        settingsBtn.style.right = '55px';
-        settingsBtn.style.bottom = '5px';
-        settingsBtn.style.width = '50px';
-        settingsBtn.style.height = '50px';
+        settingsBtn.style.right = '10px';
+        settingsBtn.style.bottom = '10px';
+        settingsBtn.style.width = '45px';
+        settingsBtn.style.height = '45px';
         settingsBtn.style.borderRadius = '50%';
-        settingsBtn.style.background = 'rgba(200,200,200,0.5)';
+        settingsBtn.style.background = '#333a';
+        settingsBtn.style.color = '#fff';
         settingsBtn.style.boxShadow = '0 2px 8px #0006';
-        settingsBtn.style.zIndex = 1000;
         settingsBtn.style.display = 'flex';
         settingsBtn.style.alignItems = 'center';
         settingsBtn.style.justifyContent = 'center';
         settingsBtn.style.cursor = 'pointer';
         settingsBtn.style.userSelect = 'none';
-        settingsBtn.innerHTML = '<span style="font-size:32px;font-weight:bold;line-height:50px;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#222;">Ｓ</span>';
-        document.body.appendChild(settingsBtn);
+        settingsBtn.style.zIndex = 1000;
+        settingsBtn.style.fontSize = '22px';
+        settingsBtn.innerHTML = '<span style="font-size:22px;font-weight:bold;line-height:45px;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#fff;">⚙️</span>';
+        document.getElementById('game-wrapper').appendChild(settingsBtn);
 
         // 2. 新增設定面板
         const settingsPanel = document.createElement('div');
