@@ -377,6 +377,10 @@
 
         // ===== 遊戲設定（集中整理） =====
 
+        let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文
+        // let FirstLanguage = localStorage.getItem('lang') || 'zh'; //預設語言中文
+        // let FirstLanguage = localStorage.getItem('lang') || 'en'; //預設語言英文
+
         // 顏色設定
         const COLOR_PLATFORM_NORMAL = '#444';      // 一般平台顏色
         const COLOR_PLATFORM_BOSS   = '#800';      // Boss區域平台顏色
@@ -2118,7 +2122,7 @@
                 }
             }
         };
-        let currentLang = localStorage.getItem('lang') || 'ja'; // 預設語言
+        let currentLang = FirstLanguage; // 預設語言
         function setLang(lang) {
             currentLang = lang;
             localStorage.setItem('lang', lang);
