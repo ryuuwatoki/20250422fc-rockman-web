@@ -424,7 +424,7 @@
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
 
-        let startx = 0;
+        let startx = 5000;
         let starty = 0;
         let playerMaxHealth = 100; // Player血量
         let bossHealth   = 300;  // Boss血量
@@ -1019,8 +1019,8 @@
         const boss = {
             x: 2500 + 2700 * 1,
             y: 350, // 固定初始座標
-            width: 100,
-            height: 100,
+            width: 185, // 碰撞箱 boss大小 boss圖片大小
+            height: 185, // 碰撞箱 boss大小 boss圖片大小
             speed: 2 * 1.1, // 1.1倍
             vy: 0, // 不再需要重力
             color: '#2196f3', // 主體藍色（Airman主色）
@@ -1032,9 +1032,21 @@
             maxHealth: 300,
             onGround: false, // 不再需要onGround
             pauseTimer: 0, // 暫停計時器
+            imgIndex: 0, // 當前圖片
+            animFrame: 0, // 動畫計數
             
             // Boss 行為模式
             update: function() {
+                // 動畫切換
+                if (!bossCanMove) {
+                    this.imgIndex = 0;
+                } else {
+                    this.animFrame++;
+                    if (this.animFrame % 6 === 0) {
+                        this.imgIndex++;
+                        if (this.imgIndex > 8) this.imgIndex = 1;
+                    }
+                }
                 // 暫停狀態
                 if (this.pauseTimer > 0) {
                     this.pauseTimer--;
@@ -1250,6 +1262,8 @@
             boss.health = boss.maxHealth;
             boss.x = 2500 + 2700 * 1;
             boss.y = 350;
+            boss.imgIndex = 0;
+            boss.animFrame = 0;
             bossActive = false;
             reachedBossArea = false;
             
@@ -1471,8 +1485,8 @@
                 if (type === ENEMY_TYPES.FLY_RED) {
                     enemy._animFrame = 0;
                     enemy._imgIndex = 0;
-                    enemy.width = 55;   // 設定寬度
-                    enemy.height = 55;  // 設定高度
+                    enemy.width = 30;   // 設定寬度
+                    enemy.height = 30;  // 設定高度
 
                 }
                 if (type === ENEMY_TYPES.FLY_ORANGE) {
@@ -1484,15 +1498,15 @@
                 if (type === ENEMY_TYPES.GROUND_RED) {
                     enemy._animFrame = 0;
                     enemy._imgIndex = 0;
-                    enemy.width = 60;   // 設定寬度
-                    enemy.height = 60;  // 設定高度
+                    enemy.width = 50;   // 設定寬度
+                    enemy.height = 50;  // 設定高度
 
                 }
                 if (type === ENEMY_TYPES.GROUND_ORANGE) {
                     enemy._animFrame = 0;
                     enemy._imgIndex = 0;
                     enemy.width = 60;   // 設定寬度
-                    enemy.height = 60;  // 設定高度
+                    enemy.height = 66;  // 設定高度
 
                 }
                 if (type === ENEMY_TYPES.GROUND_PINK) {
@@ -1974,16 +1988,14 @@
             if (bossActive && !isWinScreen) {
                 if (bossHitFlash > 0) {
                     if (boss.lastHitCharge) {
-                        // 集氣彈：黃白閃爍
                         ctx.globalAlpha = 1;
                         ctx.save();
                         if (Math.floor(Date.now() / 50) % 2 === 0) {
-                            ctx.filter = 'brightness(1.5) sepia(1) hue-rotate(60deg)'; // 黃色
+                            ctx.filter = 'brightness(1.5) sepia(1) hue-rotate(60deg)';
                         } else {
-                            ctx.filter = 'brightness(2)'; // 白色
+                            ctx.filter = 'brightness(2)';
                         }
                     } else {
-                        // 普通彈：原本的透明閃爍
                         if (Math.floor(Date.now() / 50) % 2 === 0) {
                             ctx.globalAlpha = 0.3;
                         } else {
@@ -1991,70 +2003,12 @@
                         }
                     }
                 }
-                // 主體：圓角矩形
-                const r = 28; // 圓角半徑
-                ctx.save();
-                ctx.beginPath();
-                ctx.moveTo(boss.x + r, boss.y);
-                ctx.lineTo(boss.x + boss.width - r, boss.y);
-                ctx.quadraticCurveTo(boss.x + boss.width, boss.y, boss.x + boss.width, boss.y + r);
-                ctx.lineTo(boss.x + boss.width, boss.y + boss.height - r);
-                ctx.quadraticCurveTo(boss.x + boss.width, boss.y + boss.height, boss.x + boss.width - r, boss.y + boss.height);
-                ctx.lineTo(boss.x + r, boss.y + boss.height);
-                ctx.quadraticCurveTo(boss.x, boss.y + boss.height, boss.x, boss.y + boss.height - r);
-                ctx.lineTo(boss.x, boss.y + r);
-                ctx.quadraticCurveTo(boss.x, boss.y, boss.x + r, boss.y);
-                ctx.closePath();
-                ctx.fillStyle = boss.color;
-                ctx.fill();
-                // 底下1/5為更鮮明的黃色
-                ctx.save();
-                ctx.beginPath();
-                ctx.moveTo(boss.x + r, boss.y + boss.height * 0.8);
-                ctx.lineTo(boss.x + boss.width - r, boss.y + boss.height * 0.8);
-                ctx.quadraticCurveTo(boss.x + boss.width, boss.y + boss.height * 0.8, boss.x + boss.width, boss.y + boss.height - r);
-                ctx.lineTo(boss.x + boss.width, boss.y + boss.height - r);
-                ctx.quadraticCurveTo(boss.x + boss.width, boss.y + boss.height, boss.x + boss.width - r, boss.y + boss.height);
-                ctx.lineTo(boss.x + r, boss.y + boss.height);
-                ctx.quadraticCurveTo(boss.x, boss.y + boss.height, boss.x, boss.y + boss.height - r);
-                ctx.lineTo(boss.x, boss.y + boss.height * 0.8);
-                ctx.quadraticCurveTo(boss.x, boss.y + boss.height * 0.8, boss.x + r, boss.y + boss.height * 0.8);
-                ctx.closePath();
-                ctx.fillStyle = '#ffd600'; // 更鮮明的黃色
-                ctx.fill();
-                ctx.restore();
-                // 眼睛（上方兩個，白色眼白、紅色眼珠）
-                // 左眼
-                ctx.beginPath();
-                ctx.ellipse(boss.x + boss.width * 0.32, boss.y + boss.height * 0.32, 10, 14, 0, 0, Math.PI * 2);
-                ctx.fillStyle = '#fff';
-                ctx.fill();
-                ctx.beginPath();
-                ctx.ellipse(boss.x + boss.width * 0.32, boss.y + boss.height * 0.36, 4, 6, 0, 0, Math.PI * 2);
-                ctx.fillStyle = '#f44';
-                ctx.fill();
-                // 右眼
-                ctx.beginPath();
-                ctx.ellipse(boss.x + boss.width * 0.68, boss.y + boss.height * 0.32, 10, 14, 0, 0, Math.PI * 2);
-                ctx.fillStyle = '#fff';
-                ctx.fill();
-                ctx.beginPath();
-                ctx.ellipse(boss.x + boss.width * 0.68, boss.y + boss.height * 0.36, 4, 6, 0, 0, Math.PI * 2);
-                ctx.fillStyle = '#f44';
-                ctx.fill();
-                // 風扇（黃色圓形）
-                ctx.beginPath();
-                ctx.arc(boss.x + boss.width/2, boss.y + boss.height/2 + 10, 20, 0, Math.PI*2);
-                ctx.fillStyle = '#ffe082'; // 黃色
-                ctx.fill();
-                // 風扇中心
-                ctx.beginPath();
-                ctx.arc(boss.x + boss.width/2, boss.y + boss.height/2 + 10, 7, 0, Math.PI*2);
-                ctx.fillStyle = '#fff';
-                ctx.fill();
-                ctx.restore();
+                // 圖片繪製 80x80，中心對齊碰撞箱
+                let drawImg = bossImgs[boss.imgIndex || 0];
+                //boss圖片大小 boss大小
+                ctx.drawImage(drawImg, boss.x + (boss.width - 80) / 2,
+                boss.y + (boss.height - 80) / 2, 200, 200);
                 ctx.globalAlpha = 1;
-                // boss 繪製結束後恢復 filter
                 if (bossHitFlash > 0 && boss.lastHitCharge) {
                     ctx.restore();
                 }
@@ -2063,28 +2017,15 @@
             // ===== fakeBoss 閃爍效果 =====
             if (fakeBoss) {
                 fakeBossFlashFrame++;
+                let drawImg = bossImgs[0];
+                if (fakeBoss.imgIndex !== undefined) drawImg = bossImgs[fakeBoss.imgIndex];
                 ctx.save();
                 if (Math.floor(fakeBossFlashFrame / 6) % 2 === 0) {
                     ctx.globalAlpha = 1;
-                    ctx.fillStyle = "#fff";
                 } else {
                     ctx.globalAlpha = 0.2;
-                    ctx.fillStyle = fakeBoss.color;
                 }
-                // 主體：圓角矩形
-                const r = 28;
-                ctx.beginPath();
-                ctx.moveTo(fakeBoss.x + r, fakeBoss.y);
-                ctx.lineTo(fakeBoss.x + fakeBoss.width - r, fakeBoss.y);
-                ctx.quadraticCurveTo(fakeBoss.x + fakeBoss.width, fakeBoss.y, fakeBoss.x + fakeBoss.width, fakeBoss.y + r);
-                ctx.lineTo(fakeBoss.x + fakeBoss.width, fakeBoss.y + fakeBoss.height - r);
-                ctx.quadraticCurveTo(fakeBoss.x + fakeBoss.width, fakeBoss.y + fakeBoss.height, fakeBoss.x + fakeBoss.width - r, fakeBoss.y + fakeBoss.height);
-                ctx.lineTo(fakeBoss.x + r, fakeBoss.y + fakeBoss.height);
-                ctx.quadraticCurveTo(fakeBoss.x, fakeBoss.y + fakeBoss.height, fakeBoss.x, fakeBoss.y + fakeBoss.height - r);
-                ctx.lineTo(fakeBoss.x, fakeBoss.y + r);
-                ctx.quadraticCurveTo(fakeBoss.x, fakeBoss.y, fakeBoss.x + r, fakeBoss.y);
-                ctx.closePath();
-                ctx.fill();
+                ctx.drawImage(drawImg, fakeBoss.x + (fakeBoss.width - 80) / 2, fakeBoss.y + (fakeBoss.height - 80) / 2, 80, 80);
                 ctx.restore();
             }
             
@@ -2970,6 +2911,13 @@
             customLangList.style.display = 'none';
         });
         window.addEventListener('DOMContentLoaded', updateCustomLangBtn);
+
+        // ===== Boss圖片載入 =====
+        const bossImgs = [];
+        for (let i = 0; i <= 8; i++) {
+            bossImgs[i] = new Image();
+            bossImgs[i].src = `img/b${i}.png`;
+        }
     </script>
 </body>
 </html>
