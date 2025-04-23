@@ -1064,7 +1064,7 @@
                 switch (this.pattern) {
                     case 0: // 上下移動
                         this.y += this.speed;
-                        if (this.y < 0 || this.y > WORLD_HEIGHT - bossDisplayHeight) {
+                        if (this.y < -100 || this.y > 250) {
                             this.speed *= -1;
                         }
                         break;
@@ -1075,7 +1075,7 @@
                             this.y -= this.speed;
                         }
                         // 限制範圍
-                        this.y = Math.max(0, Math.min(WORLD_HEIGHT - bossDisplayHeight, this.y));
+                        this.y = Math.max(-100, Math.min(250, this.y));
                         break;
                     case 2: // 快速上下移動
                         if (this.patternTimer % 60 < 30) {
@@ -1084,7 +1084,7 @@
                             this.y += 8; // 向下飄
                         }
                         // 限制範圍
-                        this.y = Math.max(0, Math.min(WORLD_HEIGHT - bossDisplayHeight, this.y));
+                        this.y = Math.max(-100, Math.min(250, this.y));
                         break;
                     case 3: // 衝刺攻擊
                         if (this.patternTimer < 60) {
@@ -1118,8 +1118,8 @@
                 }
                 // === 加入邊界限制 ===
                 const bossDisplayWidth = 190;
-                this.x = Math.max(BOSS_AREA_X, Math.min(WORLD_WIDTH - bossDisplayWidth, this.x));
-                this.y = Math.max(0, Math.min(WORLD_HEIGHT - bossDisplayHeight, this.y));
+                this.x = Math.max(4500, Math.min(5150, this.x));
+                this.y = Math.max(-100, Math.min(250, this.y));
             }
         };
         const bosses = [boss];
@@ -1264,8 +1264,8 @@
             score = 0;
             playerHealth = playerMaxHealth;
             boss.health = boss.maxHealth;
-            boss.x = 2500 + 2700 * 1;
-            boss.y = 350;
+            boss.x = 5300 - boss.width; // 貼齊右邊界
+            boss.y = 420 - boss.height; // 貼齊地板
             boss.imgIndex = 0;
             boss.animFrame = 0;
             bossActive = false;
