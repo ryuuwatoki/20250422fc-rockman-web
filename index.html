@@ -2078,6 +2078,34 @@
         
         // ===== 工具函數 =====
         function checkCollision(a, b) {
+            // 如果 b 是 boss，改用圓形碰撞
+            if (b === boss) {
+                // 以 boss 的中心與半徑（取寬高平均的一半）為圓
+                const bossCenterX = boss.x + boss.width / 2;
+                const bossCenterY = boss.y + boss.height / 2;
+                const bossRadius = (boss.width + boss.height) / 4; // 取平均
+                // 判斷 a（通常是子彈或玩家）中心點到 boss 圓心的距離
+                const aCenterX = a.x + (a.width ? a.width / 2 : 0);
+                const aCenterY = a.y + (a.height ? a.height / 2 : 0);
+                const dx = aCenterX - bossCenterX;
+                const dy = aCenterY - bossCenterY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                // 若 a 是矩形（玩家），需考慮邊緣最近點
+                if (a.width && a.height && a !== player) {
+                    // 子彈等直接用中心
+                    return dist < bossRadius;
+                } else if (a === player) {
+                    // 玩家用最近點到圓心
+                    // 找出玩家矩形最近 boss 圓心的點
+                    const closestX = Math.max(player.x, Math.min(bossCenterX, player.x + player.width));
+                    const closestY = Math.max(player.y, Math.min(bossCenterY, player.y + player.height));
+                    const pdx = closestX - bossCenterX;
+                    const pdy = closestY - bossCenterY;
+                    const pdist = Math.sqrt(pdx * pdx + pdy * pdy);
+                    return pdist < bossRadius;
+                }
+            }
+            // 其他情況維持原本矩形碰撞
             return a.x < b.x + b.width &&
                     a.x + a.width > b.x &&
                     a.y < b.y + b.height &&
