@@ -2029,7 +2029,14 @@
                 } else {
                     ctx.globalAlpha = 0.2;
                 }
-                ctx.drawImage(drawImg, fakeBoss.x + (fakeBoss.width - 80) / 2, fakeBoss.y + (fakeBoss.height - 80) / 2, 80, 80);
+                // 改為 190x190 並修正中心對齊
+                ctx.drawImage(
+                    drawImg,
+                    fakeBoss.x + (fakeBoss.width - 190) / 2,
+                    fakeBoss.y + (fakeBoss.height - 190) / 2,
+                    190,
+                    190
+                );
                 ctx.restore();
             }
             
