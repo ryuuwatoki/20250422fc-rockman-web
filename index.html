@@ -251,6 +251,10 @@
             font-size: 12px !important;
             line-height: 1.6;
         }
+        #start-button,  #play-again-button{
+            margin-top: 50px;
+        }
+        
     </style>
 </head>
 <body>
@@ -297,7 +301,7 @@
                 <p></p>
                 <p></p>
                 <p></p>
-                <button id="start-button"></button>
+                <button id="start-button">START</button>
             </div>
             
             <!-- 遊戲結束畫面（Game Over Screen） -->
@@ -372,7 +376,7 @@
 
         // ===== 遊戲狀態 =====
         let MAX_FPS = 70; // 最大FPS設定
-        let startx = 5000;
+        let startx = 0;
         let starty = 0;
         let gameRunning  = false; // 遊戲是否正在進行中
         let score        = 0;     // 玩家分數
@@ -1963,7 +1967,7 @@
                 playagain: '你想再玩一次也是可以...',
                 // Settings 多語言
                 settings: {
-                    title: '設定',
+                    title: '設定選單',
                     selectLang: '選擇語言',
                     music: '音樂',
                     sfx: '音效',
@@ -1998,7 +2002,7 @@
                 winScore: '<div style="font-size:95%">SCORE: 君の価値を点数で決められるわけがない！</div>',
                 playagain: 'もう一度遊びますか？',
                 settings: {
-                    title: '設定',
+                    title: '設定メニュー',
                     selectLang: '言語を選択',
                     music: '音楽',
                     sfx: '効果音',
