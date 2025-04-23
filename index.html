@@ -309,7 +309,7 @@
                 <h1>win!</h1>
                 <p id="win-score">score: </p>
                 <button id="play-again-button">play again</button>
-                <div id="by-watoki" style="position:absolute;right:50px;bottom:10px;color:#fff;font-size:18px;z-index:20;text-shadow:0 0 4px #000a;">by Watoki</div>
+                <div id="by-watoki" style="position:absolute;right:70px;bottom:10px;color:#fff;font-size:18px;z-index:20;text-shadow:0 0 4px #000a;">by Watoki</div>
             </div>
         </div>
         <div id="flash-effect" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100;display:none;"></div>
@@ -327,8 +327,11 @@
         </div>
         <div id="settings-btn" style="position:absolute;right:10px;bottom:10px;width:45px;height:45px;border-radius:50%;background:#333a;color:#fff;box-shadow:0 2px 8px #0006;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;z-index:1000;font-size:22px;">⚙️</div>
     </div>
+
     <script>
+
         // ===== 遊戲設定（集中整理） =====
+
         // 顏色設定
         const COLOR_PLATFORM_NORMAL = '#444';      // 一般平台顏色
         const COLOR_PLATFORM_BOSS   = '#800';      // Boss區域平台顏色
@@ -341,26 +344,67 @@
         const COLOR_BULLET_CHARGE   = '#ff0';      // 玩家集氣彈顏色
         const COLOR_BULLET_ENEMY    = '#f8f';      // 敵人子彈顏色
         const COLOR_BULLET_BOSS     = '#f4a';      // Boss子彈顏色
+
         // 音量設定
-        const VOLUME_BGM      = 0.55;  // 背景音樂音量
-        const VOLUME_SHOOT    = 0.55;  // 射擊音效音量
-        const VOLUME_CHARGE   = 0.55;  // 集氣音效音量
-        const VOLUME_BOOM     = 0.45;  // 爆炸音效音量
-        const VOLUME_HURT     = 0.70;  // 受傷音效音量
-        const VOLUME_GAMEOVER = 0.75;  // 遊戲結束音效音量
-        const VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量
-        const VOLUME_BOSS     = 0.85;  // Boss出場音效音量
-        const VOLUME_OUTRO    = 0.55;  // 勝利音樂音量
+        let VOLUME_BGM      = 0.55;  // 背景音樂音量
+        let VOLUME_SHOOT    = 0.55;  // 射擊音效音量
+        let VOLUME_CHARGE   = 0.55;  // 集氣音效音量
+        let VOLUME_BOOM     = 0.45;  // 爆炸音效音量
+        let VOLUME_HURT     = 0.70;  // 受傷音效音量
+        let VOLUME_GAMEOVER = 0.75;  // 遊戲結束音效音量
+        let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量
+        let VOLUME_BOSS     = 0.85;  // Boss出場音效音量
+        let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量
+
         // 遊戲常數
         let GRAVITY         = 1;         // 重力加速度
         let JUMP_POWER      = -15; // 跳躍初速度
         let JUMP_EXTRA      = -0.5; // 長按跳躍時每幀額外加速度
         let JUMP_EXTRA_FRAMES = 12;      // 跳躍額外加速最大幀數
-        const WORLD_WIDTH     = 2700*2;    // 世界寬度
+        const WORLD_WIDTH     = 5400;    // 世界寬度
         const WORLD_HEIGHT    = 500;       // 世界高度
         const BOSS_AREA_X     = 4600;      // Boss區域起點X座標
-        const CHARGE_MIN_FRAME = 42;       // 集氣彈最少需要的幀數
-        const CHARGE_CANCEL_FRAME = 12;    // 集氣取消的最短幀數
+        let CHARGE_MIN_FRAME = 42;       // 集氣彈最少需要的幀數
+        let CHARGE_CANCEL_FRAME = 12;    // 集氣取消的最短幀數
+
+        // ===== 遊戲狀態 =====
+        let MAX_FPS = 70; // 最大FPS設定
+        let startx = 0;
+        let starty = 0;
+        let gameRunning  = false; // 遊戲是否正在進行中
+        let score        = 0;     // 玩家分數
+        let playerMaxHealth = 100; // 新增最大血量
+        let playerHealth = playerMaxHealth; // 玩家目前血量
+        let bossHealth   = 300;  // 增強Boss血量
+        let bossActive   = false; // Boss是否啟動
+        let bossTimer    = 0;     // Boss出場動畫計時器
+        let reachedBossArea = false; // 玩家是否已經抵達過boss區域
+        let charging = false; // 是否正在集氣
+        let chargeFrame = 0; // 集氣持續幀數
+        let chargeReady = false; // 是否集氣完成
+        let bossHitFlash = 0; // Boss被擊中閃爍計數
+        let upPressed = false; // 追蹤上鍵是否已經按下
+        let chargeAudioTimeout = null; // 集氣音效延遲計時器
+        let bossCanAttack = false; // Boss是否可以攻擊
+        let bossCanMove = false; // Boss是否可以移動
+        let bossHpAnimating = false; // Boss血條是否正在動畫
+        let canShoot = true; // 玩家是否可以射擊
+        let midEventTriggered = false; // 中途事件是否已觸發
+        let playerDead = false; // 新增：玩家死亡狀態
+        let playerDeadX = 0;   // 新增：死亡時的X
+        let playerDeadY = 0;   // 新增：死亡時的Y
+        let weaponPower = 100;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
+        let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
+        let showScore = 1; // score:0 顯示1 隱藏0
+        let showMoved = 0; // moved:(0) 顯示1 隱藏0
+        let showFPS = 1; //showfps
+        let showXY = 0; //show xy
+        let showNXY = 0; //show new xy
+        let showEntityCounts = 0; //show 人物怪物子彈數量
+        let showMobileTouch = 1; // 新增：是否顯示手機觸控按鈕（1=顯示，0=隱藏）
+        let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉
+        let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉
+
         // 以格數設計的平台資料 地板
         const platformGrid = [
             // 第一區（0~2700）
@@ -455,8 +499,8 @@
             { x: 87, y: 9, color: COLOR_PLATFORM_NORMAL },
             // { x: 88, y: 9, color: COLOR_PLATFORM_NORMAL },
             { x: 89, y: 2, color: COLOR_PLATFORM_NORMAL },
-
             // { x: 90, y: 2, color: COLOR_PLATFORM_NORMAL },
+
             // Boss 區域地板（x=4600 之後）
             { x: 91, y: 1, color: COLOR_PLATFORM_BOSS },
             { x: 92, y: 1, color: COLOR_PLATFORM_BOSS },
@@ -506,44 +550,7 @@
         const finalScoreElement   = document.getElementById('final-score');
         const winScoreElement     = document.getElementById('win-score');
         const cameraDebugElement  = document.getElementById('camera-debug');
-        
-        // ===== 遊戲狀態 =====
-        let MAX_FPS = 70; // 最大FPS設定
-        let gameRunning  = false; // 遊戲是否正在進行中
-        let score        = 0;     // 玩家分數
-        let playerMaxHealth = 100; // 新增最大血量
-        let playerHealth = playerMaxHealth; // 玩家目前血量
-        let bossHealth   = 300;  // 增強Boss血量
-        let bossActive   = false; // Boss是否啟動
-        let bossTimer    = 0;     // Boss出場動畫計時器
-        let reachedBossArea = false; // 玩家是否已經抵達過boss區域
-        let charging = false; // 是否正在集氣
-        let chargeFrame = 0; // 集氣持續幀數
-        let chargeReady = false; // 是否集氣完成
-        let bossHitFlash = 0; // Boss被擊中閃爍計數
-        let upPressed = false; // 追蹤上鍵是否已經按下
-        let chargeAudioTimeout = null; // 集氣音效延遲計時器
-        let bossCanAttack = false; // Boss是否可以攻擊
-        let bossCanMove = false; // Boss是否可以移動
-        let bossHpAnimating = false; // Boss血條是否正在動畫
-        let canShoot = true; // 玩家是否可以射擊
-        let midEventTriggered = false; // 中途事件是否已觸發
-        let playerDead = false; // 新增：玩家死亡狀態
-        let playerDeadX = 0;   // 新增：死亡時的X
-        let playerDeadY = 0;   // 新增：死亡時的Y
-        let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
-        let showScore = 1; // score:0 顯示1 隱藏0
-        let showMoved = 0; // moved:(0) 顯示1 隱藏0
-        let showFPS = 1; //showfps
-        let showXY = 0; //show xy
-        let showNXY = 0; //show new xy
-        let showEntityCounts = 0; //show 人物怪物子彈數量
-        let showMobileTouch = 1; // 新增：是否顯示手機觸控按鈕（1=顯示，0=隱藏）
-        let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉
-        let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉
 
-        
         
         // ===== 鏡頭系統 =====
         const camera = {
@@ -575,7 +582,7 @@
         };
         
         // ===== 玩家物件 =====
-        const player = {
+        let player = {
             x: 100,                // 玩家X座標
             y: 0,                  // 玩家Y座標（於startGame()時會放到平台上）
             width: 40,             // 玩家寬度
