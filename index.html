@@ -1957,7 +1957,31 @@
                 retry: '再trytry',
                 win: '<div style="font-size:80%">命運試圖阻止你...</div><div style="font-size:80%">但你戰勝了！</div><div style="font-size:80%">請相信自己！</div><div style="font-size:80%">不管多大困難！你都能克服！</div>',
                 winScore: '<div style="font-size:95%">SCORE: 無人能定義你的分數，那些看不見的努力，才是你最真實的實力!</div>',
-                playagain: '你想再玩一次也是可以...'
+                playagain: '你想再玩一次也是可以...',
+                // Settings 多語言
+                settings: {
+                    title: '設定',
+                    selectLang: '選擇語言',
+                    music: '音樂',
+                    sfx: '音效',
+                    startX: '起始 X',
+                    startY: '起始 Y',
+                    moveSpeed: '玩家移動速度',
+                    weaponPower: '武器攻擊力',
+                    maxFps: '最大 FPS',
+                    gravity: '重力',
+                    jumpPower: '跳躍初速度',
+                    jumpExtra: '跳躍額外加速度',
+                    jumpExtraFrames: '跳躍額外加速幀數',
+                    showScore: '顯示分數',
+                    showMoved: '顯示移動',
+                    showFps: '顯示 FPS',
+                    showXy: '顯示 XY',
+                    showNxy: '顯示格數座標',
+                    showEntityCounts: '顯示物件數量',
+                    showMobileTouch: '顯示手機觸控',
+                    ok: '確定'
+                }
             },
             ja: {
                 title: '億千万億千万',
@@ -1969,7 +1993,30 @@
                 retry: 'もう一度',
                 win: '<div style="font-size:80%">運命は君を止めたが、</div><div style="font-size:80%">君が勝った！</div><div style="font-size:80%">自分を信じて！</div><div style="font-size:80%">どんな困難でも必ず乗り越えられる！</div>',
                 winScore: '<div style="font-size:95%">SCORE: 君の価値を点数で決められるわけがない！</div>',
-                playagain: 'もう一度遊びますか？'
+                playagain: 'もう一度遊びますか？',
+                settings: {
+                    title: '設定',
+                    selectLang: '言語を選択',
+                    music: '音楽',
+                    sfx: '効果音',
+                    startX: '開始 X',
+                    startY: '開始 Y',
+                    moveSpeed: 'プレイヤー移動速度',
+                    weaponPower: '武器パワー',
+                    maxFps: '最大 FPS',
+                    gravity: '重力',
+                    jumpPower: 'ジャンプ初速度',
+                    jumpExtra: 'ジャンプ追加加速度',
+                    jumpExtraFrames: 'ジャンプ追加フレーム',
+                    showScore: 'スコア表示',
+                    showMoved: '移動表示',
+                    showFps: 'FPS表示',
+                    showXy: 'XY表示',
+                    showNxy: 'グリッド座標表示',
+                    showEntityCounts: 'エンティティ数表示',
+                    showMobileTouch: 'モバイルタッチ表示',
+                    ok: 'OK'
+                }
             },
             en: {
                 title: 'Mega AI',
@@ -1981,7 +2028,30 @@
                 retry: 'Retry',
                 win: '<div style="font-size:80%">Fate tried to stop you...</div><div style="font-size:80%">but you prevailed !</div><div style="font-size:80%">Believe in yourself !</div><div style="font-size:80%">And overcome any difficulty !</div>',
                 winScore: '<div style="font-size:95%">SCORE: Scores are for tests. You\'re not a test-you\'re a force.</div>',
-                playagain: 'Play again?'
+                playagain: 'Play again?',
+                settings: {
+                    title: 'Settings',
+                    selectLang: 'Select Language',
+                    music: 'Music',
+                    sfx: 'Effects Sound',
+                    startX: 'Start X',
+                    startY: 'Start Y',
+                    moveSpeed: 'Player Move Speed',
+                    weaponPower: 'Weapon Power',
+                    maxFps: 'Max FPS',
+                    gravity: 'Gravity',
+                    jumpPower: 'Jump Power',
+                    jumpExtra: 'Jump Extra',
+                    jumpExtraFrames: 'Jump Extra Frames',
+                    showScore: 'Show Score',
+                    showMoved: 'Show Moved',
+                    showFps: 'Show FPS',
+                    showXy: 'Show XY',
+                    showNxy: 'Show NXY',
+                    showEntityCounts: 'Show Entity Counts',
+                    showMobileTouch: 'Show Mobile Touch',
+                    ok: 'OK'
+                }
             }
         };
         let currentLang = localStorage.getItem('lang') || 'zh';
@@ -2006,14 +2076,15 @@
         langToggle.onclick = () => {
             langSelect.style.display = (langSelect.style.display === 'flex') ? 'none' : 'flex';
         };
-        document.getElementById('lang-zh').onclick = () => { setLang('zh'); langSelect.style.display = 'none'; };
-        document.getElementById('lang-ja').onclick = () => { setLang('ja'); langSelect.style.display = 'none'; };
-        document.getElementById('lang-en').onclick = () => { setLang('en'); langSelect.style.display = 'none'; };
+        document.getElementById('lang-zh').onclick = () => { setLang('zh'); langSelect.style.display = 'none'; updateSettingsPanelLang(); };
+        document.getElementById('lang-ja').onclick = () => { setLang('ja'); langSelect.style.display = 'none'; updateSettingsPanelLang(); };
+        document.getElementById('lang-en').onclick = () => { setLang('en'); langSelect.style.display = 'none'; updateSettingsPanelLang(); };
         // 預設語言
         window.addEventListener('DOMContentLoaded', () => {
             setLang(currentLang);
             langSelect.style.display = 'none';
             langToggle.style.display = 'block';
+            updateSettingsPanelLang();
         });
         
         // ===== 觸控操作模擬鍵盤 =====
@@ -2226,127 +2297,178 @@
 
         // 3. 設定按鈕事件
         settingsBtn.onclick = function() {
+            // 先取得所有 input
+            var bgmOnInput = document.getElementById('setting-bgm-on');
+            var sfxOnInput = document.getElementById('setting-sfx-on');
+            var moveSpeedInput = document.getElementById('setting-move-speed');
+            var weaponPowerInput = document.getElementById('setting-weapon-power');
+            var maxFpsInput = document.getElementById('setting-max-fps');
+            var gravityInput = document.getElementById('setting-gravity');
+            var jumpPowerInput = document.getElementById('setting-jump-power');
+            var jumpExtraInput = document.getElementById('setting-jump-extra');
+            var jumpExtraFramesInput = document.getElementById('setting-jump-extra-frames');
+            var showScoreInput = document.getElementById('setting-show-score');
+            var showMovedInput = document.getElementById('setting-show-moved');
+            var showFpsInput = document.getElementById('setting-show-fps');
+            var showXYInput = document.getElementById('setting-show-xy');
+            var showNXYInput = document.getElementById('setting-show-nxy');
+            var showEntityCountsInput = document.getElementById('setting-entity-counts');
+            var showMobileTouchInput = document.getElementById('setting-show-mobile-touch');
+            var startXInput = document.getElementById('setting-start-x');
+            var startYInput = document.getElementById('setting-start-y');
             if (settingsPanel.style.display === 'block') {
-                // 面板已開啟，等同於按OK
-                isBgmOn = document.getElementById('setting-bgm-on').checked ? 1 : 0;
-                isSfxOn = document.getElementById('setting-sfx-on').checked ? 1 : 0;
-                playerMoveSpeed = parseInt(document.getElementById('setting-move-speed').value) || 1;
-                weaponPower = parseInt(document.getElementById('setting-weapon-power').value) || 1;
-                MAX_FPS = parseInt(document.getElementById('setting-max-fps').value) || 10;
-                GRAVITY = parseFloat(document.getElementById('setting-gravity').value) || 1;
-                JUMP_POWER = parseFloat(document.getElementById('setting-jump-power').value) || -11.5*1.3;
-                JUMP_EXTRA = parseFloat(document.getElementById('setting-jump-extra').value) || -0.35*1.3;
-                JUMP_EXTRA_FRAMES = parseInt(document.getElementById('setting-jump-extra-frames').value) || 12;
-                showScore = document.getElementById('setting-show-score').checked ? 1 : 0;
-                showMoved = document.getElementById('setting-show-moved').checked ? 1 : 0;
-                showFPS = document.getElementById('setting-show-fps').checked ? 1 : 0;
-                showXY = document.getElementById('setting-show-xy').checked ? 1 : 0;
-                showNXY = document.getElementById('setting-show-nxy').checked ? 1 : 0;
-                showEntityCounts = document.getElementById('setting-show-entity-counts').checked ? 1 : 0;
-                showMobileTouch = document.getElementById('setting-show-mobile-touch').checked ? 1 : 0;
+                if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
+                if (sfxOnInput) isSfxOn = sfxOnInput.checked ? 1 : 0;
+                if (moveSpeedInput) playerMoveSpeed = parseInt(moveSpeedInput.value) || 1;
+                if (weaponPowerInput) weaponPower = parseInt(weaponPowerInput.value) || 1;
+                if (maxFpsInput) MAX_FPS = parseInt(maxFpsInput.value) || 10;
+                if (gravityInput) GRAVITY = parseFloat(gravityInput.value) || 1;
+                if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || -11.5*1.3;
+                if (jumpExtraInput) JUMP_EXTRA = parseFloat(jumpExtraInput.value) || -0.35*1.3;
+                if (jumpExtraFramesInput) JUMP_EXTRA_FRAMES = parseInt(jumpExtraFramesInput.value) || 12;
+                if (showScoreInput) showScore = showScoreInput.checked ? 1 : 0;
+                if (showMovedInput) showMoved = showMovedInput.checked ? 1 : 0;
+                if (showFpsInput) showFPS = showFpsInput.checked ? 1 : 0;
+                if (showXYInput) showXY = showXYInput.checked ? 1 : 0;
+                if (showNXYInput) showNXY = showNXYInput.checked ? 1 : 0;
+                if (showEntityCountsInput) showEntityCounts = showEntityCountsInput.checked ? 1 : 0;
+                if (showMobileTouchInput) showMobileTouch = showMobileTouchInput.checked ? 1 : 0;
                 settingsPanel.style.display = 'none';
                 isPaused = false;
-                startx = parseInt(document.getElementById('setting-start-x').value) || 0;
-                starty = parseInt(document.getElementById('setting-start-y').value) || 0;
+                if (startXInput) startx = parseInt(startXInput.value) || 0;
+                if (startYInput) starty = parseInt(startYInput.value) || 0;
             } else {
-                // 顯示面板時同步 input 值
-                document.getElementById('setting-bgm-on').checked = !!isBgmOn;
-                document.getElementById('setting-sfx-on').checked = !!isSfxOn;
-                document.getElementById('setting-move-speed').value = playerMoveSpeed;
-                document.getElementById('setting-weapon-power').value = weaponPower;
-                document.getElementById('setting-max-fps').value = MAX_FPS;
-                document.getElementById('setting-gravity').value = GRAVITY;
-                document.getElementById('setting-jump-power').value = JUMP_POWER;
-                document.getElementById('setting-jump-extra').value = JUMP_EXTRA;
-                document.getElementById('setting-jump-extra-frames').value = JUMP_EXTRA_FRAMES;
-                document.getElementById('setting-show-score').checked = !!showScore;
-                document.getElementById('setting-show-moved').checked = !!showMoved;
-                document.getElementById('setting-show-fps').checked = !!showFPS;
-                document.getElementById('setting-show-xy').checked = !!showXY;
-                document.getElementById('setting-show-nxy').checked = !!showNXY;
-                document.getElementById('setting-show-entity-counts').checked = !!showEntityCounts;
-                document.getElementById('setting-show-mobile-touch').checked = !!showMobileTouch;
+                if (bgmOnInput) bgmOnInput.checked = !!isBgmOn;
+                if (sfxOnInput) sfxOnInput.checked = !!isSfxOn;
+                if (moveSpeedInput) moveSpeedInput.value = playerMoveSpeed;
+                if (weaponPowerInput) weaponPowerInput.value = weaponPower;
+                if (maxFpsInput) maxFpsInput.value = MAX_FPS;
+                if (gravityInput) gravityInput.value = GRAVITY;
+                if (jumpPowerInput) jumpPowerInput.value = JUMP_POWER;
+                if (jumpExtraInput) jumpExtraInput.value = JUMP_EXTRA;
+                if (jumpExtraFramesInput) jumpExtraFramesInput.value = JUMP_EXTRA_FRAMES;
+                if (showScoreInput) showScoreInput.checked = !!showScore;
+                if (showMovedInput) showMovedInput.checked = !!showMoved;
+                if (showFpsInput) showFpsInput.checked = !!showFPS;
+                if (showXYInput) showXYInput.checked = !!showXY;
+                if (showNXYInput) showNXYInput.checked = !!showNXY;
+                if (showEntityCountsInput) showEntityCountsInput.checked = !!showEntityCounts;
+                if (showMobileTouchInput) showMobileTouchInput.checked = !!showMobileTouch;
                 settingsPanel.style.display = 'block';
-                isPaused = true; // 開啟設定時暫停
-                document.getElementById('setting-start-x').value = startx;
-                document.getElementById('setting-start-y').value = starty;
+                isPaused = true;
+                if (startXInput) startXInput.value = startx;
+                if (startYInput) startYInput.value = starty;
             }
         };
-        document.getElementById('settings-close-btn').onclick = function() {
-            // 關閉時才套用新值
-            isBgmOn = document.getElementById('setting-bgm-on').checked ? 1 : 0;
-            isSfxOn = document.getElementById('setting-sfx-on').checked ? 1 : 0;
-            playerMoveSpeed = parseInt(document.getElementById('setting-move-speed').value) || 1;
-            weaponPower = parseInt(document.getElementById('setting-weapon-power').value) || 1;
-            MAX_FPS = parseInt(document.getElementById('setting-max-fps').value) || 10;
-            GRAVITY = parseFloat(document.getElementById('setting-gravity').value) || 1;
-            JUMP_POWER = parseFloat(document.getElementById('setting-jump-power').value) || -11.5*1.3;
-            JUMP_EXTRA = parseFloat(document.getElementById('setting-jump-extra').value) || -0.35*1.3;
-            JUMP_EXTRA_FRAMES = parseInt(document.getElementById('setting-jump-extra-frames').value) || 12;
-            // 新增：checkbox 狀態同步
-            showScore = document.getElementById('setting-show-score').checked ? 1 : 0;
-            showMoved = document.getElementById('setting-show-moved').checked ? 1 : 0;
-            showFPS = document.getElementById('setting-show-fps').checked ? 1 : 0;
-            showXY = document.getElementById('setting-show-xy').checked ? 1 : 0;
-            showNXY = document.getElementById('setting-show-nxy').checked ? 1 : 0;
-            showEntityCounts = document.getElementById('setting-show-entity-counts').checked ? 1 : 0;
-            showMobileTouch = document.getElementById('setting-show-mobile-touch').checked ? 1 : 0;
-            settingsPanel.style.display = 'none';
-            isPaused = false; // 關閉設定時恢復
-            startx = parseInt(document.getElementById('setting-start-x').value) || 0;
-            starty = parseInt(document.getElementById('setting-start-y').value) || 0;
-        };
+        var settingsCloseBtn = document.getElementById('settings-close-btn');
+        if (settingsCloseBtn) {
+            settingsCloseBtn.onclick = function() {
+                var bgmOnInput = document.getElementById('setting-bgm-on');
+                var sfxOnInput = document.getElementById('setting-sfx-on');
+                var moveSpeedInput = document.getElementById('setting-move-speed');
+                var weaponPowerInput = document.getElementById('setting-weapon-power');
+                var maxFpsInput = document.getElementById('setting-max-fps');
+                var gravityInput = document.getElementById('setting-gravity');
+                var jumpPowerInput = document.getElementById('setting-jump-power');
+                var jumpExtraInput = document.getElementById('setting-jump-extra');
+                var jumpExtraFramesInput = document.getElementById('setting-jump-extra-frames');
+                var showScoreInput = document.getElementById('setting-show-score');
+                var showMovedInput = document.getElementById('setting-show-moved');
+                var showFpsInput = document.getElementById('setting-show-fps');
+                var showXYInput = document.getElementById('setting-show-xy');
+                var showNXYInput = document.getElementById('setting-show-nxy');
+                var showEntityCountsInput = document.getElementById('setting-entity-counts');
+                var showMobileTouchInput = document.getElementById('setting-show-mobile-touch');
+                var startXInput = document.getElementById('setting-start-x');
+                var startYInput = document.getElementById('setting-start-y');
+                if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
+                if (sfxOnInput) isSfxOn = sfxOnInput.checked ? 1 : 0;
+                if (moveSpeedInput) playerMoveSpeed = parseInt(moveSpeedInput.value) || 1;
+                if (weaponPowerInput) weaponPower = parseInt(weaponPowerInput.value) || 1;
+                if (maxFpsInput) MAX_FPS = parseInt(maxFpsInput.value) || 10;
+                if (gravityInput) GRAVITY = parseFloat(gravityInput.value) || 1;
+                if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || -11.5*1.3;
+                if (jumpExtraInput) JUMP_EXTRA = parseFloat(jumpExtraInput.value) || -0.35*1.3;
+                if (jumpExtraFramesInput) JUMP_EXTRA_FRAMES = parseInt(jumpExtraFramesInput.value) || 12;
+                if (showScoreInput) showScore = showScoreInput.checked ? 1 : 0;
+                if (showMovedInput) showMoved = showMovedInput.checked ? 1 : 0;
+                if (showFpsInput) showFPS = showFpsInput.checked ? 1 : 0;
+                if (showXYInput) showXY = showXYInput.checked ? 1 : 0;
+                if (showNXYInput) showNXY = showNXYInput.checked ? 1 : 0;
+                if (showEntityCountsInput) showEntityCounts = showEntityCountsInput.checked ? 1 : 0;
+                if (showMobileTouchInput) showMobileTouch = showMobileTouchInput.checked ? 1 : 0;
+                settingsPanel.style.display = 'none';
+                isPaused = false; // 關閉設定時恢復
+                if (startXInput) startx = parseInt(startXInput.value) || 0;
+                if (startYInput) starty = parseInt(startYInput.value) || 0;
+            };
+        }
         // 新增：checkbox 變動即時同步
         ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch'].forEach(id => {
-            document.getElementById(id).addEventListener('change', function() {
-                switch(id) {
-                    case 'setting-show-score': showScore = this.checked ? 1 : 0; break;
-                    case 'setting-show-moved': showMoved = this.checked ? 1 : 0; break;
-                    case 'setting-show-fps': showFPS = this.checked ? 1 : 0; break;
-                    case 'setting-show-xy': showXY = this.checked ? 1 : 0; break;
-                    case 'setting-show-nxy': showNXY = this.checked ? 1 : 0; break;
-                    case 'setting-show-entity-counts': showEntityCounts = this.checked ? 1 : 0; break;
-                    case 'setting-show-mobile-touch': showMobileTouch = this.checked ? 1 : 0; updateMobileTouchDisplay(); break;
-                }
-            });
-        });
-        // 音樂/效果音即時同步
-        document.getElementById('setting-bgm-on').addEventListener('change', function() {
-            isBgmOn = this.checked ? 1 : 0;
-            // 立即控制 BGM/OUTRO
-            const bgm = document.getElementById('bgm');
-            const outroAudio = document.getElementById('outro-audio');
-            if (isBgmOn) {
-                if (bgm && gameRunning) { bgm.currentTime = 0; bgm.volume = VOLUME_BGM; bgm.play(); }
-            } else {
-                if (bgm) { bgm.pause(); }
-                if (outroAudio) { outroAudio.pause(); }
+            var el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('change', function() {
+                    switch(id) {
+                        case 'setting-show-score': showScore = this.checked ? 1 : 0; break;
+                        case 'setting-show-moved': showMoved = this.checked ? 1 : 0; break;
+                        case 'setting-show-fps': showFPS = this.checked ? 1 : 0; break;
+                        case 'setting-show-xy': showXY = this.checked ? 1 : 0; break;
+                        case 'setting-show-nxy': showNXY = this.checked ? 1 : 0; break;
+                        case 'setting-show-entity-counts': showEntityCounts = this.checked ? 1 : 0; break;
+                        case 'setting-show-mobile-touch': showMobileTouch = this.checked ? 1 : 0; updateMobileTouchDisplay(); break;
+                    }
+                });
             }
         });
-        document.getElementById('setting-sfx-on').addEventListener('change', function() {
-            isSfxOn = this.checked ? 1 : 0;
-        });
-
+        // 音樂/效果音即時同步
+        var bgmOnInput2 = document.getElementById('setting-bgm-on');
+        if (bgmOnInput2) {
+            bgmOnInput2.addEventListener('change', function() {
+                isBgmOn = this.checked ? 1 : 0;
+                // 立即控制 BGM/OUTRO
+                const bgm = document.getElementById('bgm');
+                const outroAudio = document.getElementById('outro-audio');
+                if (isBgmOn) {
+                    if (bgm && gameRunning) { bgm.currentTime = 0; bgm.volume = VOLUME_BGM; bgm.play(); }
+                } else {
+                    if (bgm) { bgm.pause(); }
+                    if (outroAudio) { outroAudio.pause(); }
+                }
+            });
+        }
+        var sfxOnInput2 = document.getElementById('setting-sfx-on');
+        if (sfxOnInput2) {
+            sfxOnInput2.addEventListener('change', function() {
+                isSfxOn = this.checked ? 1 : 0;
+            });
+        }
         // 4. 參數 input 綁定（移除即時套用）
-        document.getElementById('setting-move-speed').addEventListener('input', function() {
+        var moveSpeedInput2 = document.getElementById('setting-move-speed');
+        if (moveSpeedInput2) moveSpeedInput2.addEventListener('input', function() {
             playerMoveSpeed = parseInt(this.value) || 1;
         });
-        document.getElementById('setting-weapon-power').addEventListener('input', function() {
+        var weaponPowerInput2 = document.getElementById('setting-weapon-power');
+        if (weaponPowerInput2) weaponPowerInput2.addEventListener('input', function() {
             weaponPower = parseInt(this.value) || 1;
         });
-        document.getElementById('setting-max-fps').addEventListener('input', function() {
+        var maxFpsInput2 = document.getElementById('setting-max-fps');
+        if (maxFpsInput2) maxFpsInput2.addEventListener('input', function() {
             MAX_FPS = parseInt(this.value) || 10;
         });
-        document.getElementById('setting-gravity').addEventListener('input', function() {
+        var gravityInput2 = document.getElementById('setting-gravity');
+        if (gravityInput2) gravityInput2.addEventListener('input', function() {
             GRAVITY = parseFloat(this.value) || 1;
         });
-        document.getElementById('setting-jump-power').addEventListener('input', function() {
+        var jumpPowerInput2 = document.getElementById('setting-jump-power');
+        if (jumpPowerInput2) jumpPowerInput2.addEventListener('input', function() {
             JUMP_POWER = parseFloat(this.value) || -11.5*1.3;
         });
-        document.getElementById('setting-jump-extra').addEventListener('input', function() {
+        var jumpExtraInput2 = document.getElementById('setting-jump-extra');
+        if (jumpExtraInput2) jumpExtraInput2.addEventListener('input', function() {
             JUMP_EXTRA = parseFloat(this.value) || -0.35*1.3;
         });
-        document.getElementById('setting-jump-extra-frames').addEventListener('input', function() {
+        var jumpExtraFramesInput2 = document.getElementById('setting-jump-extra-frames');
+        if (jumpExtraFramesInput2) jumpExtraFramesInput2.addEventListener('input', function() {
             JUMP_EXTRA_FRAMES = parseInt(this.value) || 12;
         });
 
@@ -2442,21 +2564,74 @@
 
         let isWinInvincible = false; // 勝利畫面無敵狀態
 
-        // 新增：設定面板語言切換
-        // ['settings-lang-zh','settings-lang-ja','settings-lang-en'].forEach(function(id){
-        //     document.getElementById(id).onclick = function(){
-        //         if(id==='settings-lang-zh') setLang('zh');
-        //         if(id==='settings-lang-ja') setLang('ja');
-        //         if(id==='settings-lang-en') setLang('en');
-        //     };
-        // });
 
         // 新增：設定面板語言下拉選單切換
         var settingsLangSelect = document.getElementById('settings-lang-select');
         settingsLangSelect.value = currentLang;
         settingsLangSelect.onchange = function() {
             setLang(this.value);
+            updateSettingsPanelLang();
         };
+
+        // 新增：根據語言切換設定面板所有文字
+        function updateSettingsPanelLang() {
+            const L = LANGUAGES[currentLang].settings;
+            document.querySelector('#settings-panel h2').textContent = L.title;
+            document.getElementById('settings-lang-label').textContent = L.selectLang;
+            // label for bgm
+            var bgmLabel = document.getElementById('setting-bgm-on').parentNode;
+            if (bgmLabel) {
+                var bgmInput = document.getElementById('setting-bgm-on');
+                bgmLabel.innerHTML = '';
+                if (bgmInput) bgmLabel.appendChild(bgmInput);
+                bgmLabel.append(' ' + L.music);
+            }
+            var sfxLabel = document.getElementById('setting-sfx-on').parentNode;
+            if (sfxLabel) {
+                var sfxInput = document.getElementById('setting-sfx-on');
+                sfxLabel.innerHTML = '';
+                if (sfxInput) sfxLabel.appendChild(sfxInput);
+                sfxLabel.append(' ' + L.sfx);
+            }
+            // 其他 input + label
+            function updateInputLabel(inputId, labelText) {
+                var input = document.getElementById(inputId);
+                if (input && input.parentNode) {
+                    var label = input.parentNode;
+                    // 只更新第一個文字節點
+                    if (label.childNodes.length > 0 && label.childNodes[0].nodeType === 3) {
+                        label.childNodes[0].textContent = labelText + ' ';
+                    }
+                }
+            }
+            updateInputLabel('setting-start-x', L.startX);
+            updateInputLabel('setting-start-y', L.startY);
+            updateInputLabel('setting-move-speed', L.moveSpeed);
+            updateInputLabel('setting-weapon-power', L.weaponPower);
+            updateInputLabel('setting-max-fps', L.maxFps);
+            updateInputLabel('setting-gravity', L.gravity);
+            updateInputLabel('setting-jump-power', L.jumpPower);
+            updateInputLabel('setting-jump-extra', L.jumpExtra);
+            updateInputLabel('setting-jump-extra-frames', L.jumpExtraFrames);
+            // Checkbox
+            function updateCheckboxLabel(inputId, labelText) {
+                var input = document.getElementById(inputId);
+                if (input && input.parentNode) {
+                    var label = input.parentNode;
+                    label.innerHTML = '';
+                    label.appendChild(input);
+                    label.append(' ' + labelText);
+                }
+            }
+            updateCheckboxLabel('setting-show-score', L.showScore);
+            updateCheckboxLabel('setting-show-moved', L.showMoved);
+            updateCheckboxLabel('setting-show-fps', L.showFps);
+            updateCheckboxLabel('setting-show-xy', L.showXy);
+            updateCheckboxLabel('setting-show-nxy', L.showNxy);
+            updateCheckboxLabel('setting-show-entity-counts', L.showEntityCounts);
+            updateCheckboxLabel('setting-show-mobile-touch', L.showMobileTouch);
+            document.getElementById('settings-close-btn').textContent = L.ok;
+        }
     </script>
 </body>
 </html>
