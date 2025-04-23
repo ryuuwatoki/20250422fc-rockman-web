@@ -479,6 +479,7 @@
         // 新增floor圖片物件
         const floorImg = new Image(); floorImg.src = 'img/01floor.png';
         const floorBossImg = new Image(); floorBossImg.src = 'img/02floor.png';
+        
         // FLY_RED 兩張動畫圖
         const flyRedImgs = [
             new Image(),
@@ -486,6 +487,38 @@
         ];
         flyRedImgs[0].src = 'img/e01-1.png';
         flyRedImgs[1].src = 'img/e01-2.png';
+
+        // FLY_ORANGE 兩張動畫圖
+        const flyOrangeImgs = [
+            new Image(),
+            new Image()
+        ];
+        flyOrangeImgs[0].src = 'img/e02-1.png';
+        flyOrangeImgs[1].src = 'img/e02-2.png';
+
+        // GROUND_RED 兩張動畫圖
+        const groundRedImgs = [
+            new Image(),
+            new Image()
+        ];
+        groundRedImgs[0].src = 'img/e03-1.png';
+        groundRedImgs[1].src = 'img/e03-2.png';
+
+        // GROUND_ORANGE 兩張動畫圖
+        const groundOrangeImgs = [
+            new Image(),
+            new Image()
+        ];
+        groundOrangeImgs[0].src = 'img/e04-1.png';
+        groundOrangeImgs[1].src = 'img/e04-2.png';
+
+        // GROUND_PINK 兩張動畫圖（同 GROUND_ORANGE）
+        const groundPinkImgs = [
+            new Image(),
+            new Image()
+        ];
+        groundPinkImgs[0].src = 'img/e05-1.png';
+        groundPinkImgs[1].src = 'img/e05-2.png';
 
 
 
@@ -863,6 +896,13 @@
                     // 大幅度上下
                     if (!enemy.floatBaseY) enemy.floatBaseY = enemy.y;
                     enemy.y = enemy.floatBaseY + Math.sin(Date.now() / 300 + enemy._id) * 48;
+                    // 動畫
+                    if (enemy._animFrame === undefined) enemy._animFrame = 0;
+                    if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
+                    enemy._animFrame++;
+                    if (enemy._animFrame % 20 === 0) {
+                        enemy._imgIndex = 1 - enemy._imgIndex;
+                    }
                 },
                 isFlying: true, // 是否為飛行敵人
                 eye: { color: '#222', type: 'circle' } // 眼睛樣式
@@ -875,6 +915,13 @@
                 score: 50, // 擊殺得分
                 behavior: function(enemy) { // 行為函數
                     enemy.x -= enemy.speed;
+                    // 動畫
+                    if (enemy._animFrame === undefined) enemy._animFrame = 0;
+                    if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
+                    enemy._animFrame++;
+                    if (enemy._animFrame % 20 === 0) {
+                        enemy._imgIndex = 1 - enemy._imgIndex;
+                    }
                 },
                 isFlying: false, // 是否為飛行敵人
                 eye: { color: '#222', type: 'semi' } // 眼睛樣式
@@ -889,6 +936,13 @@
                     if (enemy.onGround && Math.random() < 0.02) {
                         enemy.vy = -12;
                         enemy.onGround = false;
+                    }
+                    // 動畫
+                    if (enemy._animFrame === undefined) enemy._animFrame = 0;
+                    if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
+                    enemy._animFrame++;
+                    if (enemy._animFrame % 20 === 0) {
+                        enemy._imgIndex = 1 - enemy._imgIndex;
                     }
                 },
                 isFlying: false, // 是否為飛行敵人
@@ -924,6 +978,13 @@
                             });
                         }
                         enemy.shootCooldown = enemy.shootDelay;
+                    }
+                    // 動畫
+                    if (enemy._animFrame === undefined) enemy._animFrame = 0;
+                    if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
+                    enemy._animFrame++;
+                    if (enemy._animFrame % 20 === 0) {
+                        enemy._imgIndex = 1 - enemy._imgIndex;
                     }
                 },
                 isFlying: false, // 是否為飛行敵人
@@ -1384,6 +1445,22 @@
                     enemy._animFrame = 0;
                     enemy._imgIndex = 0;
                 }
+                if (type === ENEMY_TYPES.FLY_ORANGE) {
+                    enemy._animFrame = 0;
+                    enemy._imgIndex = 0;
+                }
+                if (type === ENEMY_TYPES.GROUND_RED) {
+                    enemy._animFrame = 0;
+                    enemy._imgIndex = 0;
+                }
+                if (type === ENEMY_TYPES.GROUND_ORANGE) {
+                    enemy._animFrame = 0;
+                    enemy._imgIndex = 0;
+                }
+                if (type === ENEMY_TYPES.GROUND_PINK) {
+                    enemy._animFrame = 0;
+                    enemy._imgIndex = 0;
+                }
                 enemies.push(enemy);
             }
             
@@ -1744,9 +1821,12 @@
                 }
                 if (enemy.isFlying) {
                     // FLY_RED 用圖片動畫
-                    if (enemy.color === '#f44') {
+                    if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
                         const idx = enemy._imgIndex || 0;
                         ctx.drawImage(flyRedImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
+                    } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
+                        const idx = enemy._imgIndex || 0;
+                        ctx.drawImage(flyOrangeImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
                     } else {
                         // 其他飛行敵人維持原本畫圓
                         ctx.save();
@@ -1762,21 +1842,38 @@
                         ctx.restore();
                     }
                 } else {
-                    // 路面敵人：半圓（朝右）
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.arc(enemy.x + enemy.width/2, enemy.y + enemy.height, enemy.width/2, Math.PI, 0, false);
-                    ctx.lineTo(enemy.x + enemy.width, enemy.y + enemy.height);
-                    ctx.lineTo(enemy.x, enemy.y + enemy.height);
-                    ctx.closePath();
-                    ctx.fillStyle = enemy.color;
-                    ctx.fill();
-                    // 眼睛（左前方）
-                    ctx.beginPath();
-                    ctx.arc(enemy.x + enemy.width*0.25, enemy.y + enemy.height*0.75, enemy.width/8, 0, Math.PI*2);
-                    ctx.fillStyle = '#fff';
-                    ctx.fill();
-                    ctx.restore();
+                    // GROUND_RED
+                    if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
+                        const idx = enemy._imgIndex || 0;
+                        ctx.drawImage(groundRedImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
+                    }
+                    // GROUND_ORANGE
+                    else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
+                        const idx = enemy._imgIndex || 0;
+                        ctx.drawImage(groundOrangeImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
+                    }
+                    // GROUND_PINK
+                    else if (enemy.color === '#f8c' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
+                        const idx = enemy._imgIndex || 0;
+                        ctx.drawImage(groundPinkImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
+                    }
+                    else {
+                        // 其他地面敵人維持原本半圓
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.arc(enemy.x + enemy.width/2, enemy.y + enemy.height, enemy.width/2, Math.PI, 0, false);
+                        ctx.lineTo(enemy.x + enemy.width, enemy.y + enemy.height);
+                        ctx.lineTo(enemy.x, enemy.y + enemy.height);
+                        ctx.closePath();
+                        ctx.fillStyle = enemy.color;
+                        ctx.fill();
+                        // 眼睛（左前方）
+                        ctx.beginPath();
+                        ctx.arc(enemy.x + enemy.width*0.25, enemy.y + enemy.height*0.75, enemy.width/8, 0, Math.PI*2);
+                        ctx.fillStyle = '#fff';
+                        ctx.fill();
+                        ctx.restore();
+                    }
                 }
                 ctx.globalAlpha = 1;
                 // 在 render() 繪製敵人時，若 enemy.dying，根據 dyingFrame 閃爍
