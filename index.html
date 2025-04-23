@@ -846,7 +846,7 @@
                     if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
                     enemy._animFrame++;
                     // 幾幀切換動畫（這裡是6幀切換一次）
-                    if (enemy._animFrame % 6 === 0) {
+                    if (enemy._animFrame % 20 === 0) {
                         enemy._imgIndex = 1 - enemy._imgIndex;
                     }
                 },
@@ -1361,8 +1361,8 @@
                 const enemy = {
                     x: camera.x + camera.width + 50, // 初始X座標（生成在鏡頭右側）
                     y: type.isFlying ? (Math.random() * (WORLD_HEIGHT - 200) + 50) : (Math.random() * (WORLD_HEIGHT - 100) + 50), // 初始Y座標
-                    width: 30, // 寬度
-                    height: 30, // 高度
+                    width: 35, // 寬度
+                    height: 35, // 高度
                     speed: type.speed, // 移動速度
                     health: 3, // 當前血量
                     maxHealth: 3, // 最大血量
