@@ -479,7 +479,7 @@
         // 新增floor圖片物件
         const floorImg = new Image(); floorImg.src = 'img/01floor.png';
         const floorBossImg = new Image(); floorBossImg.src = 'img/02floor.png';
-        
+
         // FLY_RED 兩張動畫圖
         const flyRedImgs = [
             new Image(),
@@ -491,10 +491,12 @@
         // FLY_ORANGE 兩張動畫圖
         const flyOrangeImgs = [
             new Image(),
+            new Image(),
             new Image()
         ];
         flyOrangeImgs[0].src = 'img/e02-1.png';
         flyOrangeImgs[1].src = 'img/e02-2.png';
+        flyOrangeImgs[2].src = 'img/e02-3.png';
 
         // GROUND_RED 兩張動畫圖
         const groundRedImgs = [
@@ -507,10 +509,15 @@
         // GROUND_ORANGE 兩張動畫圖
         const groundOrangeImgs = [
             new Image(),
+            new Image(),
+            new Image(),
             new Image()
         ];
         groundOrangeImgs[0].src = 'img/e04-1.png';
         groundOrangeImgs[1].src = 'img/e04-2.png';
+        groundOrangeImgs[2].src = 'img/e04-3.png';
+        groundOrangeImgs[3].src = 'img/e04-4.png';
+
 
         // GROUND_PINK 兩張動畫圖（同 GROUND_ORANGE）
         const groundPinkImgs = [
@@ -520,7 +527,15 @@
         groundPinkImgs[0].src = 'img/e05-1.png';
         groundPinkImgs[1].src = 'img/e05-2.png';
 
-
+        // ===== 玩家圖片載入 =====
+        const playerImgs = [
+            new Image(), // 0: 靜止
+            new Image(), // 1: 移動動畫
+            new Image(), // 2: 發射
+        ];
+        playerImgs[0].src = 'img/p1.png';
+        playerImgs[1].src = 'img/p2.png';
+        playerImgs[2].src = 'img/p3.png';
 
         // 以格數設計的平台資料 地板
         const platformGrid = [
@@ -704,8 +719,8 @@
         let player = {
             x: startx,                // 玩家X座標（連動 startx）
             y: starty,                // 玩家Y座標（連動 starty）
-            width: 40,             // 玩家寬度
-            height: 40,            // 玩家高度
+            width: 50,             // 玩家寬度
+            height: 70,            // 玩家高度
             get speed() { return playerMoveSpeed; }, // 玩家移動速度（取自全域變數）
             vy: 0,                 // 垂直速度
             onGround: false,       // 是否在地面上
@@ -901,7 +916,7 @@
                     if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
                     enemy._animFrame++;
                     if (enemy._animFrame % 20 === 0) {
-                        enemy._imgIndex = 1 - enemy._imgIndex;
+                        enemy._imgIndex = (enemy._imgIndex + 1) % 3; // 0,1,2循環
                     }
                 },
                 isFlying: true, // 是否為飛行敵人
@@ -941,8 +956,8 @@
                     if (enemy._animFrame === undefined) enemy._animFrame = 0;
                     if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
                     enemy._animFrame++;
-                    if (enemy._animFrame % 20 === 0) {
-                        enemy._imgIndex = 1 - enemy._imgIndex;
+                    if (enemy._animFrame % 10 === 0) {
+                        enemy._imgIndex = (enemy._imgIndex + 1) % 4; // 0,1,2,3循環
                     }
                 },
                 isFlying: false, // 是否為飛行敵人
@@ -1444,22 +1459,36 @@
                 if (type === ENEMY_TYPES.FLY_RED) {
                     enemy._animFrame = 0;
                     enemy._imgIndex = 0;
+                    enemy.width = 55;   // 設定寬度
+                    enemy.height = 55;  // 設定高度
+
                 }
                 if (type === ENEMY_TYPES.FLY_ORANGE) {
                     enemy._animFrame = 0;
                     enemy._imgIndex = 0;
+                    enemy.width = 70;   // 設定寬度
+                    enemy.height = 70;  // 設定高度
                 }
                 if (type === ENEMY_TYPES.GROUND_RED) {
                     enemy._animFrame = 0;
                     enemy._imgIndex = 0;
+                    enemy.width = 60;   // 設定寬度
+                    enemy.height = 60;  // 設定高度
+
                 }
                 if (type === ENEMY_TYPES.GROUND_ORANGE) {
                     enemy._animFrame = 0;
                     enemy._imgIndex = 0;
+                    enemy.width = 60;   // 設定寬度
+                    enemy.height = 60;  // 設定高度
+
                 }
                 if (type === ENEMY_TYPES.GROUND_PINK) {
                     enemy._animFrame = 0;
                     enemy._imgIndex = 0;
+                    enemy.width = 40;   // 設定寬度
+                    enemy.height = 40;  // 設定高度
+
                 }
                 enemies.push(enemy);
             }
@@ -1762,26 +1791,25 @@
                 if (isWinInvincible) {
                     ctx.globalAlpha = 0.2;
                 }
-                if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
-                    if (Math.floor(Date.now() / 100) % 2 === 0) {
-                        ctx.fillStyle = '#cfbb3a'; // 淺黃色
+                // 狀態判斷
+                let imgToDraw = playerImgs[0]; // 預設靜止
+                if (player.isShooting) {
+                    imgToDraw = playerImgs[2]; // 發射
+                } else if (keys.ArrowLeft || keys.ArrowRight) {
+                    // 左右移動時切換 p1/p2 動畫
+                    if (!window._playerMoveAnimFrame) window._playerMoveAnimFrame = 0;
+                    window._playerMoveAnimFrame++;
+                    // 每 8 幀切換一次
+                    if (Math.floor(window._playerMoveAnimFrame / 8) % 2 === 0) {
+                        imgToDraw = playerImgs[0];
                     } else {
-                        ctx.fillStyle = player.color;
+                        imgToDraw = playerImgs[1];
                     }
                 } else {
-                    ctx.fillStyle = player.color;
+                    window._playerMoveAnimFrame = 0;
                 }
                 if (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0) {
-                    ctx.fillRect(player.x, player.y, player.width, player.height);
-                    // 只畫大眼白，不畫眼珠
-                    ctx.beginPath();
-                    if (player.direction === 1) {
-                        ctx.ellipse(player.x + player.width - 12, player.y + 18, 8, 10, 0, 0, Math.PI * 2);
-                    } else {
-                        ctx.ellipse(player.x + 12, player.y + 18, 8, 10, 0, 0, Math.PI * 2);
-                    }
-                    ctx.fillStyle = '#fff';
-                    ctx.fill();
+                    ctx.drawImage(imgToDraw, player.x, player.y, player.width, player.height);
                 }
                 ctx.globalAlpha = 1;
             }
