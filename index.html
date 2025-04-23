@@ -2096,6 +2096,10 @@
                 <label style="margin-left:16px;"><input type="checkbox" id="setting-sfx-on"> Effects Sound</label>
             </div>
             <div style="margin-bottom:16px;">
+                <label>Start X <input id="setting-start-x" type="number" min="0" max="5400" step="1" style="width:60px;"> </label>
+                <label style="margin-left:16px;">Start Y <input id="setting-start-y" type="number" min="0" max="500" step="1" style="width:60px;"> </label>
+            </div>
+            <div style="margin-bottom:16px;">
                 <label>Player Move Speed <input id="setting-move-speed" type="number" min="1" max="100" step="1" style="width:60px;"> </label>
             </div>
             <div style="margin-bottom:16px;">
@@ -2157,6 +2161,8 @@
                 showMobileTouch = document.getElementById('setting-show-mobile-touch').checked ? 1 : 0;
                 settingsPanel.style.display = 'none';
                 isPaused = false;
+                startx = parseInt(document.getElementById('setting-start-x').value) || 0;
+                starty = parseInt(document.getElementById('setting-start-y').value) || 0;
             } else {
                 // 顯示面板時同步 input 值
                 document.getElementById('setting-bgm-on').checked = !!isBgmOn;
@@ -2177,6 +2183,8 @@
                 document.getElementById('setting-show-mobile-touch').checked = !!showMobileTouch;
                 settingsPanel.style.display = 'block';
                 isPaused = true; // 開啟設定時暫停
+                document.getElementById('setting-start-x').value = startx;
+                document.getElementById('setting-start-y').value = starty;
             }
         };
         document.getElementById('settings-close-btn').onclick = function() {
@@ -2200,6 +2208,8 @@
             showMobileTouch = document.getElementById('setting-show-mobile-touch').checked ? 1 : 0;
             settingsPanel.style.display = 'none';
             isPaused = false; // 關閉設定時恢復
+            startx = parseInt(document.getElementById('setting-start-x').value) || 0;
+            starty = parseInt(document.getElementById('setting-start-y').value) || 0;
         };
         // 新增：checkbox 變動即時同步
         ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch'].forEach(id => {
@@ -2337,6 +2347,13 @@
         }
         // 預設載入時也要呼叫一次
         updateMobileTouchDisplay();
+
+        document.getElementById('setting-start-x').addEventListener('input', function() {
+            startx = parseInt(this.value) || 0;
+        });
+        document.getElementById('setting-start-y').addEventListener('input', function() {
+            starty = parseInt(this.value) || 0;
+        });
     </script>
 </body>
 </html>
