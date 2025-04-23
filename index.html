@@ -423,6 +423,8 @@
 
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
+        // 是否自動水平翻轉角色圖片（true=按方向鍵時自動翻轉，false=永遠朝右），預設true
+        let autoFlipPlayer = true;
 
         let startx = 0;
         let starty = 0;
@@ -1823,13 +1825,26 @@
                 const imgDrawHeight = 60; //玩家實際高度
                 // 以底部對齊碰撞箱，左右置中
                 if (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0) {
-                    ctx.drawImage(
-                        imgToDraw,
-                        player.x + (player.width - imgDrawWidth) / 2,
-                        player.y + (player.height - imgDrawHeight),
-                        imgDrawWidth,
-                        imgDrawHeight
-                    );
+                    ctx.save();
+                    if (autoFlipPlayer && player.direction === -1) {
+                        ctx.translate(player.x + player.width / 2, player.y + player.height - imgDrawHeight / 2);
+                        ctx.scale(-1, 1);
+                        ctx.drawImage(
+                            imgToDraw,
+                            -(imgDrawWidth / 2),
+                            -(imgDrawHeight / 2),
+                            imgDrawWidth,
+                            imgDrawHeight
+                        );
+                    } else {
+                        ctx.drawImage(
+                            imgToDraw,
+                            player.x + (player.width - imgDrawWidth) / 2,
+                            player.y + (player.height - imgDrawHeight),
+                            imgDrawWidth,
+                            imgDrawHeight
+                        );
+                    }
                     // ===== 集氣時黃色閃爍遮罩 =====
                     if (charging && chargeFrame >= 30) { // 只有集氣超過0.5秒才閃爍
                         if (Math.floor(Date.now() / 100) % 2 === 0) { // 每0.1秒閃爍
@@ -1848,6 +1863,7 @@
                             ctx.restore();
                         }
                     }
+                    ctx.restore();
                 }
                 ctx.globalAlpha = 1;
                 // 發射動畫幀數遞減
@@ -2252,6 +2268,7 @@
                     showNxy: '顯示格數座標',
                     showEntityCounts: '顯示物件數量',
                     showMobileTouch: '顯示手機觸控',
+                    autoFlipPlayer: '自動翻轉角色',
                     ok: '確定'
                 }
             },
@@ -2287,6 +2304,7 @@
                     showNxy: 'グリッド座標表示',
                     showEntityCounts: 'エンティティ数表示',
                     showMobileTouch: 'モバイルタッチ表示',
+                    autoFlipPlayer: '自動反転キャラ',
                     ok: 'OK'
                 }
             },
@@ -2322,6 +2340,7 @@
                     showNxy: 'Show NXY',
                     showEntityCounts: 'Show Entity Counts',
                     showMobileTouch: 'Show Mobile Touch',
+                    autoFlipPlayer: 'Auto Flip Character',
                     ok: 'OK'
                 }
             }
@@ -2561,6 +2580,10 @@
             <div style="margin-bottom:16px;">
                 <label><input type="checkbox" id="setting-show-mobile-touch"> Show Mobile Touch</label>
             </div>
+
+            <div style="margin-bottom:16px;">
+                <label><input type="checkbox" id="setting-auto-flip-player"> 自動翻轉角色</label>
+            </div>
             
             <div style="text-align:center;margin-top:18px;">
                 <button id="settings-close-btn" style="padding:6px 24px;font-size:16px;background:#4af;color:#fff;border:none;border-radius:6px;">OK</button>
@@ -2592,6 +2615,7 @@
             var showMobileTouchInput = document.getElementById('setting-show-mobile-touch');
             var startXInput = document.getElementById('setting-start-x');
             var startYInput = document.getElementById('setting-start-y');
+            var autoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
             if (settingsPanel.style.display === 'block') {
                 if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
                 if (sfxOnInput) isSfxOn = sfxOnInput.checked ? 1 : 0;
@@ -2609,6 +2633,7 @@
                 if (showNXYInput) showNXY = showNXYInput.checked ? 1 : 0;
                 if (showEntityCountsInput) showEntityCounts = showEntityCountsInput.checked ? 1 : 0;
                 if (showMobileTouchInput) showMobileTouch = showMobileTouchInput.checked ? 1 : 0;
+                if (autoFlipPlayerInput) autoFlipPlayer = autoFlipPlayerInput.checked;
                 settingsPanel.style.display = 'none';
                 isPaused = false;
                 if (startXInput) startx = parseInt(startXInput.value) || 0;
@@ -2630,6 +2655,7 @@
                 if (showNXYInput) showNXYInput.checked = !!showNXY;
                 if (showEntityCountsInput) showEntityCountsInput.checked = !!showEntityCounts;
                 if (showMobileTouchInput) showMobileTouchInput.checked = !!showMobileTouch;
+                if (autoFlipPlayerInput) autoFlipPlayerInput.checked = !!autoFlipPlayer;
                 settingsPanel.style.display = 'block';
                 isPaused = true;
                 if (startXInput) startXInput.value = startx;
@@ -2657,6 +2683,7 @@
                 var showMobileTouchInput = document.getElementById('setting-show-mobile-touch');
                 var startXInput = document.getElementById('setting-start-x');
                 var startYInput = document.getElementById('setting-start-y');
+                var autoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
                 if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
                 if (sfxOnInput) isSfxOn = sfxOnInput.checked ? 1 : 0;
                 if (moveSpeedInput) playerMoveSpeed = parseInt(moveSpeedInput.value) || 1;
@@ -2673,6 +2700,7 @@
                 if (showNXYInput) showNXY = showNXYInput.checked ? 1 : 0;
                 if (showEntityCountsInput) showEntityCounts = showEntityCountsInput.checked ? 1 : 0;
                 if (showMobileTouchInput) showMobileTouch = showMobileTouchInput.checked ? 1 : 0;
+                if (autoFlipPlayerInput) autoFlipPlayer = autoFlipPlayerInput.checked;
                 settingsPanel.style.display = 'none';
                 isPaused = false; // 關閉設定時恢復
                 if (startXInput) startx = parseInt(startXInput.value) || 0;
@@ -2680,7 +2708,7 @@
             };
         }
         // checkbox 變動即時同步
-        ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch'].forEach(id => {
+        ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch','setting-auto-flip-player'].forEach(id => {
             var el = document.getElementById(id);
             if (el) {
                 el.addEventListener('change', function() {
@@ -2692,6 +2720,7 @@
                         case 'setting-show-nxy': showNXY = this.checked ? 1 : 0; break;
                         case 'setting-show-entity-counts': showEntityCounts = this.checked ? 1 : 0; break;
                         case 'setting-show-mobile-touch': showMobileTouch = this.checked ? 1 : 0; updateMobileTouchDisplay(); break;
+                        case 'setting-auto-flip-player': autoFlipPlayer = this.checked; break;
                     }
                 });
             }
@@ -2913,6 +2942,7 @@
             updateCheckboxLabel('setting-show-nxy', L.showNxy);
             updateCheckboxLabel('setting-show-entity-counts', L.showEntityCounts);
             updateCheckboxLabel('setting-show-mobile-touch', L.showMobileTouch);
+            updateCheckboxLabel('setting-auto-flip-player', L.autoFlipPlayer || '自動翻轉角色');
             document.getElementById('settings-close-btn').textContent = L.ok;
         }
 
