@@ -2152,9 +2152,9 @@
         settingsPanel.innerHTML = `
             <h2 style="margin-top:0;margin-bottom:18px;font-size:22px;text-align:center;">Settings</h2>
 
-            <div style="text-align:center;margin-top:18px;">
-                <div id="settings-lang-label" style="margin-bottom:8px;font-size:15px;">
-                    選擇語言 / 言語を選択 / Select Language
+            <div style="margin-bottom:16px;">
+                <div id="settings-lang-label" style="font-size:15px;min-width:120px;">
+                    Select Language
                 </div>
                 <select id="settings-lang-select" style="font-size:15px;padding:4px 16px;border-radius:6px;">
                     <option value="zh">中文</option>
@@ -2168,44 +2168,56 @@
                 <label><input type="checkbox" id="setting-bgm-on"> Muisc</label>
                 <label style="margin-left:16px;"><input type="checkbox" id="setting-sfx-on"> Effects Sound</label>
             </div>
+
             <div style="margin-bottom:16px;">
                 <label>Start X <input id="setting-start-x" type="number" min="0" max="5400" step="1" style="width:60px;"> </label>
                 <label style="margin-left:16px;">Start Y <input id="setting-start-y" type="number" min="0" max="500" step="1" style="width:60px;"> </label>
             </div>
+
             <div style="margin-bottom:16px;">
                 <label>Player Move Speed <input id="setting-move-speed" type="number" min="1" max="100" step="1" style="width:60px;"> </label>
             </div>
+
             <div style="margin-bottom:16px;">
                 <label>Weapon Power <input id="setting-weapon-power" type="number" min="1" max="20" step="1" style="width:60px;"> </label>
             </div>
+
             <div style="margin-bottom:16px;">
                 <label>Max FPS <input id="setting-max-fps" type="number" min="10" max="240" step="1" style="width:60px;"> </label>
             </div>
+
             <div style="margin-bottom:16px;">
                 <label>Gravity <input id="setting-gravity" type="number" min="0.1" max="10" step="0.1" style="width:60px;"> </label>
             </div>
+
             <div style="margin-bottom:16px;">
                 <label>Jump Power <input id="setting-jump-power" type="number" min="-50" max="0" step="0.1" style="width:80px;"> </label>
             </div>
+
             <div style="margin-bottom:16px;">
                 <label>Jump Extra <input id="setting-jump-extra" type="number" min="-5" max="0" step="0.01" style="width:80px;"> </label>
             </div>
+
             <div style="margin-bottom:16px;">
                 <label>Jump Extra Frames <input id="setting-jump-extra-frames" type="number" min="1" max="60" step="1" style="width:80px;"> </label>
             </div>
+
             <div style="margin-bottom:16px;">
                 <label><input type="checkbox" id="setting-show-score"> Show Score</label>
                 <label style="margin-left:16px;"><input type="checkbox" id="setting-show-moved"> Show Moved</label>
                 <label style="margin-left:16px;"><input type="checkbox" id="setting-show-fps"> Show FPS</label>
             </div>
+
             <div style="margin-bottom:16px;">
                 <label><input type="checkbox" id="setting-show-xy"> Show XY</label>
                 <label style="margin-left:16px;"><input type="checkbox" id="setting-show-nxy"> Show NXY</label>
                 <label style="margin-left:16px;"><input type="checkbox" id="setting-show-entity-counts"> Show Entity Counts</label>
             </div>
+
             <div style="margin-bottom:16px;">
                 <label><input type="checkbox" id="setting-show-mobile-touch"> Show Mobile Touch</label>
             </div>
+            
             <div style="text-align:center;margin-top:18px;">
                 <button id="settings-close-btn" style="padding:6px 24px;font-size:16px;background:#4af;color:#fff;border:none;border-radius:6px;">OK</button>
             </div>
