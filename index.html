@@ -719,8 +719,8 @@
         let player = {
             x: startx,                // 玩家X座標（連動 startx）
             y: starty,                // 玩家Y座標（連動 starty）
-            width: 50,             // 玩家寬度
-            height: 70,            // 玩家高度
+            width: 30,                // 玩家寬度（碰撞箱）
+            height: 60,               // 玩家高度（碰撞箱）
             get speed() { return playerMoveSpeed; }, // 玩家移動速度（取自全域變數）
             vy: 0,                 // 垂直速度
             onGround: false,       // 是否在地面上
@@ -1808,8 +1808,36 @@
                 } else {
                     window._playerMoveAnimFrame = 0;
                 }
+                // 顯示圖片大小
+                const imgDrawWidth = 50; // 玩家實際寬度
+                const imgDrawHeight = 60; //玩家實際高度
+                // 以底部對齊碰撞箱，左右置中
                 if (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0) {
-                    ctx.drawImage(imgToDraw, player.x, player.y, player.width, player.height);
+                    ctx.drawImage(
+                        imgToDraw,
+                        player.x + (player.width - imgDrawWidth) / 2,
+                        player.y + (player.height - imgDrawHeight),
+                        imgDrawWidth,
+                        imgDrawHeight
+                    );
+                    // ===== 集氣時黃色閃爍遮罩 =====
+                    if (charging) {
+                        if (Math.floor(Date.now() / 100) % 2 === 0) { // 每0.1秒閃爍
+                            ctx.save();
+                            ctx.globalAlpha = 0.35;
+                            ctx.fillStyle = '#ffff00';
+                            ctx.beginPath();
+                            ctx.ellipse(
+                                player.x + player.width / 2,
+                                player.y + player.height / 2,
+                                imgDrawWidth / 2,
+                                imgDrawHeight / 2,
+                                0, 0, Math.PI * 2
+                            );
+                            ctx.fill();
+                            ctx.restore();
+                        }
+                    }
                 }
                 ctx.globalAlpha = 1;
             }
