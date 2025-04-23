@@ -1458,35 +1458,38 @@
                                     if (opacity >= 1) {
                                         clearInterval(fadeIn);
                                         // 3. 全白時播放outro並顯示勝利畫面，勝利畫面opacity=0
-                                        winGame();
-                                        winScreen.style.opacity = 0;
-                                        // 播放outro音樂
-                                        const outroAudio = document.getElementById('outro-audio');
-                                        if (outroAudio) {
-                                            outroAudio.currentTime = 0;
-                                            outroAudio.volume = VOLUME_OUTRO;
-                                            if (isBgmOn) outroAudio.play();
-                                        }
-                                        // 4. 2秒內白色遮罩淡出、勝利畫面同步淡入
-                                        let outOpacity = 1;
-                                        let winOpacity = 0;
-                                        const fadeOut = setInterval(() => {
-                                            outOpacity -= 0.02;
-                                            winOpacity += 0.02;
-                                            flashDiv.style.opacity = outOpacity;
-                                            winScreen.style.opacity = winOpacity;
-                                            if (outOpacity <= 0) {
-                                                clearInterval(fadeOut);
-                                                flashDiv.style.display = 'none';
-                                                winScreen.style.opacity = 1;
+                                        // 延遲120幀（約2秒）再顯示勝利畫面
+                                        setTimeout(() => {
+                                            winGame();
+                                            winScreen.style.opacity = 0;
+                                            // 播放outro音樂
+                                            const outroAudio = document.getElementById('outro-audio');
+                                            if (outroAudio) {
+                                                outroAudio.currentTime = 0;
+                                                outroAudio.volume = VOLUME_OUTRO;
+                                                if (isBgmOn) outroAudio.play();
                                             }
-                                        }, 20);
+                                            // 4. 2秒內白色遮罩淡出、勝利畫面同步淡入
+                                            let outOpacity = 1;
+                                            let winOpacity = 0;
+                                            const fadeOut = setInterval(() => {
+                                                outOpacity -= 0.02;
+                                                winOpacity += 0.02;
+                                                flashDiv.style.opacity = outOpacity;
+                                                winScreen.style.opacity = winOpacity;
+                                                if (outOpacity <= 0) {
+                                                    clearInterval(fadeOut);
+                                                    flashDiv.style.display = 'none';
+                                                    winScreen.style.opacity = 1;
+                                                }
+                                            }, 20);
+                                        }, 90 * (1000 / MAX_FPS)); // 90幀延遲
                                     }
                                 }, 20);
                             }, 2000);
                         } else {
                             setTimeout(() => {
-                                winGame();
+                                setTimeout(() => { winGame(); }, 90 * (1000 / MAX_FPS)); // 90幀延遲
                             }, 3000);
                         }
                     }
