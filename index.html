@@ -2151,6 +2151,19 @@
         settingsPanel.style.minWidth = '320px';
         settingsPanel.innerHTML = `
             <h2 style="margin-top:0;margin-bottom:18px;font-size:22px;text-align:center;">Settings</h2>
+
+            <div style="text-align:center;margin-top:18px;">
+                <div id="settings-lang-label" style="margin-bottom:8px;font-size:15px;">
+                    選擇語言 / 言語を選択 / Select Language
+                </div>
+                <select id="settings-lang-select" style="font-size:15px;padding:4px 16px;border-radius:6px;">
+                    <option value="zh">中文</option>
+                    <option value="ja">日本語</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+
+
             <div style="margin-bottom:16px;">
                 <label><input type="checkbox" id="setting-bgm-on"> Muisc</label>
                 <label style="margin-left:16px;"><input type="checkbox" id="setting-sfx-on"> Effects Sound</label>
@@ -2416,6 +2429,22 @@
         });
 
         let isWinInvincible = false; // 勝利畫面無敵狀態
+
+        // 新增：設定面板語言切換
+        ['settings-lang-zh','settings-lang-ja','settings-lang-en'].forEach(function(id){
+            document.getElementById(id).onclick = function(){
+                if(id==='settings-lang-zh') setLang('zh');
+                if(id==='settings-lang-ja') setLang('ja');
+                if(id==='settings-lang-en') setLang('en');
+            };
+        });
+
+        // 新增：設定面板語言下拉選單切換
+        var settingsLangSelect = document.getElementById('settings-lang-select');
+        settingsLangSelect.value = currentLang;
+        settingsLangSelect.onchange = function() {
+            setLang(this.value);
+        };
     </script>
 </body>
 </html>
