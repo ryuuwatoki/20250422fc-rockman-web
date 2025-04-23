@@ -1060,10 +1060,11 @@
                 }
                 if (!bossCanMove) return; // 0.7秒內不能移動
                 // 不受重力影響，直接根據行為模式調整y座標
+                const bossDisplayHeight = 190;
                 switch (this.pattern) {
                     case 0: // 上下移動
                         this.y += this.speed;
-                        if (this.y < 50 || this.y > 350) { // boss出場後的最底範圍
+                        if (this.y < 0 || this.y > WORLD_HEIGHT - bossDisplayHeight) {
                             this.speed *= -1;
                         }
                         break;
@@ -1073,6 +1074,8 @@
                         } else if (this.y > player.y) {
                             this.y -= this.speed;
                         }
+                        // 限制範圍
+                        this.y = Math.max(0, Math.min(WORLD_HEIGHT - bossDisplayHeight, this.y));
                         break;
                     case 2: // 快速上下移動
                         if (this.patternTimer % 60 < 30) {
@@ -1081,7 +1084,7 @@
                             this.y += 8; // 向下飄
                         }
                         // 限制範圍
-                        this.y = Math.max(50, Math.min(350, this.y)); // boss出場後的最底範圍
+                        this.y = Math.max(0, Math.min(WORLD_HEIGHT - bossDisplayHeight, this.y));
                         break;
                     case 3: // 衝刺攻擊
                         if (this.patternTimer < 60) {
@@ -1114,8 +1117,9 @@
                     this.shootCooldown = this.shootDelay; // ← 每次發射後重設冷卻
                 }
                 // === 加入邊界限制 ===
-                this.x = Math.max(BOSS_AREA_X, Math.min(WORLD_WIDTH - this.width, this.x));
-                this.y = Math.max(0, Math.min(350, this.y)); // boss出場後的最底範圍
+                const bossDisplayWidth = 190;
+                this.x = Math.max(BOSS_AREA_X, Math.min(WORLD_WIDTH - bossDisplayWidth, this.x));
+                this.y = Math.max(0, Math.min(WORLD_HEIGHT - bossDisplayHeight, this.y));
             }
         };
         const bosses = [boss];
