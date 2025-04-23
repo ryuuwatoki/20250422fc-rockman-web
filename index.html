@@ -369,7 +369,7 @@
 
         // ===== 遊戲狀態 =====
         let MAX_FPS = 70; // 最大FPS設定
-        let startx = 0;
+        let startx = 100;
         let starty = 0;
         let gameRunning  = false; // 遊戲是否正在進行中
         let score        = 0;     // 玩家分數
@@ -583,8 +583,8 @@
         
         // ===== 玩家物件 =====
         let player = {
-            x: 100,                // 玩家X座標
-            y: 0,                  // 玩家Y座標（於startGame()時會放到平台上）
+            x: startx,                // 玩家X座標（連動 startx）
+            y: starty,                // 玩家Y座標（連動 starty）
             width: 40,             // 玩家寬度
             height: 40,            // 玩家高度
             get speed() { return playerMoveSpeed; }, // 玩家移動速度（取自全域變數）
@@ -1072,8 +1072,8 @@
             reachedBossArea = false;
             
             // 重置玩家位置
-            player.x = 100;
-            player.y = platforms[0].y - player.height;
+            player.x = startx;
+            player.y = starty;
             player.vy = 0;
             player.onGround = true;
             player.direction = 1;
