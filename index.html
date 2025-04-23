@@ -478,11 +478,11 @@
         ];
         // 自動轉換
         const basePlatforms = platformGrid.map(p => ({
-          x: p.x * 50,
-          y: 500 - p.y * 50,
-          width: 50,
-          height: 50,
-          color: p.color
+            x: p.x * 50,
+            y: 500 - p.y * 50,
+            width: 50,
+            height: 50,
+            color: p.color
         }));
         
         // ===== DOM 元素選取 =====
@@ -1772,9 +1772,9 @@
         // ===== 工具函數 =====
         function checkCollision(a, b) {
             return a.x < b.x + b.width &&
-                   a.x + a.width > b.x &&
-                   a.y < b.y + b.height &&
-                   a.y + a.height > b.y;
+                    a.x + a.width > b.x &&
+                    a.y < b.y + b.height &&
+                    a.y + a.height > b.y;
         }
         
         /**
