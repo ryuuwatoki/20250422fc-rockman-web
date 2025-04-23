@@ -1017,10 +1017,10 @@
         
         // ===== Boss 物件 =====
         const boss = {
-            x: 2500 + 2700 * 1,
+            x: 5200,
             y: 350, // 固定初始座標
-            width: 185, // 碰撞箱 boss大小 boss圖片大小
-            height: 185, // 碰撞箱 boss大小 boss圖片大小
+            width: 180, // 碰撞箱 boss大小 boss圖片大小
+            height: 170, // 碰撞箱 boss大小 boss圖片大小
             speed: 2 * 1.1, // 1.1倍
             vy: 0, // 不再需要重力
             color: '#2196f3', // 主體藍色（Airman主色）
@@ -2007,7 +2007,7 @@
                 let drawImg = bossImgs[boss.imgIndex || 0];
                 //boss圖片大小 boss大小
                 ctx.drawImage(drawImg, boss.x + (boss.width - 80) / 2,
-                boss.y + (boss.height - 80) / 2, 200, 200);
+                boss.y + (boss.height - 80) / 2, 190, 190);
                 ctx.globalAlpha = 1;
                 if (bossHitFlash > 0 && boss.lastHitCharge) {
                     ctx.restore();
