@@ -234,19 +234,18 @@
             font-size: 70% !important;
         }
         #language-select {
-            position:absolute;
-            top:40px;
-            right:10px;
-            z-index:29;
-            background:#222;
-            padding:12px 24px;
-            border-radius:10px;
-            box-shadow:0 2px 12px #0008;
-            display:none;
-            flex-direction:column;
-            align-items:center;
-            transform: scale(0.75);
-            transform-origin: top right;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #222;
+            padding: 12px 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px #0008;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 3000;
         }
     </style>
 </head>
@@ -2223,15 +2222,18 @@
         settingsPanel.innerHTML = `
             <h2 style="margin-top:0;margin-bottom:18px;font-size:22px;text-align:center;">Settings</h2>
 
-            <div style="margin-bottom:16px; display: flex; align-items: center;">
+            <div style="margin-bottom:16px; display: flex; align-items: center; position:relative;">
                 <div id="settings-lang-label" style="font-size:15px;min-width:120px; margin-right: 12px;">
                     Select Language
                 </div>
-                <select id="settings-lang-select" style="font-size:15px;padding:4px 16px;border-radius:6px;">
-                    <option value="zh">中文</option>
-                    <option value="ja">日本語</option>
-                    <option value="en">English</option>
-                </select>
+                <div id="custom-lang-select-wrapper" style="position:relative;">
+                    <button id="custom-lang-select-btn" style="font-size:15px;padding:4px 16px;border-radius:6px;background:#fff;color:#222;border:1px solid #888;min-width:90px;text-align:left;">English ▼</button>
+                    <ul id="custom-lang-select-list" style="display:none;position:absolute;top:110%;left:0;width:100%;background:#222;border-radius:8px;box-shadow:0 2px 12px #0008;z-index:9999;padding:0;margin:0;list-style:none;">
+                        <li data-lang="zh" style="padding:8px 16px;cursor:pointer;color:#fff;">中文</li>
+                        <li data-lang="ja" style="padding:8px 16px;cursor:pointer;color:#fff;">日本語</li>
+                        <li data-lang="en" style="padding:8px 16px;cursor:pointer;color:#fff;">English</li>
+                    </ul>
+                </div>
             </div>
 
 
@@ -2566,12 +2568,12 @@
 
 
         // 新增：設定面板語言下拉選單切換
-        var settingsLangSelect = document.getElementById('settings-lang-select');
-        settingsLangSelect.value = currentLang;
-        settingsLangSelect.onchange = function() {
-            setLang(this.value);
-            updateSettingsPanelLang();
-        };
+        // var settingsLangSelect = document.getElementById('settings-lang-select');
+        // settingsLangSelect.value = currentLang;
+        // settingsLangSelect.onchange = function() {
+        //     setLang(this.value);
+        //     updateSettingsPanelLang();
+        // };
 
         // 新增：根據語言切換設定面板所有文字
         function updateSettingsPanelLang() {
@@ -2632,6 +2634,31 @@
             updateCheckboxLabel('setting-show-mobile-touch', L.showMobileTouch);
             document.getElementById('settings-close-btn').textContent = L.ok;
         }
+
+        // 自訂語言選單邏輯
+        const customLangBtn = document.getElementById('custom-lang-select-btn');
+        const customLangList = document.getElementById('custom-lang-select-list');
+        const customLangItems = customLangList.querySelectorAll('li');
+        function updateCustomLangBtn() {
+            const map = { zh: '中文', ja: '日本語', en: 'English' };
+            customLangBtn.textContent = map[currentLang] + ' ▼';
+        }
+        customLangBtn.onclick = function(e) {
+            e.stopPropagation();
+            customLangList.style.display = (customLangList.style.display === 'block') ? 'none' : 'block';
+        };
+        customLangItems.forEach(item => {
+            item.onclick = function(e) {
+                setLang(this.dataset.lang);
+                updateCustomLangBtn();
+                customLangList.style.display = 'none';
+                updateSettingsPanelLang();
+            };
+        });
+        document.addEventListener('click', function(e) {
+            customLangList.style.display = 'none';
+        });
+        window.addEventListener('DOMContentLoaded', updateCustomLangBtn);
     </script>
 </body>
 </html>
