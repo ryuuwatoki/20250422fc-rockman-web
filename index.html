@@ -722,6 +722,7 @@
             
             // 受傷處理
             takeDamage: function(amount) {
+                if (isWinInvincible) return;
                 if (this.invincible > 0) return;
                 // 播放受傷音效
                 const hurtAudio = document.getElementById('hurt-audio');
@@ -1114,6 +1115,7 @@
             playerDeadX = 0;
             playerDeadY = 0;
             bossDefeated = false;
+            isWinInvincible = false;
         }
         
         // ===== 遊戲主循環 =====
@@ -1533,6 +1535,14 @@
             
             // 在update()最後加上bossHitFlash遞減
             if (bossHitFlash > 0) bossHitFlash--;
+
+            // 勝利畫面無敵狀態下，若玩家不在地圖外，強制歸位 (0,0)
+            if (isWinInvincible) {
+                if (!(player.x < 0 || player.x > WORLD_WIDTH || player.y < 0 || player.y > WORLD_HEIGHT)) {
+                    player.x = 0;
+                    player.y = 0;
+                }
+            }
         }
         
         // ===== 渲染遊戲 =====
@@ -1571,6 +1581,9 @@
             
             // 繪製玩家 (無敵時閃爍)
             if (!playerDead) { // 死亡時不繪製
+                if (isWinInvincible) {
+                    ctx.globalAlpha = 0.2;
+                }
                 if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
                     if (Math.floor(Date.now() / 100) % 2 === 0) {
                         ctx.fillStyle = '#cfbb3a'; // 淺黃色
@@ -1592,8 +1605,8 @@
                     ctx.fillStyle = '#fff';
                     ctx.fill();
                 }
+                ctx.globalAlpha = 1;
             }
-            ctx.globalAlpha = 1;
             
             // 繪製子彈
             bullets.forEach(bullet => {
@@ -1903,6 +1916,7 @@
             player.x = -9999;
             player.y = -9999;
             gameRunning = false;
+            isWinInvincible = true;
             if (currentLang === 'zh') {
                 winScoreElement.innerHTML = '<div>score: 分數高到無法計算</div>';
             } else if (currentLang === 'ja') {
@@ -2400,6 +2414,8 @@
         document.getElementById('setting-start-y').addEventListener('input', function() {
             starty = parseInt(this.value) || 0;
         });
+
+        let isWinInvincible = false; // 勝利畫面無敵狀態
     </script>
 </body>
 </html>
