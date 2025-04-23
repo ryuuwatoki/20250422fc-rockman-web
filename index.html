@@ -1821,10 +1821,10 @@
                         imgDrawHeight
                     );
                     // ===== 集氣時黃色閃爍遮罩 =====
-                    if (charging) {
+                    if (charging && chargeFrame >= 30) { // 只有集氣超過0.5秒才閃爍
                         if (Math.floor(Date.now() / 100) % 2 === 0) { // 每0.1秒閃爍
                             ctx.save();
-                            ctx.globalAlpha = 0.35;
+                            ctx.globalAlpha = 0.2; // 透明度
                             ctx.fillStyle = '#ffff00';
                             ctx.beginPath();
                             ctx.ellipse(
