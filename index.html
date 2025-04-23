@@ -384,7 +384,6 @@
         // 顏色設定
         const COLOR_PLATFORM_NORMAL = '#444';      // 一般平台顏色
         const COLOR_PLATFORM_BOSS   = '#800';      // Boss區域平台顏色
-        const COLOR_PLATFORM_HIGH   = '#666';      // 高台平台顏色
         const COLOR_PLAYER          = '#4af';      // 玩家顏色
         const COLOR_BOSS            = '#2196f3';   // Boss主體顏色
         const COLOR_BOSS_FAN        = '#ffe082';   // Boss風扇顏色
@@ -393,6 +392,8 @@
         const COLOR_BULLET_CHARGE   = '#ff0';      // 玩家集氣彈顏色
         const COLOR_BULLET_ENEMY    = '#f8f';      // 敵人子彈顏色
         const COLOR_BULLET_BOSS     = '#f4a';      // Boss子彈顏色
+
+        
 
         // 音量設定
         let VOLUME_BGM      = 0.55;  // 背景音樂音量
@@ -475,6 +476,12 @@
         let fakeBoss = null;
         let fakeBossFlashFrame = 0;
 
+        // 新增floor圖片物件
+        const floorImg = new Image(); floorImg.src = 'img/01floor.png';
+        const floorBossImg = new Image(); floorBossImg.src = 'img/02floor.png';
+
+
+
         // 以格數設計的平台資料 地板
         const platformGrid = [
             // 第一區（0~2700）
@@ -498,62 +505,62 @@
             // 中間區域
             { x: 17, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 18, y: 2, color: COLOR_PLATFORM_NORMAL },
-            { x: 19, y: 3, color: COLOR_PLATFORM_HIGH },
-            { x: 20, y: 3, color: COLOR_PLATFORM_HIGH },
+            { x: 19, y: 3, color: COLOR_PLATFORM_NORMAL },
+            { x: 20, y: 3, color: COLOR_PLATFORM_NORMAL },
             // { x: 21, y: 2, color: COLOR_PLATFORM_NORMAL },
             // { x: 22, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 23, y: 3, color: COLOR_PLATFORM_NORMAL },
             { x: 24, y: 3, color: COLOR_PLATFORM_NORMAL },
             // { x: 25, y: 2, color: COLOR_PLATFORM_NORMAL },
             // { x: 26, y: 2, color: COLOR_PLATFORM_NORMAL },
-            { x: 27, y: 3, color: COLOR_PLATFORM_HIGH },
-            { x: 28, y: 3, color: COLOR_PLATFORM_HIGH },
+            { x: 27, y: 3, color: COLOR_PLATFORM_NORMAL },
+            { x: 28, y: 3, color: COLOR_PLATFORM_NORMAL },
             { x: 29, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 30, y: 2, color: COLOR_PLATFORM_NORMAL },
             // { x: 31, y: 1, color: COLOR_PLATFORM_NORMAL },
             // { x: 32, y: 1, color: COLOR_PLATFORM_NORMAL },
             { x: 33, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 34, y: 2, color: COLOR_PLATFORM_NORMAL },
-            { x: 35, y: 3, color: COLOR_PLATFORM_HIGH },
-            { x: 36, y: 3, color: COLOR_PLATFORM_HIGH },
+            { x: 35, y: 3, color: COLOR_PLATFORM_NORMAL },
+            { x: 36, y: 3, color: COLOR_PLATFORM_NORMAL },
             { x: 37, y: 6, color: COLOR_PLATFORM_NORMAL },
             { x: 38, y: 6, color: COLOR_PLATFORM_NORMAL },
             { x: 39, y: 6, color: COLOR_PLATFORM_NORMAL },
             // { x: 40, y: 1, color: COLOR_PLATFORM_NORMAL },
             // { x: 41, y: 2, color: COLOR_PLATFORM_NORMAL },
             // { x: 42, y: 2, color: COLOR_PLATFORM_NORMAL },
-            { x: 43, y: 3, color: COLOR_PLATFORM_HIGH },
-            { x: 44, y: 3, color: COLOR_PLATFORM_HIGH },
+            { x: 43, y: 3, color: COLOR_PLATFORM_NORMAL },
+            { x: 44, y: 3, color: COLOR_PLATFORM_NORMAL },
             { x: 45, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 46, y: 2, color: COLOR_PLATFORM_NORMAL },
             // { x: 47, y: 1, color: COLOR_PLATFORM_NORMAL },
             // { x: 48, y: 1, color: COLOR_PLATFORM_NORMAL },
             { x: 49, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 50, y: 2, color: COLOR_PLATFORM_NORMAL },
-            { x: 51, y: 3, color: COLOR_PLATFORM_HIGH },
-            { x: 52, y: 3, color: COLOR_PLATFORM_HIGH },
+            { x: 51, y: 3, color: COLOR_PLATFORM_NORMAL },
+            { x: 52, y: 3, color: COLOR_PLATFORM_NORMAL },
             // { x: 53, y: 2, color: COLOR_PLATFORM_NORMAL },
             // { x: 54, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 55, y: 4, color: COLOR_PLATFORM_NORMAL },
             { x: 56, y: 4, color: COLOR_PLATFORM_NORMAL },
             { x: 57, y: 4, color: COLOR_PLATFORM_NORMAL },
             { x: 58, y: 4, color: COLOR_PLATFORM_NORMAL },
-            { x: 59, y: 7, color: COLOR_PLATFORM_HIGH },
-            { x: 60, y: 7, color: COLOR_PLATFORM_HIGH },
+            { x: 59, y: 7, color: COLOR_PLATFORM_NORMAL },
+            { x: 60, y: 7, color: COLOR_PLATFORM_NORMAL },
             { x: 61, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 62, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 63, y: 7, color: COLOR_PLATFORM_NORMAL },
             { x: 64, y: 7, color: COLOR_PLATFORM_NORMAL },
             { x: 65, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 66, y: 2, color: COLOR_PLATFORM_NORMAL },
-            { x: 67, y: 7, color: COLOR_PLATFORM_HIGH },
-            { x: 68, y: 7, color: COLOR_PLATFORM_HIGH },
+            { x: 67, y: 7, color: COLOR_PLATFORM_NORMAL },
+            { x: 68, y: 7, color: COLOR_PLATFORM_NORMAL },
             { x: 69, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 70, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 71, y: 7, color: COLOR_PLATFORM_NORMAL },
             { x: 72, y: 7, color: COLOR_PLATFORM_NORMAL },
-            { x: 73, y: 2, color: COLOR_PLATFORM_HIGH },
-            { x: 74, y: 2, color: COLOR_PLATFORM_HIGH },
+            { x: 73, y: 2, color: COLOR_PLATFORM_NORMAL },
+            { x: 74, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 75, y: 7, color: COLOR_PLATFORM_NORMAL },
             { x: 76, y: 2, color: COLOR_PLATFORM_NORMAL },
             // { x: 77, y: 7, color: COLOR_PLATFORM_NORMAL },
@@ -562,8 +569,8 @@
             { x: 80, y: 2, color: COLOR_PLATFORM_NORMAL },
             // { x: 81, y: 7, color: COLOR_PLATFORM_NORMAL },
             // { x: 82, y: 2, color: COLOR_PLATFORM_NORMAL },
-            { x: 83, y: 7, color: COLOR_PLATFORM_HIGH },
-            // { x: 84, y: 2, color: COLOR_PLATFORM_HIGH },
+            { x: 83, y: 7, color: COLOR_PLATFORM_NORMAL },
+            // { x: 84, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 85, y: 2, color: COLOR_PLATFORM_NORMAL },
             // { x: 86, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 87, y: 9, color: COLOR_PLATFORM_NORMAL },
@@ -1643,8 +1650,14 @@
             
             // 繪製平台
             platforms.forEach(platform => {
-                ctx.fillStyle = platform.color;
-                ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                if (platform.color === COLOR_PLATFORM_NORMAL) {
+                    ctx.drawImage(floorImg, platform.x, platform.y, 50, 50);
+                } else if (platform.color === COLOR_PLATFORM_BOSS) {
+                    ctx.drawImage(floorBossImg, platform.x, platform.y, 50, 50);
+                } else {
+                    ctx.fillStyle = platform.color;
+                    ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                }
             });
             
             // 繪製玩家 (無敵時閃爍)
