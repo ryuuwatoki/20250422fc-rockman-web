@@ -725,7 +725,8 @@
             vy: 0,                 // 垂直速度
             onGround: false,       // 是否在地面上
             color: '#4af',         // 玩家顏色
-            isShooting: false,     // 是否正在射擊
+            isShooting: false,     // 是否正在射擊（已廢棄，保留相容）
+            shootAnimFrame: 0,     // 發射動畫剩餘幀數
             shootCooldown: 0,      // 射擊冷卻計時器
             shootDelay: Math.round(15 / 1.1), // 射擊間隔
             direction: 1,          // 玩家面向方向（1=右，-1=左）
@@ -1147,7 +1148,7 @@
                         charging = true;
                         chargeFrame = 0;
                         chargeReady = false;
-                        player.isShooting = true;
+                        player.shootAnimFrame = 7; // 只顯示1幀
                         // 播放射擊音效
                         const shootAudio = document.getElementById('shoot-audio');
                         if (shootAudio) {
@@ -1195,11 +1196,19 @@
                     if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
                         chargeReady = true; // 發射集氣彈
                     } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
-                        // 只有 chargeReady 為 false 才補發普通彈
-                        player.isShooting = true;
+                        // 只有 chargeReady 為 false 才補發普通彈，且不受冷卻限制
+                        bullets.push({
+                            x: player.x + (player.direction === 1 ? player.width : -10),
+                            y: player.y + player.height / 2 - 3,
+                            width: 10,
+                            height: 6,
+                            speed: 10 * 1.1 * player.direction, // 1.1倍
+                            color: '#b3f0ff',
+                            isCharge: false
+                        });
+                        player.shootAnimFrame = 1;
                     }
                     charging = false;
-                    setTimeout(() => { player.isShooting = false; }, 0); // 下一幀關閉普通射擊
                     // 停止集氣音效
                     if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
                     const chargeAudio = document.getElementById('charge-audio');
@@ -1334,6 +1343,7 @@
                     shootAudio.volume = VOLUME_SHOOT;
                     shootAudio.play();
                 }
+                player.shootAnimFrame = 14; // 集氣彈顯示0.2秒
                 chargeReady = false;
             }
             // 更新玩家
@@ -1793,7 +1803,7 @@
                 }
                 // 狀態判斷
                 let imgToDraw = playerImgs[0]; // 預設靜止
-                if (player.isShooting) {
+                if (player.shootAnimFrame > 0) {
                     imgToDraw = playerImgs[2]; // 發射
                 } else if (keys.ArrowLeft || keys.ArrowRight) {
                     // 左右移動時切換 p1/p2 動畫
@@ -1840,6 +1850,8 @@
                     }
                 }
                 ctx.globalAlpha = 1;
+                // 發射動畫幀數遞減
+                if (player.shootAnimFrame > 0) player.shootAnimFrame--;
             }
             
             // 繪製子彈
@@ -2770,7 +2782,7 @@
                         charging = true;
                         chargeFrame = 0;
                         chargeReady = false;
-                        player.isShooting = true;
+                        player.shootAnimFrame = 1;
                         const shootAudio = document.getElementById('shoot-audio');
                         if (shootAudio) {
                             shootAudio.currentTime = 0;
@@ -2793,10 +2805,19 @@
                     if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
                         chargeReady = true;
                     } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
-                        player.isShooting = true;
+                        // 只有 chargeReady 為 false 才補發普通彈，且不受冷卻限制
+                        bullets.push({
+                            x: player.x + (player.direction === 1 ? player.width : -10),
+                            y: player.y + player.height / 2 - 3,
+                            width: 10,
+                            height: 6,
+                            speed: 10 * 1.1 * player.direction, // 1.1倍
+                            color: '#b3f0ff',
+                            isCharge: false
+                        });
+                        player.shootAnimFrame = 1;
                     }
                     charging = false;
-                    setTimeout(() => { player.isShooting = false; }, 0);
                     if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
                     const chargeAudio = document.getElementById('charge-audio');
                     if (chargeAudio) {
