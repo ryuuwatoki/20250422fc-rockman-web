@@ -1918,11 +1918,11 @@
             gameRunning = false;
             isWinInvincible = true;
             if (currentLang === 'zh') {
-                winScoreElement.innerHTML = '<div>score: 分數高到無法計算</div>';
+                winScoreElement.innerHTML = '<div style="font-size:80%">score: 分數高到無法計算</div>';
             } else if (currentLang === 'ja') {
-                winScoreElement.innerHTML = '<div>score: 君のスコアは高すぎて計算できない。</div>';
+                winScoreElement.innerHTML = '<div style="font-size:80%">score: 君のスコアは高すぎて計算できない。</div>';
             } else {
-                winScoreElement.innerHTML = '<div>score: Your score is incalculably high.</div>';
+                winScoreElement.innerHTML = '<div style="font-size:80%">score: Your score is incalculably high.</div>';
             }
             winScreen.style.display = 'flex';
             langToggle.style.display = 'block';
@@ -1955,8 +1955,8 @@
                 start: 'START',
                 gameover: '何回やっても　何回やっても　エアーまんが...',
                 retry: '再trytry',
-                win: '<div>命運試圖阻止你...</div><div>但你戰勝了！</div><div>請相信自己！</div><div>不管多大困難！你都能克服！</div>',
-                winScore: '<div>SCORE: 無人能定義你的分數，那些看不見的努力，才是你最真實的實力!</div>',
+                win: '<div style="font-size:80%">命運試圖阻止你...</div><div style="font-size:80%">但你戰勝了！</div><div style="font-size:80%">請相信自己！</div><div style="font-size:80%">不管多大困難！你都能克服！</div>',
+                winScore: '<div style="font-size:80%">SCORE: 無人能定義你的分數，那些看不見的努力，才是你最真實的實力!</div>',
                 playagain: '你想再玩一次也是可以...'
             },
             ja: {
@@ -1967,8 +1967,8 @@
                 start: 'スタート',
                 gameover: '何回やっても　何回やっても　エアーまんが...',
                 retry: 'もう一度',
-                win: '<div>運命は君を止めたが、</div><div>君が勝った！</div><div>自分を信じて！</div>どんな困難でも必ず乗り越えられる！<div></div>',
-                winScore: '<div>SCORE: 君の価値を点数で決められるわけがない！</div>',
+                win: '<div style="font-size:80%">運命は君を止めたが、</div><div style="font-size:80%">君が勝った！</div><div style="font-size:80%">自分を信じて！</div><div style="font-size:80%">どんな困難でも必ず乗り越えられる！</div>',
+                winScore: '<div style="font-size:80%">SCORE: 君の価値を点数で決められるわけがない！</div>',
                 playagain: 'もう一度遊びますか？'
             },
             en: {
@@ -1979,8 +1979,8 @@
                 start: 'START',
                 gameover: 'The Untouchable Airman',
                 retry: 'Retry',
-                win: '<div>Fate tried to stop you...</div><div>but you prevailed !</div><div>Believe in yourself !</div><div>And overcome any difficulty !</div>',
-                winScore: '<div>SCORE: Scores are for tests. You\'re not a test-you\'re a force.</div>',
+                win: '<div style="font-size:80%">Fate tried to stop you...</div><div style="font-size:80%">but you prevailed !</div><div style="font-size:80%">Believe in yourself !</div><div style="font-size:80%">And overcome any difficulty !</div>',
+                winScore: '<div style="font-size:80%">SCORE: Scores are for tests. You\'re not a test-you\'re a force.</div>',
                 playagain: 'Play again?'
             }
         };
