@@ -2052,21 +2052,27 @@
             playerDeadX = player.x; // 記錄死亡時位置
             playerDeadY = player.y;
             playerDead = true; // 設為死亡狀態
-            finalScoreElement.textContent = `score: ${score}`;
-            gameOverScreen.style.display = 'flex';
-            langToggle.style.display = 'block';
-            langSelect.style.display = 'none';
-            // 停止BGM並播放Game Over音效
-            if (bgm) {
-                bgm.pause();
-                bgm.currentTime = 0;
-            }
-            const gameOverAudio = document.getElementById('game-over-audio');
-            if (gameOverAudio) {
-                gameOverAudio.currentTime = 0;
-                gameOverAudio.volume = VOLUME_GAMEOVER;
-                if (isSfxOn) gameOverAudio.play();
-            }
+            // 歸零 hp 並更新血條
+            playerHealth = 0;
+            updateHealthBar();
+            // 延遲顯示 game over 畫面
+            setTimeout(function() {
+                finalScoreElement.textContent = `score: ${score}`;
+                gameOverScreen.style.display = 'flex';
+                langToggle.style.display = 'block';
+                langSelect.style.display = 'none';
+                // 停止BGM並播放Game Over音效
+                if (bgm) {
+                    bgm.pause();
+                    bgm.currentTime = 0;
+                }
+                const gameOverAudio = document.getElementById('game-over-audio');
+                if (gameOverAudio) {
+                    gameOverAudio.currentTime = 0;
+                    gameOverAudio.volume = VOLUME_GAMEOVER;
+                    if (isSfxOn) gameOverAudio.play();
+                }
+            }, 100); // 0.1秒後才顯示 game over 畫面
         }
         
         //處理勝利畫面與音效
