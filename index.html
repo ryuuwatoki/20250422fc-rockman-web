@@ -90,7 +90,7 @@
 
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerStartX = 500;   // 玩家初始座標 x 預設200
+        let playerStartX = 5000;   // 玩家初始座標 x 預設200
         let playerStartY = 150;   // 玩家初始座標 y 預設100 
         let playerMaxHealth = 20; // 玩家血量 預設100
 
@@ -879,7 +879,7 @@
                     } else if (bossBulletPatternMode === 2) {
                         bossBulletCount = [3, 5][Math.floor(Math.random() * 3)];
                     } else if (bossBulletPatternMode === 3) {
-                        bossBulletCount = [3, 4, 5, 7][Math.floor(Math.random() * 4)];
+                        bossBulletCount = [3, 5, 7, 9][Math.floor(Math.random() * 4)];
                     }
                     // 多方向射擊，使用 bossBulletCount
                     let mid = Math.floor(bossBulletCount / 2);
@@ -2140,6 +2140,12 @@
                     jumpPower: '跳躍初速度',
                     jumpExtra: '跳躍額外加速度',
                     jumpExtraFrames: '跳躍額外加速幀數',
+                    enemyMaxCount: '敵人最大數量',
+                    bossBulletSpeed: 'Boss子彈速度',
+                    bossBulletPattern: 'Boss子彈模式：',
+                    bossPatternEasy: '簡單',
+                    bossPatternNormal: '普通',
+                    bossPatternHard: '困難',
                     showScore: '顯示分數',
                     showMoved: '顯示移動',
                     showFps: '顯示 FPS',
@@ -2177,6 +2183,12 @@
                     jumpPower: 'ジャンプ初速度',
                     jumpExtra: 'ジャンプ追加加速度',
                     jumpExtraFrames: 'ジャンプ追加フレーム',
+                    enemyMaxCount: '敵最大数',
+                    bossBulletSpeed: 'ボス弾スピード',
+                    bossBulletPattern: 'ボス弾パターン：',
+                    bossPatternEasy: '簡単',
+                    bossPatternNormal: '普通',
+                    bossPatternHard: '難しい',
                     showScore: 'スコア表示',
                     showMoved: '移動表示',
                     showFps: 'FPS表示',
@@ -2214,6 +2226,12 @@
                     jumpPower: 'Jump Power',
                     jumpExtra: 'Jump Extra',
                     jumpExtraFrames: 'Jump Extra Frames',
+                    enemyMaxCount: 'Enemy Max Count',
+                    bossBulletSpeed: 'Boss Bullet Speed',
+                    bossBulletPattern: 'Boss Bullet Pattern:',
+                    bossPatternEasy: 'Easy',
+                    bossPatternNormal: 'Normal',
+                    bossPatternHard: 'Hard',
                     showScore: 'Show Score',
                     showMoved: 'Show Moved',
                     showFps: 'Show FPS',
@@ -2445,6 +2463,20 @@
                 <label>Jump Extra Frames <input id="setting-jump-extra-frames" type="number" min="1" max="60" step="1" style="width:80px;"> </label>
             </div>
 
+            <!-- 新增：敵人最大數量、Boss子彈速度、Boss子彈模式 -->
+            <div style="margin-bottom:16px;">
+                <label id="label-enemy-max-count">敵人最大數量 <input id="setting-enemy-max-count" type="number" min="1" max="50" step="1" style="width:80px;"></label>
+            </div>
+            <div style="margin-bottom:16px;">
+                <label id="label-boss-bullet-speed">Boss子彈速度 <input id="setting-boss-bullet-speed" type="number" min="1" max="20" step="1" style="width:80px;"></label>
+            </div>
+            <div style="margin-bottom:16px;">
+                <span id="label-boss-bullet-pattern">Boss子彈模式：</span>
+                <label style="margin-left:8px;"><input type="radio" name="setting-boss-bullet-pattern" id="setting-boss-bullet-pattern-1" value="1"> <span id="label-boss-pattern-easy">簡單</span></label>
+                <label style="margin-left:8px;"><input type="radio" name="setting-boss-bullet-pattern" id="setting-boss-bullet-pattern-2" value="2"> <span id="label-boss-pattern-normal">普通</span></label>
+                <label style="margin-left:8px;"><input type="radio" name="setting-boss-bullet-pattern" id="setting-boss-bullet-pattern-3" value="3"> <span id="label-boss-pattern-hard">困難</span></label>
+            </div>
+
             <div style="margin-bottom:16px;">
                 <label><input type="checkbox" id="setting-show-score"> Show Score</label>
                 <label style="margin-left:16px;"><input type="checkbox" id="setting-show-moved"> Show Moved</label>
@@ -2488,6 +2520,11 @@
             var jumpPowerInput = document.getElementById('setting-jump-power');
             var jumpExtraInput = document.getElementById('setting-jump-extra');
             var jumpExtraFramesInput = document.getElementById('setting-jump-extra-frames');
+            var enemyMaxCountInput = document.getElementById('setting-enemy-max-count');
+            var bossBulletSpeedInput = document.getElementById('setting-boss-bullet-speed');
+            var bossPattern1 = document.getElementById('setting-boss-bullet-pattern-1');
+            var bossPattern2 = document.getElementById('setting-boss-bullet-pattern-2');
+            var bossPattern3 = document.getElementById('setting-boss-bullet-pattern-3');
             var showScoreInput = document.getElementById('setting-show-score');
             var showMovedInput = document.getElementById('setting-show-moved');
             var showFpsInput = document.getElementById('setting-show-fps');
@@ -2509,6 +2546,11 @@
                 if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || -11.5*1.3;
                 if (jumpExtraInput) JUMP_EXTRA = parseFloat(jumpExtraInput.value) || -0.35*1.3;
                 if (jumpExtraFramesInput) JUMP_EXTRA_FRAMES = parseInt(jumpExtraFramesInput.value) || 12;
+                if (enemyMaxCountInput) enemyMaxCount = parseInt(enemyMaxCountInput.value) || 1;
+                if (bossBulletSpeedInput) bossBulletSpeed = parseInt(bossBulletSpeedInput.value) || 1;
+                if (bossPattern1 && bossPattern1.checked) bossBulletPatternMode = 1;
+                if (bossPattern2 && bossPattern2.checked) bossBulletPatternMode = 2;
+                if (bossPattern3 && bossPattern3.checked) bossBulletPatternMode = 3;
                 if (showScoreInput) showScore = showScoreInput.checked ? 1 : 0;
                 if (showMovedInput) showMoved = showMovedInput.checked ? 1 : 0;
                 if (showFpsInput) showFPS = showFpsInput.checked ? 1 : 0;
@@ -2532,6 +2574,11 @@
                 if (jumpPowerInput) jumpPowerInput.value = JUMP_POWER;
                 if (jumpExtraInput) jumpExtraInput.value = JUMP_EXTRA;
                 if (jumpExtraFramesInput) jumpExtraFramesInput.value = JUMP_EXTRA_FRAMES;
+                if (enemyMaxCountInput) enemyMaxCountInput.value = enemyMaxCount;
+                if (bossBulletSpeedInput) bossBulletSpeedInput.value = bossBulletSpeed;
+                if (bossPattern1) bossPattern1.checked = bossBulletPatternMode === 1;
+                if (bossPattern2) bossPattern2.checked = bossBulletPatternMode === 2;
+                if (bossPattern3) bossPattern3.checked = bossBulletPatternMode === 3;
                 if (showScoreInput) showScoreInput.checked = !!showScore;
                 if (showMovedInput) showMovedInput.checked = !!showMoved;
                 if (showFpsInput) showFpsInput.checked = !!showFPS;
@@ -2559,6 +2606,11 @@
                 var jumpPowerInput = document.getElementById('setting-jump-power');
                 var jumpExtraInput = document.getElementById('setting-jump-extra');
                 var jumpExtraFramesInput = document.getElementById('setting-jump-extra-frames');
+                var enemyMaxCountInput = document.getElementById('setting-enemy-max-count');
+                var bossBulletSpeedInput = document.getElementById('setting-boss-bullet-speed');
+                var bossPattern1 = document.getElementById('setting-boss-bullet-pattern-1');
+                var bossPattern2 = document.getElementById('setting-boss-bullet-pattern-2');
+                var bossPattern3 = document.getElementById('setting-boss-bullet-pattern-3');
                 var showScoreInput = document.getElementById('setting-show-score');
                 var showMovedInput = document.getElementById('setting-show-moved');
                 var showFpsInput = document.getElementById('setting-show-fps');
@@ -2579,9 +2631,14 @@
                 if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || -11.5*1.3;
                 if (jumpExtraInput) JUMP_EXTRA = parseFloat(jumpExtraInput.value) || -0.35*1.3;
                 if (jumpExtraFramesInput) JUMP_EXTRA_FRAMES = parseInt(jumpExtraFramesInput.value) || 12;
+                if (enemyMaxCountInput) enemyMaxCount = parseInt(enemyMaxCountInput.value) || 1;
+                if (bossBulletSpeedInput) bossBulletSpeed = parseInt(bossBulletSpeedInput.value) || 1;
+                if (bossPattern1 && bossPattern1.checked) bossBulletPatternMode = 1;
+                if (bossPattern2 && bossPattern2.checked) bossBulletPatternMode = 2;
+                if (bossPattern3 && bossPattern3.checked) bossBulletPatternMode = 3;
                 if (showScoreInput) showScore = showScoreInput.checked ? 1 : 0;
                 if (showMovedInput) showMoved = showMovedInput.checked ? 1 : 0;
-                if (showFpsInput) showFPS = showFpsInput.checked ? 1 : 0;
+                if (showFpsInput) showFpsInput.checked = !!showFPS;
                 if (showXYInput) showXY = showXYInput.checked ? 1 : 0;
                 if (showNXYInput) showNXY = showNXYInput.checked ? 1 : 0;
                 if (showEntityCountsInput) showEntityCounts = showEntityCountsInput.checked ? 1 : 0;
@@ -2664,6 +2721,21 @@
         if (jumpExtraFramesInput2) jumpExtraFramesInput2.addEventListener('input', function() {
             JUMP_EXTRA_FRAMES = parseInt(this.value) || 12;
         });
+        // 新增即時同步
+        var enemyMaxCountInput2 = document.getElementById('setting-enemy-max-count');
+        if (enemyMaxCountInput2) enemyMaxCountInput2.addEventListener('input', function() {
+            enemyMaxCount = parseInt(this.value) || 1;
+        });
+        var bossBulletSpeedInput2 = document.getElementById('setting-boss-bullet-speed');
+        if (bossBulletSpeedInput2) bossBulletSpeedInput2.addEventListener('input', function() {
+            bossBulletSpeed = parseInt(this.value) || 1;
+        });
+        var bossPattern1 = document.getElementById('setting-boss-bullet-pattern-1');
+        var bossPattern2 = document.getElementById('setting-boss-bullet-pattern-2');
+        var bossPattern3 = document.getElementById('setting-boss-bullet-pattern-3');
+        if (bossPattern1) bossPattern1.addEventListener('change', function() { if (this.checked) bossBulletPatternMode = 1; });
+        if (bossPattern2) bossPattern2.addEventListener('change', function() { if (this.checked) bossBulletPatternMode = 2; });
+        if (bossPattern3) bossPattern3.addEventListener('change', function() { if (this.checked) bossBulletPatternMode = 3; });
 
         // 補上 simulateKey 實作
         function simulateKey(key, pressed) {
@@ -2823,6 +2895,13 @@
             updateCheckboxLabel('setting-auto-flip-player', L.autoFlipPlayer || '自動翻轉角色');
             updateCheckboxLabel('setting-show-collision-box', L.showCollisionBox ? '顯示碰撞箱' : '隱藏碰撞箱');
             document.getElementById('settings-close-btn').textContent = L.ok;
+            // 新增多語言
+            document.getElementById('label-enemy-max-count').childNodes[0].textContent = (L.enemyMaxCount || '敵人最大數量') + ' ';
+            document.getElementById('label-boss-bullet-speed').childNodes[0].textContent = (L.bossBulletSpeed || 'Boss子彈速度') + ' ';
+            document.getElementById('label-boss-bullet-pattern').textContent = L.bossBulletPattern || 'Boss子彈模式：';
+            document.getElementById('label-boss-pattern-easy').textContent = L.bossPatternEasy || '簡單';
+            document.getElementById('label-boss-pattern-normal').textContent = L.bossPatternNormal || '普通';
+            document.getElementById('label-boss-pattern-hard').textContent = L.bossPatternHard || '困難';
         }
 
         // 自訂語言選單邏輯
