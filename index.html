@@ -429,7 +429,7 @@
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
 
-        let playerStartX = 5000;
+        let playerStartX = 0;
         let playerStartY = 0;
         let playerMaxHealth = 100000; // Player血量
         let bossHealth   = 300;  // Boss血量
@@ -448,6 +448,40 @@
         let playerCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
         let ShowPlayerCollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
+        let FLY_RED_CollisionBoxX = 30; // 碰撞箱寬度，值越大越寬
+        let FLY_RED_CollisionBoxY = 30; // 碰撞箱高度，值越大越長
+        let FLY_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
+        let FLY_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
+        let FLY_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+        let ShowFLY_RED_CollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+
+        let FLY_ORANGE_CollisionBoxX = 60; // 碰撞箱寬度，值越大越寬
+        let FLY_ORANGE_CollisionBoxY = 70; // 碰撞箱高度，值越大越長
+        let FLY_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
+        let FLY_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
+        let FLY_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+        let ShowFLY_ORANGE_CollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+
+        let GROUND_RED_CollisionBoxX = 35; // 碰撞箱寬度，值越大越寬
+        let GROUND_RED_CollisionBoxY = 60; // 碰撞箱高度，值越大越長
+        let GROUND_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
+        let GROUND_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
+        let GROUND_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+        let ShowGROUND_RED_CollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+
+        let GROUND_ORANGE_CollisionBoxX = 50; // 碰撞箱寬度，值越大越寬
+        let GROUND_ORANGE_CollisionBoxY = 70; // 碰撞箱高度，值越大越長
+        let GROUND_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
+        let GROUND_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
+        let GROUND_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+        let ShowGROUND_ORANGE_CollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+
+        let GROUND_PINK_CollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
+        let GROUND_PINK_CollisionBoxY = 40; // 碰撞箱高度，值越大越長
+        let GROUND_PINK_CollisionBoxNX = 50; //碰撞箱中心移動x
+        let GROUND_PINK_CollisionBoxNY = 50; //碰撞箱中心移動y
+        let GROUND_PINK_CollisionBoxCircle = 1; // 0=圓形，1=矩形，越小越圓
+        let ShowGROUND_PINK_CollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
 
 
@@ -2072,6 +2106,72 @@
                         ctx.globalAlpha = 0.3;
                     } else {
                         ctx.globalAlpha = 1;
+                    }
+                }
+                // ====== 新增碰撞箱顯示 ======
+                // 依據敵人類型選擇對應參數
+                let showBox = 0, boxX = 0, boxY = 0, boxNX = 50, boxNY = 50, boxCircle = 0.4;
+                if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
+                    showBox = ShowFLY_RED_CollisionBox;
+                    boxX = FLY_RED_CollisionBoxX;
+                    boxY = FLY_RED_CollisionBoxY;
+                    boxNX = FLY_RED_CollisionBoxNX;
+                    boxNY = FLY_RED_CollisionBoxNY;
+                    boxCircle = FLY_RED_CollisionBoxCircle;
+                } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
+                    showBox = ShowFLY_ORANGE_CollisionBox;
+                    boxX = FLY_ORANGE_CollisionBoxX;
+                    boxY = FLY_ORANGE_CollisionBoxY;
+                    boxNX = FLY_ORANGE_CollisionBoxNX;
+                    boxNY = FLY_ORANGE_CollisionBoxNY;
+                    boxCircle = FLY_ORANGE_CollisionBoxCircle;
+                } else if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
+                    showBox = ShowGROUND_RED_CollisionBox;
+                    boxX = GROUND_RED_CollisionBoxX;
+                    boxY = GROUND_RED_CollisionBoxY;
+                    boxNX = GROUND_RED_CollisionBoxNX;
+                    boxNY = GROUND_RED_CollisionBoxNY;
+                    boxCircle = GROUND_RED_CollisionBoxCircle;
+                } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
+                    showBox = ShowGROUND_ORANGE_CollisionBox;
+                    boxX = GROUND_ORANGE_CollisionBoxX;
+                    boxY = GROUND_ORANGE_CollisionBoxY;
+                    boxNX = GROUND_ORANGE_CollisionBoxNX;
+                    boxNY = GROUND_ORANGE_CollisionBoxNY;
+                    boxCircle = GROUND_ORANGE_CollisionBoxCircle;
+                } else if (enemy.color === '#f8c' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
+                    showBox = ShowGROUND_PINK_CollisionBox;
+                    boxX = GROUND_PINK_CollisionBoxX;
+                    boxY = GROUND_PINK_CollisionBoxY;
+                    boxNX = GROUND_PINK_CollisionBoxNX;
+                    boxNY = GROUND_PINK_CollisionBoxNY;
+                    boxCircle = GROUND_PINK_CollisionBoxCircle;
+                }
+                if (showBox === 1) {
+                    // 算出中心
+                    const centerX = enemy.x + enemy.width * (boxNX / 100);
+                    const centerY = enemy.y + enemy.height * (boxNY / 100);
+                    const ellipseRx = boxX / 2;
+                    const ellipseRy = boxY / 2;
+                    const boxX1 = centerX - boxX / 2;
+                    const boxY1 = centerY - boxY / 2;
+                    // 畫橢圓
+                    if (boxCircle < 1) {
+                        ctx.save();
+                        ctx.globalAlpha = 0.35;
+                        ctx.fillStyle = 'rgba(255,140,0,0.7)';
+                        ctx.beginPath();
+                        ctx.ellipse(centerX, centerY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                    // 畫矩形
+                    if (boxCircle > 0) {
+                        ctx.save();
+                        ctx.globalAlpha = 0.18;
+                        ctx.fillStyle = 'rgba(255,140,0,0.7)';
+                        ctx.fillRect(boxX1, boxY1, boxX, boxY);
+                        ctx.restore();
                     }
                 }
             });
