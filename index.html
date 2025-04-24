@@ -1559,6 +1559,30 @@
                     player.y = 0;
                 }
             }
+            // ====== 流星生成與移動 ======
+            if (Date.now() > nextMeteorTime) {
+                // 隨機起點（畫面右上方），隨機角度
+                const startX = camera.x + Math.random() * canvas.width * 0.7 + canvas.width * 0.3;
+                const startY = camera.y + Math.random() * 80;
+                const angle = Math.PI + (Math.random() * 0.4 - 0.2); // 向左下
+                const speed = 8 + Math.random() * 6;
+                meteors.push({
+                    x: startX,
+                    y: startY,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    len: 80 + Math.random() * 40,
+                    alpha: 1
+                });
+                nextMeteorTime = Date.now() + 3000 + Math.random() * 2000; // 下次3~5秒
+            }
+            // 流星移動
+            meteors.forEach(meteor => {
+                meteor.x += meteor.vx;
+                meteor.y += meteor.vy;
+                meteor.alpha -= 0.012;
+            });
+            meteors = meteors.filter(m => m.alpha > 0 && m.x > camera.x - 100 && m.y < camera.y + canvas.height + 100);
         }
         
         // ===== 渲染遊戲 =====
@@ -1979,6 +2003,27 @@
             // 調試信息
             cameraDebugElement.textContent = `moved: (${Math.floor(camera.x)})`;
             cameraDebugElement.style.display = showMoved == 1 ? 'block' : 'none';
+            // ===== 星星閃爍特效 =====
+            const now = Date.now() / 1000;
+            stars.forEach(star => {
+                const flicker = 0.6 + 0.4 * Math.sin(now * star.speed + star.phase);
+                ctx.globalAlpha = flicker;
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(star.x, star.y, star.size, star.size);
+            });
+            ctx.globalAlpha = 1;
+            // ===== 流星特效 =====
+            meteors.forEach(meteor => {
+                ctx.save();
+                ctx.globalAlpha = meteor.alpha;
+                ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(meteor.x, meteor.y);
+                ctx.lineTo(meteor.x - meteor.vx * meteor.len / 20, meteor.y - meteor.vy * meteor.len / 20);
+                ctx.stroke();
+                ctx.restore();
+            });
         }
         
         // ===== 工具函數 =====
@@ -2928,6 +2973,21 @@
             customLangList.style.display = 'none';
         });
         window.addEventListener('DOMContentLoaded', updateCustomLangBtn);
+
+        // ===== 星星與流星特效 =====
+        const STAR_COUNT = 100;
+        const stars = [];
+        for (let i = 0; i < STAR_COUNT; i++) {
+            stars.push({
+                x: Math.random() * WORLD_WIDTH,
+                y: Math.random() * WORLD_HEIGHT,
+                size: 1 + Math.floor(Math.random() * 3),
+                phase: Math.random() * Math.PI * 2, // 閃爍起始位相
+                speed: 0.5 + Math.random() * 1.5 // 閃爍速度
+            });
+        }
+        let meteors = [];
+        let nextMeteorTime = Date.now() + 3000 + Math.random() * 2000; // 3~5秒
 
     </script>
 </body>
