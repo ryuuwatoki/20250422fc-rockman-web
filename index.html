@@ -2445,6 +2445,7 @@
                     showEntityCounts: '顯示物件數量',
                     showMobileTouch: '顯示手機觸控',
                     autoFlipPlayer: '自動翻轉角色',
+                    showCollisionBox: '顯示碰撞箱',
                     ok: '確定'
                 }
             },
@@ -2481,6 +2482,7 @@
                     showEntityCounts: 'エンティティ数表示',
                     showMobileTouch: 'モバイルタッチ表示',
                     autoFlipPlayer: '自動反転キャラ',
+                    showCollisionBox: '当たり判定表示',
                     ok: 'OK'
                 }
             },
@@ -2517,6 +2519,7 @@
                     showEntityCounts: 'Show Entity Counts',
                     showMobileTouch: 'Show Mobile Touch',
                     autoFlipPlayer: 'Auto Flip Character',
+                    showCollisionBox: 'Show Collision Box',
                     ok: 'OK'
                 }
             }
@@ -2754,12 +2757,15 @@
             </div>
 
             <div style="margin-bottom:16px;">
+                <label><input type="checkbox" id="setting-auto-flip-player"> 自動翻轉角色</label>
+                <label style="margin-left:16px;"><input type="checkbox" id="setting-show-collision-box"> 顯示碰撞箱</label>
+            </div>
+
+
+            <div style="margin-bottom:16px;">
                 <label><input type="checkbox" id="setting-show-mobile-touch"> Show Mobile Touch</label>
             </div>
 
-            <div style="margin-bottom:16px;">
-                <label><input type="checkbox" id="setting-auto-flip-player"> 自動翻轉角色</label>
-            </div>
             
             <div style="text-align:center;margin-top:18px;">
                 <button id="settings-close-btn" style="padding:6px 24px;font-size:16px;background:#4af;color:#fff;border:none;border-radius:6px;">OK</button>
@@ -2792,6 +2798,7 @@
             var startXInput = document.getElementById('setting-start-x');
             var startYInput = document.getElementById('setting-start-y');
             var autoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
+            var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
             if (settingsPanel.style.display === 'block') {
                 if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
                 if (sfxOnInput) isSfxOn = sfxOnInput.checked ? 1 : 0;
@@ -2810,6 +2817,7 @@
                 if (showEntityCountsInput) showEntityCounts = showEntityCountsInput.checked ? 1 : 0;
                 if (showMobileTouchInput) showMobileTouch = showMobileTouchInput.checked ? 1 : 0;
                 if (autoFlipPlayerInput) autoFlipPlayer = autoFlipPlayerInput.checked;
+                if (showCollisionBoxInput) ShowCollisionBox = showCollisionBoxInput.checked ? 1 : 0;
                 settingsPanel.style.display = 'none';
                 isPaused = false;
                 if (startXInput) startXInput.value = playerStartX;
@@ -2832,6 +2840,7 @@
                 if (showEntityCountsInput) showEntityCountsInput.checked = !!showEntityCounts;
                 if (showMobileTouchInput) showMobileTouchInput.checked = !!showMobileTouch;
                 if (autoFlipPlayerInput) autoFlipPlayerInput.checked = !!autoFlipPlayer;
+                if (showCollisionBoxInput) ShowCollisionBox = showCollisionBoxInput.checked ? 1 : 0;
                 settingsPanel.style.display = 'block';
                 isPaused = true;
                 if (startXInput) startXInput.value = playerStartX;
@@ -2860,6 +2869,7 @@
                 var startXInput = document.getElementById('setting-start-x');
                 var startYInput = document.getElementById('setting-start-y');
                 var autoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
+                var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
                 if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
                 if (sfxOnInput) isSfxOn = sfxOnInput.checked ? 1 : 0;
                 if (moveSpeedInput) playerMoveSpeed = parseInt(moveSpeedInput.value) || 1;
@@ -2877,6 +2887,7 @@
                 if (showEntityCountsInput) showEntityCounts = showEntityCountsInput.checked ? 1 : 0;
                 if (showMobileTouchInput) showMobileTouch = showMobileTouchInput.checked ? 1 : 0;
                 if (autoFlipPlayerInput) autoFlipPlayer = autoFlipPlayerInput.checked;
+                if (showCollisionBoxInput) ShowCollisionBox = showCollisionBoxInput.checked ? 1 : 0;
                 settingsPanel.style.display = 'none';
                 isPaused = false; // 關閉設定時恢復
                 if (startXInput) startXInput.value = playerStartX;
@@ -2884,7 +2895,7 @@
             };
         }
         // checkbox 變動即時同步
-        ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch','setting-auto-flip-player'].forEach(id => {
+        ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch','setting-auto-flip-player','setting-show-collision-box'].forEach(id => {
             var el = document.getElementById(id);
             if (el) {
                 el.addEventListener('change', function() {
@@ -2897,6 +2908,7 @@
                         case 'setting-show-entity-counts': showEntityCounts = this.checked ? 1 : 0; break;
                         case 'setting-show-mobile-touch': showMobileTouch = this.checked ? 1 : 0; updateMobileTouchDisplay(); break;
                         case 'setting-auto-flip-player': autoFlipPlayer = this.checked; break;
+                        case 'setting-show-collision-box': ShowCollisionBox = this.checked ? 1 : 0; break;
                     }
                 });
             }
@@ -3110,6 +3122,7 @@
             updateCheckboxLabel('setting-show-entity-counts', L.showEntityCounts);
             updateCheckboxLabel('setting-show-mobile-touch', L.showMobileTouch);
             updateCheckboxLabel('setting-auto-flip-player', L.autoFlipPlayer || '自動翻轉角色');
+            updateCheckboxLabel('setting-show-collision-box', L.showCollisionBox ? '顯示碰撞箱' : '隱藏碰撞箱');
             document.getElementById('settings-close-btn').textContent = L.ok;
         }
 
