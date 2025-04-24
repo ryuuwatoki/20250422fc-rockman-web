@@ -433,20 +433,27 @@
 
         // ===== 遊戲狀態 =====
         let MAX_FPS = 100; // 最大FPS設定
+        let score        = 0;     // 玩家分數
 
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
 
-        let playerStartX = 0;
-        let playerStartY = 0;
-        let playerMaxHealth = 100000; // Player血量
+        let playerStartX = 5000;   // 玩家初始座標 x 預設200
+        let playerStartY = 100;   // 玩家初始座標 y 預設100 
+        let playerMaxHealth = 100000; // 玩家血量
         let bossHealth   = 300;  // Boss血量
 
-        let score        = 0;     // 玩家分數
+        let enemyMaxCount = 20; // 敵人最大數量
+        let BossShootDelay = 10; // Boss射擊間隔 算幀數
 
+        let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否
+        let FLY_ORANGE_spawn = 1; // 敵人Ｂ是否生成，1=是，0=否
+        let GROUND_RED_spawn = 1; // 敵人Ｃ是否生成，1=是，0=否
+        let GROUND_ORANGE_spawn = 1; // 敵人Ｄ是否生成，1=是，0=否
+        let GROUND_PINK_spawn = 1; // 敵人Ｅ是否生成，1=是，0=否
 
         let bossBulletEnable = 0; // boss 子彈是否射擊，1=是，0=否
-        let bossFixedPosition = 1; // boss 是否固定座標（取消移動），1=是，0=否
+        let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否
 
         let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
@@ -486,8 +493,6 @@
         let GROUND_PINK_CollisionBoxNY = 50; //碰撞箱中心移動y
         let GROUND_PINK_CollisionBoxCircle = 1; // 0=圓形，1=矩形，越小越圓
 
-
-
         let bossSetX = 5000; // boss 設定當前座標 x
         let bossSetY = 230; // boss 設定當前座標 y
         let bossCollisionBoxX = 160; // 碰撞箱寬度，值越大越寬
@@ -495,11 +500,6 @@
         let bossCollisionBoxNX = 75; //碰撞箱中心移動x
         let bossCollisionBoxNY = 65; //碰撞箱中心移動y
         let bossCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-
-
-
-
-
 
         let showScore = 1; // score:0 顯示1 隱藏0
         let showMoved = 0; // moved:(0) 顯示1 隱藏0
@@ -1545,8 +1545,14 @@
             
             // 生成敵人
             if (Math.random() < 0.015 && enemies.length < 8 && !bossActive && player.x < WORLD_WIDTH - 1000) {
-                // 只從新六種小怪隨機選一種
-                const enemyTypes = Object.values(ENEMY_TYPES);
+                // 依照 spawn 變數決定哪些敵人型別可以生成
+                const enemyTypes = [];
+                if (FLY_RED_spawn) enemyTypes.push(ENEMY_TYPES.FLY_RED);
+                if (FLY_ORANGE_spawn) enemyTypes.push(ENEMY_TYPES.FLY_ORANGE);
+                if (GROUND_RED_spawn) enemyTypes.push(ENEMY_TYPES.GROUND_RED);
+                if (GROUND_ORANGE_spawn) enemyTypes.push(ENEMY_TYPES.GROUND_ORANGE);
+                if (GROUND_PINK_spawn) enemyTypes.push(ENEMY_TYPES.GROUND_PINK);
+                if (enemyTypes.length === 0) return; // 沒有可生成的敵人
                 let type;
                 let tryCount = 0;
                 do {
