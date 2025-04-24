@@ -6,306 +6,7 @@
     <title>オックセンマン by watokiryuu</title>
     <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" href="css/style.css">
-
-    <style>
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #222;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-        }
-        
-        #game-wrapper {
-            width: 800px;
-            height: 500px;
-            position: relative;
-            margin: 0 auto;
-            background: transparent;
-        }
-        
-        #game-container {
-            width: 800px;
-            height: 500px;
-            position: relative;
-            background: #000;
-        }
-        
-        #game-canvas {
-            background-color: #000;
-        }
-        
-        #start-screen, #game-over-screen, #win-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            z-index: 10;
-        }
-        
-        #game-over-screen, #win-screen {
-            display: none;
-        }
-        
-        h1 {
-            color: #4af;
-            font-size: 36px;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #4af;
-        }
-        
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #4af;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            /* margin-top: 20px; */
-        }
-        
-        button:hover {
-            background-color: #6cf;
-        }
-        
-        #health-bar {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 200px;
-            height: 20px;
-            background-color: #333;
-            border: 2px solid #444;
-            z-index: 5;
-        }
-        
-        #health-fill {
-            height: 100%;
-            width: 100%;
-            background-color: #4af;
-            transition: width 0.3s;
-        }
-        
-        #boss-health-container {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 200px;
-            height: 20px;
-            background-color: #333;
-            border: 2px solid #444;
-            z-index: 5;
-            display: none;
-        }
-        
-        #boss-health-fill {
-            height: 100%;
-            width: 100%;
-            background-color: #ccc;
-            transition: width 0.3s;
-        }
-        
-        #score {
-            position: absolute;
-            top: 40px;
-            left: 10px;
-            color: white;
-            font-size: 18px;
-            z-index: 5;
-        }
-        
-        #camera-debug {
-            position: absolute;
-            top: 70px;
-            left: 10px;
-            color: white;
-            font-size: 12px;
-            z-index: 5;
-        }
-        
-        #fps-display {
-            position: absolute;
-            top: 70px;
-            right: 10px;
-            color: white;
-            font-size: 14px;
-            z-index: 5;
-        }
-        
-        #win-screen h1 div {
-            text-align: center;
-        }
-        
-        #touch-controls {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 340px; /*整體按鈕高度 手機控制鈕高度 touch高度*/
-            width: 100%;
-            height: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 50;
-            touch-action: none;
-        }
-        #touch-controls .touch-left, #touch-controls .touch-right {
-            display: flex;
-            gap: 8px; /* 更靠近 */
-            margin: 0 2vw; /* 靠近中間 */
-        }
-        #touch-controls button {
-            pointer-events: auto;
-            width: 60px;
-            height: 60px;
-            font-size: 24.2px;
-            border-radius: 50%;
-            border: none;
-            background: #333a;
-            color: #fff;
-            box-shadow: 0 2px 8px #0006;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-        }
-        #touch-controls button:active {
-            background: #4af;
-            color: #fff;
-        }
-        @media (max-width: 900px) {
-            #game-container { width: 800px; height: 500px; }
-            #touch-controls { height: 90px; }
-            #touch-controls .touch-left, #touch-controls .touch-right { margin: 0 6vw; }
-            #touch-controls button { width: 60px; height: 60px; font-size: 24.2px; }
-        }
-        #touch-controls .touch-right {
-            display: flex;
-            gap: 8px;
-            margin: 0 2vw;
-            /* position: relative; */
-            /* top: -100px; */
-        }
-        #btn-shoot {
-            position: relative;
-            top: -100px;
-        }
-        #settings-panel {
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background: #222;
-            color: #fff;
-            padding: 32px 32px 24px 32px;
-            border-radius: 16px;
-            box-shadow: 0 4px 32px #000a;
-            z-index: 2000;
-            display: none;
-            min-width: 320px;
-            max-width: 96vw;
-            max-height: 96vh;
-            overflow: auto;
-            font-size: calc(16px + 1vw);
-        }
-        @media (max-width: 600px) {
-            #settings-panel {
-                min-width: 0;
-                width: 98vw;
-                padding: 2vw 2vw 2vw 2vw;
-                font-size: calc(12px + 2vw);
-            }
-            #settings-panel h2 {
-                font-size: calc(18px + 2vw);
-            }
-        }
-        #settings-panel *:not(h2) {
-            font-size: 70% !important;
-        }
-        #language-select {
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background: #222;
-            padding: 12px 24px;
-            border-radius: 10px;
-            box-shadow: 0 2px 12px #0008;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            z-index: 3000;
-        }
-        #custom-lang-select-list, #custom-lang-select-list li {
-            font-size: 12px !important;
-            line-height: 1.6;
-        }
-        #start-button,  #play-again-button{
-            border-top: 10px;
-            margin-top: 50px;
-        }
-        
-        #lang-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 30;
-            background: #222;
-            color: #fff;
-            border-radius: 6px;
-            padding: 4px 12px;
-            font-size: 14px;
-        }
-        #language-select {
-            position: absolute;
-            top: 40px;
-            right: 10px;
-            z-index: 29;
-            background: #222;
-            padding: 12px 24px;
-            border-radius: 10px;
-            box-shadow: 0 2px 12px #0008;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            font-size: 80%;
-        }
-        #language-select h3 {
-            color: #fff;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        #language-select > div {
-            display: flex;
-            gap: 12px;
-        }
-        #language-select button {
-            font-size: 80%; 
-        }
-        
-        #touch-controls button img {
-            display: block;
-            margin: auto;
-            max-width: 80%;
-            max-height: 80%;
-            width: auto;
-            height: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style2.css">
 </head>
 <body>
     <audio id="bgm" src="sound/bgm.mp3" loop style="display:none"></audio>
@@ -319,7 +20,7 @@
     <audio id="boss-audio" src="sound/boss.mp3" style="display:none"></audio>
     <div id="game-wrapper">
         <div id="game-container">
-            <button id="lang-toggle">🌐</button>
+            <button id="lang-toggle"><img src="img/language.png" alt="language" style="width:28px;height:28px;vertical-align:middle;"></button>
             <div id="language-select">
                 <h3>選擇語言 / 言語を選択 / Select Language</h3>
                 <div>
@@ -329,22 +30,18 @@
                 </div>
             </div>
             <canvas id="game-canvas" width="800" height="500"></canvas>
-            
             <div id="health-bar">
                 <div id="health-fill"></div>
             </div>
-            
             <div id="boss-health-container">
                 <div id="boss-health-fill"></div>
             </div>
-            
             <div id="score">score: 0</div>
             <div id="camera-debug"></div>
             <div id="fps-display" style="position:absolute;top:70px;right:10px;color:#fff;font-size:14px;z-index:5;"></div>
             <div id="xy-display" style="position:absolute;top:90px;right:10px;color:#fff;font-size:14px;z-index:5;"></div>
             <div id="nxy-display" style="position:absolute;top:110px;right:10px;color:#fff;font-size:14px;z-index:5;"></div>
             <div id="entity-counts" style="position:absolute;top:130px;right:10px;color:#fff;font-size:14px;z-index:5;"></div>
-            
             <!-- 遊戲開始畫面（Start Screen） -->
             <div id="start-screen">
                 <h1></h1>
@@ -353,14 +50,12 @@
                 <p></p>
                 <button id="start-button">START</button>
             </div>
-            
             <!-- 遊戲結束畫面（Game Over Screen） -->
             <div id="game-over-screen">
                 <h1 style="color:#800;">gameover</h1>
                 <p id="final-score">score: 0</p>
                 <button id="restart-button">again?</button>
             </div>
-            
             <!-- 勝利畫面（Win Screen） -->
             <div id="win-screen">
                 <h1>win!</h1>
@@ -386,7 +81,6 @@
     <script>
 
         // ===== 遊戲設定（集中整理） =====
-
         // let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文
         let FirstLanguage = localStorage.getItem('lang') || 'zh'; //預設語言中文
         // let FirstLanguage = localStorage.getItem('lang') || 'en'; //預設語言英文
@@ -400,7 +94,9 @@
         let playerStartX = 200;   // 玩家初始座標 x 預設200
         let playerStartY = 100;   // 玩家初始座標 y 預設100 
         let playerMaxHealth = 100000; // 玩家血量
-        let bossHealth   = 300;  // Boss血量
+
+        // ===== 玩家飛行無敵模式 =====
+        let isFlyingMode = 0; // 預設關閉
 
         let enemyMaxCount = 12; // 敵人最大數量
         let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否
@@ -409,6 +105,7 @@
         let GROUND_ORANGE_spawn = 1; // 敵人Ｄ是否生成，1=是，0=否
         let GROUND_PINK_spawn = 1; // 敵人Ｅ是否生成，1=是，0=否
 
+        let bossHealth   = 300;  // Boss血量
         let bossSetX = 5000; // boss 設定當前座標 x
         let bossSetY = 230; // boss 設定當前座標 y
         let bossBulletSpeed = 3; // boss 子彈速度（預設3，數值越大越快）
@@ -424,10 +121,10 @@
         let showEntityCounts = 0; //show 人物怪物子彈數量
         let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）
 
+        // 音量設定
         let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉
         let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉
 
-        // 音量設定
         let VOLUME_BGM      = 0.55;  // 背景音樂音量
         let VOLUME_SHOOT    = 0.55;  // 射擊音效音量
         let VOLUME_CHARGE   = 0.55;  // 集氣音效音量
@@ -438,8 +135,6 @@
         let VOLUME_BOSS     = 0.85;  // Boss出場音效音量
         let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量
 
-        // ===== 玩家飛行無敵模式 =====
-        let isFlyingMode = 0; // 預設關閉
 
         const COLOR_PLATFORM_NORMAL = '#444';      // 一般平台顏色
         const COLOR_PLATFORM_BOSS   = '#800';      // Boss區域平台顏色
