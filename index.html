@@ -80,67 +80,67 @@
 
     <script>
 
-        // ===== 遊戲設定（集中整理） =====
-        // let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文
-        let FirstLanguage = localStorage.getItem('lang') || 'zh'; //預設語言中文
-        // let FirstLanguage = localStorage.getItem('lang') || 'en'; //預設語言英文
+        // ===== 遊戲設定（集中整理） =====｜ゲーム設定（集中管理）
+        // let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文｜デフォルト言語：日本語
+        let FirstLanguage = localStorage.getItem('lang') || 'zh'; //預設語言中文｜デフォルト言語：中国語
+        // let FirstLanguage = localStorage.getItem('lang') || 'en'; //預設語言英文｜デフォルト言語：英語
 
-        // ===== 遊戲狀態 =====
-        let MAX_FPS = 70; // 最大FPS設定 預設70
+        // ===== 遊戲狀態 =====｜ゲーム状態
+        let MAX_FPS = 70; // 最大FPS設定 預設70｜最大FPS設定 デフォルト70
 
-        let playerMoveSpeed = 60; // 玩家移動速度設定，數值越大移動越快，預設6
-        let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerStartX = 200;   // 玩家初始座標 x 預設200
-        let playerStartY = 150;   // 玩家初始座標 y 預設100 
-        let playerMaxHealth = 100; // 玩家血量 預設100
+        let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
+        let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
+        let playerStartX = 200;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
+        let playerStartY = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
+        let playerMaxHealth = 100; // 玩家血量 預設100｜プレイヤー体力 デフォルト100
 
-        // ===== 玩家飛行無敵模式 =====
-        let isFlyingMode = 1; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了
+        // ===== 玩家飛行無敵模式 =====｜プレイヤー飛行無敵モード
+        let isFlyingMode = 0; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
 
-        let enemyMaxCount = 12; // 敵人最大數量 預設12
-        let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否
-        let FLY_ORANGE_spawn = 1; // 敵人Ｂ是否生成，1=是，0=否
-        let GROUND_RED_spawn = 1; // 敵人Ｃ是否生成，1=是，0=否
-        let GROUND_ORANGE_spawn = 1; // 敵人Ｄ是否生成，1=是，0=否
-        let GROUND_PINK_spawn = 1; // 敵人Ｅ是否生成，1=是，0=否
+        let enemyMaxCount = 12; // 敵人最大數量 預設12｜敵最大数 デフォルト12
+        let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
+        let FLY_ORANGE_spawn = 1; // 敵人Ｂ是否生成，1=是，0=否｜敵B生成するか 1=はい 0=いいえ
+        let GROUND_RED_spawn = 1; // 敵人Ｃ是否生成，1=是，0=否｜敵C生成するか 1=はい 0=いいえ
+        let GROUND_ORANGE_spawn = 1; // 敵人Ｄ是否生成，1=是，0=否｜敵D生成するか 1=はい 0=いいえ
+        let GROUND_PINK_spawn = 1; // 敵人Ｅ是否生成，1=是，0=否｜敵E生成するか 1=はい 0=いいえ
 
-        let bossHealth   = 300;  // Boss血量 預設300
-        let bossSetX = 5000; // boss 設定當前座標 x 預設5000
-        let bossSetY = 230; // boss 設定當前座標 y 預設230
-        let bossBulletSpeed = 4; // boss 子彈速度（預設4，數值越大越快）
-        let bossBulletPatternMode = 2; // boss發射子彈的模式 1:固定3發 2:隨機3/4/5發 3:隨機3/4/5/7發
-        let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否
-        let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否
+        let bossHealth   = 300;  // Boss血量 預設300｜ボス体力 デフォルト300
+        let bossSetX = 5000; // boss 座標 x 預設5000｜ボス座標 x デフォルト5000
+        let bossSetY = 230; // boss 座標 y 預設230｜ボス座標 y デフォルト230
+        let bossBulletSpeed = 4; // boss 子彈速度（預設4，數值越大越快）｜ボス弾スピード（デフォルト4、数値が大きいほど速い）
+        let bossBulletPatternMode = 2; // boss發射子彈的模式 1:固定3發 2:隨機3/4/5發 3:隨機3/4/5/7發｜ボス弾パターン 1:固定3発 2:ランダム3/4/5発 3:ランダム3/4/5/7発
+        let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否｜ボス弾発射するか 1=はい 0=いいえ
+        let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否｜ボス座標固定するか（移動しない）1=はい 0=いいえ
 
-        let showScore = 1; // score:0 顯示1 隱藏0
-        let showMoved = 0; // moved:(0) 顯示1 隱藏0
-        let showFPS = 1; //showfps
-        let showXY = 0; //show xy
-        let showNXY = 0; //show new xy
-        let showEntityCounts = 0; //show 人物怪物子彈數量
-        let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）
+        let showScore = 1; // score:0 顯示1 隱藏0｜スコア表示 1=表示 0=非表示
+        let showMoved = 0; // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
+        let showFPS = 1; //showfps｜FPS表示
+        let showXY = 0; //show xy｜XY座標表示
+        let showNXY = 0; //show new xy｜グリッド座標表示
+        let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ数表示
+        let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
 
-        // 音量設定
-        let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉
-        let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉
+        // 音量設定｜音量設定
+        let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
+        let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉｜効果音オンオフ 1=オン 0=オフ
 
-        let VOLUME_BGM      = 0.55;  // 背景音樂音量
-        let VOLUME_SHOOT    = 0.55;  // 射擊音效音量
-        let VOLUME_CHARGE   = 0.55;  // 集氣音效音量
-        let VOLUME_BOOM     = 0.45;  // 爆炸音效音量
-        let VOLUME_HURT     = 0.70;  // 受傷音效音量
-        let VOLUME_GAMEOVER = 0.75;  // 遊戲結束音效音量
-        let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量
-        let VOLUME_BOSS     = 0.85;  // Boss出場音效音量
-        let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量
+        let VOLUME_BGM      = 0.55;  // 背景音樂音量｜BGM音量
+        let VOLUME_SHOOT    = 0.55;  // 射擊音效音量｜射撃効果音音量
+        let VOLUME_CHARGE   = 0.55;  // 集氣音效音量｜チャージ効果音音量
+        let VOLUME_BOOM     = 0.45;  // 爆炸音效音量｜爆発効果音音量
+        let VOLUME_HURT     = 0.70;  // 受傷音效音量｜ダメージ効果音音量
+        let VOLUME_GAMEOVER = 0.75;  // 遊戲結束音效音量｜ゲームオーバー効果音音量
+        let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量｜ボス死亡効果音音量
+        let VOLUME_BOSS     = 0.85;  // Boss出場音效音量｜ボス登場効果音音量
+        let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量｜勝利BGM音量
 
 
-        const COLOR_PLATFORM_NORMAL = '#444';      // 一般平台顏色
-        const COLOR_PLATFORM_BOSS   = '#800';      // Boss區域平台顏色
+        const COLOR_PLATFORM_NORMAL = '#444';      // 一般平台顏色｜通常プラットフォーム色
+        const COLOR_PLATFORM_BOSS   = '#800';      // Boss區域平台顏色｜ボスエリアプラットフォーム色
 
-        // 以格數設計的平台資料 地板
+        // 以格數設計的平台資料 地板｜グリッド設計のプラットフォームデータ（床）
         const platformGrid = [
-            // 第一區（0~2700）
+            // 第一區（0~2700）｜第一区（0~2700）
             { x: 0, y: 1, color: COLOR_PLATFORM_NORMAL },
             { x: 1, y: 1, color: COLOR_PLATFORM_NORMAL },
             { x: 2, y: 1, color: COLOR_PLATFORM_NORMAL },
@@ -159,7 +159,7 @@
             { x: 15, y: 1, color: COLOR_PLATFORM_NORMAL },
             // { x: 16, y: 1, color: COLOR_PLATFORM_NORMAL },
 
-            // 中間區域
+            // 中間區域｜中間エリア
             { x: 17, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 18, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 19, y: 3, color: COLOR_PLATFORM_NORMAL },
@@ -235,7 +235,7 @@
             { x: 89, y: 2, color: COLOR_PLATFORM_NORMAL },
             // { x: 90, y: 2, color: COLOR_PLATFORM_NORMAL },
 
-            // Boss 區域地板（x=4600 之後）
+            // Boss 區域地板（x=4600 之後）｜ボスエリア床（x=4600以降）
             { x: 91, y: 1, color: COLOR_PLATFORM_BOSS },
             { x: 92, y: 1, color: COLOR_PLATFORM_BOSS },
             { x: 93, y: 1, color: COLOR_PLATFORM_BOSS },
@@ -255,7 +255,7 @@
             { x: 107, y: 1, color: COLOR_PLATFORM_BOSS },
             { x: 108, y: 1, color: COLOR_PLATFORM_BOSS },
         ];
-        // 自動轉換
+        // 自動轉換｜自動変換
         const basePlatforms = platformGrid.map(p => ({
             x: p.x * 50,
             y: 500 - p.y * 50,
@@ -301,17 +301,25 @@
         let bossDefeated = false;
         let fakeBoss = null;
         let fakeBossFlashFrame = 0;
-        let meteorSpawnFrequency = 10; // 每次生成隕石的間隔幀數
-        let meteorSpawnRate = 0.1; // 隕石生成率
+
+        // ===== 隕石系統 =====
+        let meteors = [];
+        let meteorSpawnTimer = 0;
+        let bossBgTransition = 0; // Boss區背景漸變進度 0~1
+        let meteorSpawnFrequency = 180; // 每次生成隕石的間隔幀數
+        let meteorSpawnRate = 0.2; // 隕石生成率
         let boosMeteorSpawnFrequency = 20; // 每次生成隕石的間隔幀數
         let bossMeteorSpawnRate = 1; // 隕石生成率
         let enterBossArea = 30; //進入boss區間變時間 (單位秒)
-        let outBossArea = 30; //離開boss區間變時間 (單位秒)
-
+        let outBossArea = 1; //離開boss區間變時間 (單位秒)
+        let boosMeteorDelay = 7; //進入boss區多久觸發隕石(單位秒)
+        // ===== 隕石切換延遲控制 =====
+        let inBossAreaDelayTimer = 0; // 進入Boss區延遲計時器（幀）
+        let outBossAreaDelayTimer = 0; // 離開Boss區延遲計時器（幀）
+        let isInBossAreaMeteor = false; // 目前隕石是否為Boss區型態
 
         // ===== 碰撞箱 =====
         let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
-
         let playerCollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
         let playerCollisionBoxY = 70; // 碰撞箱高度，值越大越長
         let playerCollisionBoxNX = 50; //碰撞箱中心移動x
@@ -359,7 +367,7 @@
         const COLOR_BULLET_BOSS     = '#f4a';      // Boss子彈顏色
         const BOSS_METEOR_COLOR     = '#ff9800';   // Boss隕石顏色
         
-        const BOSS_METEOR_SIZE = 5; // Boss隕石尺寸
+        const BOSS_METEOR_SIZE = 10; // Boss隕石尺寸
 
         // 新增floor圖片物件
         const floorImg = new Image(); floorImg.src = 'img/01floor.png';
@@ -1573,25 +1581,49 @@
 
             // ===== 隕石生成與更新 =====
             meteorSpawnTimer++;
+            // 隕石切換延遲邏輯
             if (player.x >= BOSS_AREA_X) {
+                if (!isInBossAreaMeteor && inBossAreaDelayTimer === 0) {
+                    inBossAreaDelayTimer = Math.round(boosMeteorDelay * MAX_FPS); // 開始計時
+                }
+                if (inBossAreaDelayTimer > 0) {
+                    inBossAreaDelayTimer--;
+                    if (inBossAreaDelayTimer === 0) {
+                        isInBossAreaMeteor = true;
+                        outBossAreaDelayTimer = 0; // 清除離開計時
+                    }
+                }
+            } else {
+                if (isInBossAreaMeteor && outBossAreaDelayTimer === 0) {
+                    outBossAreaDelayTimer = Math.round(boosMeteorDelay * MAX_FPS); // 開始離開計時
+                }
+                if (outBossAreaDelayTimer > 0) {
+                    outBossAreaDelayTimer--;
+                    if (outBossAreaDelayTimer === 0) {
+                        isInBossAreaMeteor = false;
+                        inBossAreaDelayTimer = 0; // 清除進入計時
+                    }
+                }
+            }
+            // 根據 isInBossAreaMeteor 來決定隕石生成規則
+            if (isInBossAreaMeteor) {
                 // Boss區
                 if (meteorSpawnTimer >= boosMeteorSpawnFrequency) {
                     meteorSpawnTimer = 0;
                     if (Math.random() < bossMeteorSpawnRate) {
-                        // 生成一顆隕石
-                        let mx = camera.x + 500 + Math.random() * 2500; // 以鏡頭 moved 為基準，+500~3000 (原本500)
-                        let my = Math.random() * 150; // y 0~150
-                        let speed = (2 + Math.random() * 2) * 2.5; // 速度減半，2~4 px/frame (原本4~8)
-                        let angle = Math.PI + (Math.random() * 0.5 - 0.25); // 向左下斜，角度約 180 度 ±0.25rad
+                        let mx = camera.x + 500 + Math.random() * 2500;
+                        let my = Math.random() * 150;
+                        let speed = (2 + Math.random() * 2) * 2.5;
+                        let angle = Math.PI + (Math.random() * 0.5 - 0.25);
                         let vx = Math.cos(angle) * speed;
                         let vy = Math.sin(angle) * speed;
-                        let life = 20 + Math.floor(Math.random() * 41); // 20~60 幀
+                        let life = 20 + Math.floor(Math.random() * 41);
                         meteors.push({ x: mx, y: my, vx, vy, life, bossMeteor: true });
                     }
                 }
-                // === Boss區背景漸變 ===
+                // Boss區背景漸變
                 if (bossBgTransition < 1) {
-                    bossBgTransition += 1 / (enterBossArea * MAX_FPS); // 進入boss區間變時間
+                    bossBgTransition += 1 / (enterBossArea * MAX_FPS);
                     if (bossBgTransition > 1) bossBgTransition = 1;
                 }
             } else {
@@ -1599,20 +1631,19 @@
                 if (meteorSpawnTimer >= meteorSpawnFrequency) {
                     meteorSpawnTimer = 0;
                     if (Math.random() < meteorSpawnRate) {
-                        // 生成一顆隕石
-                        let mx = camera.x + 500 + Math.random() * 500; // 以鏡頭 moved 為基準，+500~1000
-                        let my = Math.random() * 150; // y 0~150
-                        let speed = (2 + Math.random() * 2) * 5; // 速度加倍，4~8 px/frame
-                        let angle = Math.PI + (Math.random() * 0.5 - 0.25); // 向左下斜，角度約 180 度 ±0.25rad
+                        let mx = camera.x + 500 + Math.random() * 500;
+                        let my = Math.random() * 150;
+                        let speed = (2 + Math.random() * 2) * 5;
+                        let angle = Math.PI + (Math.random() * 0.5 - 0.25);
                         let vx = Math.cos(angle) * speed;
                         let vy = Math.sin(angle) * speed;
-                        let life = 20 + Math.floor(Math.random() * 41); // 20~60 幀
+                        let life = 20 + Math.floor(Math.random() * 41);
                         meteors.push({ x: mx, y: my, vx, vy, life });
                     }
                 }
-                // === 離開Boss區時背景漸變回去 ===
+                // 離開Boss區時背景漸變回去
                 if (bossBgTransition > 0) {
-                    bossBgTransition -= 1 / (outBossArea * MAX_FPS); // 離開boss區間變時間
+                    bossBgTransition -= 1 / (outBossArea * MAX_FPS);
                     if (bossBgTransition < 0) bossBgTransition = 0;
                 }
             }
@@ -3032,10 +3063,6 @@
         });
         window.addEventListener('DOMContentLoaded', updateCustomLangBtn);
 
-        // ===== 隕石系統 =====
-        let meteors = [];
-        let meteorSpawnTimer = 0;
-        let bossBgTransition = 0; // Boss區背景漸變進度 0~1
 
     </script>
 </body>
