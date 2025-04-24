@@ -437,11 +437,11 @@
 
 
         let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否
-        let bossFixedPosition = 1; // boss 是否固定座標（取消移動），1=是，0=否
-        let bossStartX = 5200;
-        let bossStartY = 0;
-        let bossSetX = 5200; // boss 設定當前座標 x
-        let bossSetY = 0; // boss 設定當前座標 y
+        let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否
+        // let bossStartX = 5200;
+        // let bossStartY = 0;
+        let bossSetX = 4550; // boss 設定當前座標 x
+        let bossSetY = 252; // boss 設定當前座標 y
 
 
         let showScore = 1; // score:0 顯示1 隱藏0
@@ -1107,7 +1107,7 @@
                 switch (this.pattern) {
                     case 0: // 上下移動
                         this.y += this.speed;
-                        if (this.y < -100 || this.y > 250) {
+                        if (this.y < 0 || this.y > 252) {
                             this.speed *= -1;
                         }
                         break;
@@ -1118,7 +1118,7 @@
                             this.y -= this.speed;
                         }
                         // 限制範圍
-                        this.y = Math.max(-100, Math.min(250, this.y));
+                        this.y = Math.max(0, Math.min(252, this.y));
                         break;
                     case 2: // 快速上下移動
                         if (this.patternTimer % 60 < 30) {
@@ -1127,7 +1127,7 @@
                             this.y += 8; // 向下飄
                         }
                         // 限制範圍
-                        this.y = Math.max(-100, Math.min(250, this.y));
+                        this.y = Math.max(0, Math.min(252, this.y));
                         break;
                     case 3: // 衝刺攻擊
                         if (this.patternTimer < 60) {
@@ -1161,8 +1161,8 @@
                 }
                 // === 加入邊界限制 ===
                 const bossDisplayWidth = 190;
-                this.x = Math.max(4500, Math.min(5150, this.x));
-                this.y = Math.max(-100, Math.min(250, this.y));
+                this.x = Math.max(4550, Math.min(5150, this.x));
+                this.y = Math.max(0, Math.min(252, this.y));
             }
         };
         const bosses = [boss];
