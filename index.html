@@ -369,7 +369,6 @@
                 <button id="btn-shoot">S</button>
             </div>
         </div>
-        <!-- <div id="settings-btn" style="position:absolute;right:10px;bottom:10px;width:45px;height:45px;border-radius:50%;background:#333a;color:#fff;box-shadow:0 2px 8px #0006;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;z-index:1000;font-size:22px;">⚙️</div> -->
     </div>
 
     <script>
@@ -392,8 +391,6 @@
         const COLOR_BULLET_ENEMY    = '#f8f';      // 敵人子彈顏色
         const COLOR_BULLET_BOSS     = '#f4a';      // Boss子彈顏色
 
-        
-
         // 音量設定
         let VOLUME_BGM      = 0.55;  // 背景音樂音量
         let VOLUME_SHOOT    = 0.55;  // 射擊音效音量
@@ -415,7 +412,6 @@
         const BOSS_AREA_X     = 4600;      // Boss區域起點X座標
         let CHARGE_MIN_FRAME = 42;       // 集氣彈最少需要的幀數
         let CHARGE_CANCEL_FRAME = 12;    // 集氣取消的最短幀數
-        
 
         // ===== 遊戲狀態 =====
         let MAX_FPS = 70; // 最大FPS設定
@@ -467,7 +463,7 @@
         let isWinInvincible = false; // 勝利畫面無敵狀態
         let isPaused = false; // 全域暫停旗標
 
-            // ===== 玩家飛行模式 =====
+        // ===== 玩家飛行模式 =====
         let isFlyingMode = 0; // 預設關閉
 
         let isWinScreen = false;
@@ -538,14 +534,12 @@
         playerImgs[1].src = 'img/p2.png';
         playerImgs[2].src = 'img/p3.png';
 
-
-
         // ===== Boss圖片載入 =====
         const bossImgs = [];
         for (let i = 0; i <= 8; i++) {
             bossImgs[i] = new Image();
             bossImgs[i].src = `img/b${i}.png`;
-        }
+        };
 
         // 動態建立 tornado-img 圖片
         const tornadoImg = new Image();
@@ -553,8 +547,6 @@
         tornadoImg.src = 'img/tornadoes.png';
         tornadoImg.style.display = 'none';
         document.getElementById('game-wrapper').appendChild(tornadoImg);
-
-
 
         // 以格數設計的平台資料 地板
         const platformGrid = [
@@ -1258,9 +1250,8 @@
         
         // ===== 遊戲初始化 =====
         const bgm = document.getElementById('bgm');
-        /**
-         * 遊戲初始化，重設所有狀態並開始遊戲主循環
-         */
+
+        //遊戲初始化，重設所有狀態並開始遊戲主循環
         function startGame() {
             // 停止outro音樂
             const outroAudio = document.getElementById('outro-audio');
@@ -1336,10 +1327,6 @@
             return 1000 / MAX_FPS;
         }
 
-        /**
-         * 遊戲主循環，每一幀呼叫一次
-         * @param {DOMHighResTimeStamp} now - 當前時間戳（由requestAnimationFrame傳入）
-         */
         function gameLoop(now) {
             requestAnimationFrame(gameLoop);
             if (isPaused) return; // 暫停時不更新遊戲
@@ -1351,10 +1338,10 @@
         }
         
         // ===== 遊戲狀態更新 =====
-        /**
-         * 更新遊戲所有狀態（玩家、敵人、子彈、Boss等）
-         * 無參數，無回傳值
-         */
+        
+        // 更新遊戲所有狀態（玩家、敵人、子彈、Boss等）
+        // *無參數，無回傳值
+        
         function update() {
             // 集氣狀態計數
             if (charging) {
@@ -1794,10 +1781,9 @@
         }
         
         // ===== 渲染遊戲 =====
-        /**
-         * 負責繪製所有畫面元素（背景、平台、玩家、敵人、子彈、Boss、UI等）
-         * 無參數，無回傳值
-         */
+        //
+        // 負責繪製所有畫面元素（背景、平台、玩家、敵人、子彈、Boss、UI等）
+        // 無參數，無回傳值
         function render() {
             // 清除畫布
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -2129,10 +2115,8 @@
                     a.y + a.height > b.y;
         }
         
-        /**
-         * 更新玩家血條顯示
-         * 無參數，無回傳值
-         */
+        //更新玩家血條顯示
+        //無參數，無回傳值
         function updateHealthBar() {
             const percent = (playerHealth / playerMaxHealth) * 100;
             healthFill.style.width = `${percent}%`;
@@ -2143,20 +2127,16 @@
             }
         }
         
-        /**
-         * 更新Boss血條顯示
-         * 無參數，無回傳值
-         */
+        //更新Boss血條顯示
+        //無參數，無回傳值
         function updateBossHealthBar() {
             if (window.bossHpAnimating) return;
             const percent = (boss.health / boss.maxHealth) * 100;
             bossHealthFill.style.width = `${percent}%`;
         }
         
-        /**
-         * 更新分數顯示
-         * 無參數，無回傳值
-         */
+        //更新分數顯示
+        //無參數，無回傳值
         function updateScore() {
             const scoreDiv = document.getElementById('score');
             if (scoreDiv) {
@@ -2165,10 +2145,8 @@
             }
         }
         
-        /**
-         * 處理遊戲結束（Game Over）畫面與音效
-         * 無參數，無回傳值
-         */
+        //處理遊戲結束（Game Over）畫面與音效
+        //無參數，無回傳值
         function gameOver() {
             gameRunning = false;
             playerDeadX = player.x; // 記錄死亡時位置
@@ -2191,15 +2169,13 @@
             }
         }
         
-        /**
-         * 處理勝利畫面與音效
-         * 無參數，無回傳值
-         */
+        //處理勝利畫面與音效
+        //無參數，無回傳值
         function winGame() {
             bossActive = false;
             // 將玩家移出畫面
-            player.x = -9999;
-            player.y = -9999;
+            player.x = -1;
+            player.y = -1;
             gameRunning = false;
             isWinInvincible = true;
             if (currentLang === 'zh') {
@@ -2872,15 +2848,6 @@
             starty = parseInt(this.value) || 0;
         });
 
-
-
-        // 設定面板語言下拉選單切換
-        // var settingsLangSelect = document.getElementById('settings-lang-select');
-        // settingsLangSelect.value = currentLang;
-        // settingsLangSelect.onchange = function() {
-        //     setLang(this.value);
-        //     updateSettingsPanelLang();
-        // };
 
         // 根據語言切換設定面板所有文字
         function updateSettingsPanelLang() {
