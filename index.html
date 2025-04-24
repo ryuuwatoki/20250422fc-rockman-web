@@ -86,13 +86,13 @@
         // let FirstLanguage = localStorage.getItem('lang') || 'en'; //預設語言英文
 
         // ===== 遊戲狀態 =====
-        let MAX_FPS = 120; // 最大FPS設定 預設120
+        let MAX_FPS = 70; // 最大FPS設定 預設70
 
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerStartX = 5000;   // 玩家初始座標 x 預設200
+        let playerStartX = 200;   // 玩家初始座標 x 預設200
         let playerStartY = 150;   // 玩家初始座標 y 預設100 
-        let playerMaxHealth = 20; // 玩家血量 預設100
+        let playerMaxHealth = 100; // 玩家血量 預設100
 
         // ===== 玩家飛行無敵模式 =====
         let isFlyingMode = 0; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了
@@ -300,6 +300,8 @@
         let bossDefeated = false;
         let fakeBoss = null;
         let fakeBossFlashFrame = 0;
+        let meteorSpawnFrequency = 10; // 每次生成隕石的間隔幀數
+        let meteorSpawnRate = 0.1; // 隕石生成率
 
         // ===== 碰撞箱 =====
         let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
@@ -1559,6 +1561,33 @@
                     player.y = 0;
                 }
             }
+
+            // ===== 隕石生成與更新 =====
+            meteorSpawnTimer++;
+            if (meteorSpawnTimer >= meteorSpawnFrequency) {
+                meteorSpawnTimer = 0;
+                if (Math.random() < meteorSpawnRate) {
+                    // 生成一顆隕石
+                    let mx = camera.x + 500 + Math.random() * 500; // 以鏡頭 moved 為基準，+500~1000
+                    let my = Math.random() * 150; // y 0~150
+                    let speed = (2 + Math.random() * 2) * 5; // 速度加倍，4~8 px/frame
+                    let angle = Math.PI + (Math.random() * 0.5 - 0.25); // 向左下斜，角度約 180 度 ±0.25rad
+                    let vx = Math.cos(angle) * speed;
+                    let vy = Math.sin(angle) * speed;
+                    let life = 20 + Math.floor(Math.random() * 41); // 20~60 幀
+                    meteors.push({ x: mx, y: my, vx, vy, life });
+                }
+            }
+            // 更新隕石
+            for (let i = meteors.length - 1; i >= 0; i--) {
+                let m = meteors[i];
+                m.x += m.vx;
+                m.y += m.vy;
+                m.life--;
+                if (m.life <= 0 || m.x < 0 || m.y > WORLD_HEIGHT) {
+                    meteors.splice(i, 1);
+                }
+            }
         }
         
         // ===== 渲染遊戲 =====
@@ -1597,6 +1626,19 @@
                     ctx.fillStyle = platform.color;
                     ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 }
+            });
+
+            // ===== 繪製隕石（在玩家和敵人之間） =====
+            meteors.forEach(m => {
+                let alpha = 1;
+                if (m.life < 10) {
+                    alpha = m.life / 10;
+                }
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(m.x, m.y, 2, 2);
+                ctx.restore();
             });
             
             // 繪製玩家 (無敵時閃爍)
@@ -2928,6 +2970,10 @@
             customLangList.style.display = 'none';
         });
         window.addEventListener('DOMContentLoaded', updateCustomLangBtn);
+
+        // ===== 隕石系統 =====
+        let meteors = [];
+        let meteorSpawnTimer = 0;
 
     </script>
 </body>
