@@ -88,7 +88,7 @@
         // ===== 遊戲狀態 =====
         let MAX_FPS = 70; // 最大FPS設定 預設70
 
-        let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
+        let playerMoveSpeed = 60; // 玩家移動速度設定，數值越大移動越快，預設6
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerStartX = 200;   // 玩家初始座標 x 預設200
         let playerStartY = 150;   // 玩家初始座標 y 預設100 
@@ -137,6 +137,7 @@
 
         const COLOR_PLATFORM_NORMAL = '#444';      // 一般平台顏色
         const COLOR_PLATFORM_BOSS   = '#800';      // Boss區域平台顏色
+
         // 以格數設計的平台資料 地板
         const platformGrid = [
             // 第一區（0~2700）
@@ -302,7 +303,7 @@
         let fakeBossFlashFrame = 0;
         let meteorSpawnFrequency = 10; // 每次生成隕石的間隔幀數
         let meteorSpawnRate = 0.1; // 隕石生成率
-        let boosMeteorSpawnFrequency = 5; // 每次生成隕石的間隔幀數
+        let boosMeteorSpawnFrequency = 20; // 每次生成隕石的間隔幀數
         let bossMeteorSpawnRate = 1; // 隕石生成率
 
 
@@ -354,6 +355,9 @@
         const COLOR_BULLET_CHARGE   = '#ff0';      // 玩家集氣彈顏色
         const COLOR_BULLET_ENEMY    = '#f8f';      // 敵人子彈顏色
         const COLOR_BULLET_BOSS     = '#f4a';      // Boss子彈顏色
+        const BOSS_METEOR_COLOR     = '#ff9800';   // Boss隕石顏色
+        
+        const BOSS_METEOR_SIZE = 5; // Boss隕石尺寸
 
         // 新增floor圖片物件
         const floorImg = new Image(); floorImg.src = 'img/01floor.png';
@@ -1573,14 +1577,14 @@
                     meteorSpawnTimer = 0;
                     if (Math.random() < bossMeteorSpawnRate) {
                         // 生成一顆隕石
-                        let mx = camera.x + 500 + Math.random() * 500; // 以鏡頭 moved 為基準，+500~1000
+                        let mx = camera.x + 500 + Math.random() * 2500; // 以鏡頭 moved 為基準，+500~3000 (原本500)
                         let my = Math.random() * 150; // y 0~150
-                        let speed = (2 + Math.random() * 2) * 5; // 速度加倍，4~8 px/frame
+                        let speed = (2 + Math.random() * 2) * 2.5; // 速度減半，2~4 px/frame (原本4~8)
                         let angle = Math.PI + (Math.random() * 0.5 - 0.25); // 向左下斜，角度約 180 度 ±0.25rad
                         let vx = Math.cos(angle) * speed;
                         let vy = Math.sin(angle) * speed;
                         let life = 20 + Math.floor(Math.random() * 41); // 20~60 幀
-                        meteors.push({ x: mx, y: my, vx, vy, life });
+                        meteors.push({ x: mx, y: my, vx, vy, life, bossMeteor: true });
                     }
                 }
             } else {
@@ -1658,8 +1662,15 @@
                 }
                 ctx.save();
                 ctx.globalAlpha = alpha;
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(m.x, m.y, 2, 2);
+                if (m.bossMeteor) {
+                    ctx.fillStyle = BOSS_METEOR_COLOR;
+                    ctx.beginPath();
+                    ctx.arc(m.x + BOSS_METEOR_SIZE/2, m.y + BOSS_METEOR_SIZE/2, BOSS_METEOR_SIZE/2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(m.x, m.y, 3, 3);
+                }
                 ctx.restore();
             });
             
