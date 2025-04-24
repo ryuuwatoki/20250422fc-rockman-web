@@ -440,48 +440,43 @@
         let bossBulletEnable = 0; // boss 子彈是否射擊，1=是，0=否
         let bossFixedPosition = 1; // boss 是否固定座標（取消移動），1=是，0=否
 
+        let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
         let playerCollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
         let playerCollisionBoxY = 70; // 碰撞箱高度，值越大越長
         let playerCollisionBoxNX = 50; //碰撞箱中心移動x
         let playerCollisionBoxNY = 50; //碰撞箱中心移動y
         let playerCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-        let ShowPlayerCollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
         let FLY_RED_CollisionBoxX = 30; // 碰撞箱寬度，值越大越寬
         let FLY_RED_CollisionBoxY = 30; // 碰撞箱高度，值越大越長
         let FLY_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
         let FLY_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
         let FLY_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-        let ShowFLY_RED_CollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
         let FLY_ORANGE_CollisionBoxX = 60; // 碰撞箱寬度，值越大越寬
         let FLY_ORANGE_CollisionBoxY = 70; // 碰撞箱高度，值越大越長
         let FLY_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
         let FLY_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
         let FLY_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-        let ShowFLY_ORANGE_CollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
         let GROUND_RED_CollisionBoxX = 35; // 碰撞箱寬度，值越大越寬
         let GROUND_RED_CollisionBoxY = 60; // 碰撞箱高度，值越大越長
         let GROUND_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
         let GROUND_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
         let GROUND_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-        let ShowGROUND_RED_CollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
         let GROUND_ORANGE_CollisionBoxX = 50; // 碰撞箱寬度，值越大越寬
         let GROUND_ORANGE_CollisionBoxY = 70; // 碰撞箱高度，值越大越長
         let GROUND_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
         let GROUND_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
         let GROUND_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-        let ShowGROUND_ORANGE_CollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
         let GROUND_PINK_CollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
         let GROUND_PINK_CollisionBoxY = 40; // 碰撞箱高度，值越大越長
         let GROUND_PINK_CollisionBoxNX = 50; //碰撞箱中心移動x
         let GROUND_PINK_CollisionBoxNY = 50; //碰撞箱中心移動y
         let GROUND_PINK_CollisionBoxCircle = 1; // 0=圓形，1=矩形，越小越圓
-        let ShowGROUND_PINK_CollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
 
 
@@ -492,7 +487,6 @@
         let bossCollisionBoxNX = 75; //碰撞箱中心移動x
         let bossCollisionBoxNY = 65; //碰撞箱中心移動y
         let bossCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-        let ShowBossCollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
 
 
@@ -1979,7 +1973,7 @@
                 // 發射動畫幀數遞減
                 if (player.shootAnimFrame > 0) player.shootAnimFrame--;
                 // ===== 玩家碰撞箱顯示 =====
-                if (ShowPlayerCollisionBox == 1) {
+                if (ShowCollisionBox == 1) {
                     // 以玩家圖片中心為原點，支援 NX/NY 百分比移動
                     const playerCenterX = player.x + player.width * (playerCollisionBoxNX / 100);
                     const playerCenterY = player.y + player.height * (playerCollisionBoxNY / 100);
@@ -2110,44 +2104,39 @@
                 }
                 // ====== 新增碰撞箱顯示 ======
                 // 依據敵人類型選擇對應參數
-                let showBox = 0, boxX = 0, boxY = 0, boxNX = 50, boxNY = 50, boxCircle = 0.4;
+                let boxX = 0, boxY = 0, boxNX = 50, boxNY = 50, boxCircle = 0.4;
                 if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
-                    showBox = ShowFLY_RED_CollisionBox;
                     boxX = FLY_RED_CollisionBoxX;
                     boxY = FLY_RED_CollisionBoxY;
                     boxNX = FLY_RED_CollisionBoxNX;
                     boxNY = FLY_RED_CollisionBoxNY;
                     boxCircle = FLY_RED_CollisionBoxCircle;
                 } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
-                    showBox = ShowFLY_ORANGE_CollisionBox;
                     boxX = FLY_ORANGE_CollisionBoxX;
                     boxY = FLY_ORANGE_CollisionBoxY;
                     boxNX = FLY_ORANGE_CollisionBoxNX;
                     boxNY = FLY_ORANGE_CollisionBoxNY;
                     boxCircle = FLY_ORANGE_CollisionBoxCircle;
                 } else if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
-                    showBox = ShowGROUND_RED_CollisionBox;
                     boxX = GROUND_RED_CollisionBoxX;
                     boxY = GROUND_RED_CollisionBoxY;
                     boxNX = GROUND_RED_CollisionBoxNX;
                     boxNY = GROUND_RED_CollisionBoxNY;
                     boxCircle = GROUND_RED_CollisionBoxCircle;
                 } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
-                    showBox = ShowGROUND_ORANGE_CollisionBox;
                     boxX = GROUND_ORANGE_CollisionBoxX;
                     boxY = GROUND_ORANGE_CollisionBoxY;
                     boxNX = GROUND_ORANGE_CollisionBoxNX;
                     boxNY = GROUND_ORANGE_CollisionBoxNY;
                     boxCircle = GROUND_ORANGE_CollisionBoxCircle;
                 } else if (enemy.color === '#f8c' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
-                    showBox = ShowGROUND_PINK_CollisionBox;
                     boxX = GROUND_PINK_CollisionBoxX;
                     boxY = GROUND_PINK_CollisionBoxY;
                     boxNX = GROUND_PINK_CollisionBoxNX;
                     boxNY = GROUND_PINK_CollisionBoxNY;
                     boxCircle = GROUND_PINK_CollisionBoxCircle;
                 }
-                if (showBox === 1) {
+                if (ShowCollisionBox == 1) {
                     // 算出中心
                     const centerX = enemy.x + enemy.width * (boxNX / 100);
                     const centerY = enemy.y + enemy.height * (boxNY / 100);
@@ -2178,7 +2167,7 @@
             
             // 繪製Boss
             if (bossActive && !isWinScreen) {
-                if (ShowBossCollisionBox == 1) {
+                if (ShowCollisionBox == 1) {
                     // 以 boss 圖片中心為原點，支援 NX/NY 百分比移動
                     const bossCenterX = boss.x + boss.width * (bossCollisionBoxNX / 100);
                     const bossCenterY = boss.y + boss.height * (bossCollisionBoxNY / 100);
