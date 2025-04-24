@@ -95,7 +95,7 @@
         let playerMaxHealth = 100; // 玩家血量 預設100
 
         // ===== 玩家飛行無敵模式 =====
-        let isFlyingMode = 0; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了
+        let isFlyingMode = 1; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了
 
         let enemyMaxCount = 12; // 敵人最大數量 預設12
         let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否
@@ -302,6 +302,9 @@
         let fakeBossFlashFrame = 0;
         let meteorSpawnFrequency = 10; // 每次生成隕石的間隔幀數
         let meteorSpawnRate = 0.1; // 隕石生成率
+        let boosMeteorSpawnFrequency = 5; // 每次生成隕石的間隔幀數
+        let bossMeteorSpawnRate = 1; // 隕石生成率
+
 
         // ===== 碰撞箱 =====
         let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
@@ -1564,18 +1567,37 @@
 
             // ===== 隕石生成與更新 =====
             meteorSpawnTimer++;
-            if (meteorSpawnTimer >= meteorSpawnFrequency) {
-                meteorSpawnTimer = 0;
-                if (Math.random() < meteorSpawnRate) {
-                    // 生成一顆隕石
-                    let mx = camera.x + 500 + Math.random() * 500; // 以鏡頭 moved 為基準，+500~1000
-                    let my = Math.random() * 150; // y 0~150
-                    let speed = (2 + Math.random() * 2) * 5; // 速度加倍，4~8 px/frame
-                    let angle = Math.PI + (Math.random() * 0.5 - 0.25); // 向左下斜，角度約 180 度 ±0.25rad
-                    let vx = Math.cos(angle) * speed;
-                    let vy = Math.sin(angle) * speed;
-                    let life = 20 + Math.floor(Math.random() * 41); // 20~60 幀
-                    meteors.push({ x: mx, y: my, vx, vy, life });
+            if (player.x >= BOSS_AREA_X) {
+                // Boss區
+                if (meteorSpawnTimer >= boosMeteorSpawnFrequency) {
+                    meteorSpawnTimer = 0;
+                    if (Math.random() < bossMeteorSpawnRate) {
+                        // 生成一顆隕石
+                        let mx = camera.x + 500 + Math.random() * 500; // 以鏡頭 moved 為基準，+500~1000
+                        let my = Math.random() * 150; // y 0~150
+                        let speed = (2 + Math.random() * 2) * 5; // 速度加倍，4~8 px/frame
+                        let angle = Math.PI + (Math.random() * 0.5 - 0.25); // 向左下斜，角度約 180 度 ±0.25rad
+                        let vx = Math.cos(angle) * speed;
+                        let vy = Math.sin(angle) * speed;
+                        let life = 20 + Math.floor(Math.random() * 41); // 20~60 幀
+                        meteors.push({ x: mx, y: my, vx, vy, life });
+                    }
+                }
+            } else {
+                // 一般區
+                if (meteorSpawnTimer >= meteorSpawnFrequency) {
+                    meteorSpawnTimer = 0;
+                    if (Math.random() < meteorSpawnRate) {
+                        // 生成一顆隕石
+                        let mx = camera.x + 500 + Math.random() * 500; // 以鏡頭 moved 為基準，+500~1000
+                        let my = Math.random() * 150; // y 0~150
+                        let speed = (2 + Math.random() * 2) * 5; // 速度加倍，4~8 px/frame
+                        let angle = Math.PI + (Math.random() * 0.5 - 0.25); // 向左下斜，角度約 180 度 ±0.25rad
+                        let vx = Math.cos(angle) * speed;
+                        let vy = Math.sin(angle) * speed;
+                        let life = 20 + Math.floor(Math.random() * 41); // 20~60 幀
+                        meteors.push({ x: mx, y: my, vx, vy, life });
+                    }
                 }
             }
             // 更新隕石
