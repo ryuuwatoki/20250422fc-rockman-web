@@ -90,25 +90,25 @@
 
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerStartX = 5000;   // 玩家初始座標 x 預設200
-        let playerStartY = 100;   // 玩家初始座標 y 預設100 
-        let playerMaxHealth = 10000; // 玩家血量
+        let playerStartX = 500;   // 玩家初始座標 x 預設200
+        let playerStartY = 150;   // 玩家初始座標 y 預設100 
+        let playerMaxHealth = 20; // 玩家血量 預設100
 
         // ===== 玩家飛行無敵模式 =====
-        let isFlyingMode = 0; // 預設關閉
+        let isFlyingMode = 0; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了
 
-        let enemyMaxCount = 12; // 敵人最大數量
+        let enemyMaxCount = 12; // 敵人最大數量 預設12
         let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否
         let FLY_ORANGE_spawn = 1; // 敵人Ｂ是否生成，1=是，0=否
         let GROUND_RED_spawn = 1; // 敵人Ｃ是否生成，1=是，0=否
         let GROUND_ORANGE_spawn = 1; // 敵人Ｄ是否生成，1=是，0=否
         let GROUND_PINK_spawn = 1; // 敵人Ｅ是否生成，1=是，0=否
 
-        let bossHealth   = 300;  // Boss血量
-        let bossSetX = 5000; // boss 設定當前座標 x
-        let bossSetY = 230; // boss 設定當前座標 y
-        let bossBulletSpeed = 10; // boss 子彈速度（預設3，數值越大越快）
-
+        let bossHealth   = 300;  // Boss血量 預設300
+        let bossSetX = 5000; // boss 設定當前座標 x 預設5000
+        let bossSetY = 230; // boss 設定當前座標 y 預設230
+        let bossBulletSpeed = 4; // boss 子彈速度（預設4，數值越大越快）
+        let bossBulletPatternMode = 2; // boss發射子彈的模式 1:固定3發 2:隨機3/4/5發 3:隨機3/4/5/7發
         let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否
         let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否
 
@@ -873,6 +873,14 @@
                 if (this.shootCooldown > 0) {
                     this.shootCooldown--;
                 } else if (bossCanAttack && bossBulletEnable) {
+                    // 根據 bossBulletPatternMode 決定 bossBulletCount
+                    if (bossBulletPatternMode === 1) {
+                        bossBulletCount = 3;
+                    } else if (bossBulletPatternMode === 2) {
+                        bossBulletCount = [3, 5][Math.floor(Math.random() * 3)];
+                    } else if (bossBulletPatternMode === 3) {
+                        bossBulletCount = [3, 4, 5, 7][Math.floor(Math.random() * 4)];
+                    }
                     // 多方向射擊，使用 bossBulletCount
                     let mid = Math.floor(bossBulletCount / 2);
                     for (let i = -mid; i <= mid; i++) {
