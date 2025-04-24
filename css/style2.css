@@ -39,9 +39,9 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.4);
     color: white;
-    z-index: 10;
+    z-index: 100;
 }
 
 #game-over-screen, #win-screen {
@@ -148,7 +148,7 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 50;
+    z-index: 20;
     touch-action: none;
 }
 #touch-controls .touch-left, #touch-controls .touch-right {
@@ -227,9 +227,9 @@ button:hover {
 }
 #language-select {
     position: fixed;
+    top: 0;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     background: #222;
     padding: 12px 24px;
     border-radius: 10px;
@@ -252,26 +252,12 @@ button:hover {
     position: absolute;
     top: 10px;
     right: 10px;
-    z-index: 30;
+    z-index: 200;
     background: #222;
     color: #fff;
     border-radius: 6px;
     padding: 4px 12px;
     font-size: 14px;
-}
-#language-select {
-    position: absolute;
-    top: 40px;
-    right: 10px;
-    z-index: 29;
-    background: #222;
-    padding: 12px 24px;
-    border-radius: 10px;
-    box-shadow: 0 2px 12px #0008;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    font-size: 80%;
 }
 #language-select h3 {
     color: #fff;
