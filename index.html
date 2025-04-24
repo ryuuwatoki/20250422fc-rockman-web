@@ -358,7 +358,6 @@
             </div>
         </div>
         <div id="flash-effect" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100;display:none;"></div>
-        <img id="tornado-img" src="tornadoes.png" style="display:none" />
         <!-- 觸控操作區 -->
         <div id="touch-controls">
             <div class="touch-left">
@@ -538,6 +537,24 @@
         playerImgs[0].src = 'img/p1.png';
         playerImgs[1].src = 'img/p2.png';
         playerImgs[2].src = 'img/p3.png';
+
+
+
+        // ===== Boss圖片載入 =====
+        const bossImgs = [];
+        for (let i = 0; i <= 8; i++) {
+            bossImgs[i] = new Image();
+            bossImgs[i].src = `img/b${i}.png`;
+        }
+
+        // 動態建立 tornado-img 圖片
+        const tornadoImg = new Image();
+        tornadoImg.id = 'tornado-img';
+        tornadoImg.src = 'img/tornadoes.png';
+        tornadoImg.style.display = 'none';
+        document.getElementById('game-wrapper').appendChild(tornadoImg);
+
+
 
         // 以格數設計的平台資料 地板
         const platformGrid = [
@@ -2951,12 +2968,6 @@
         });
         window.addEventListener('DOMContentLoaded', updateCustomLangBtn);
 
-        // ===== Boss圖片載入 =====
-        const bossImgs = [];
-        for (let i = 0; i <= 8; i++) {
-            bossImgs[i] = new Image();
-            bossImgs[i].src = `img/b${i}.png`;
-        }
     </script>
 </body>
 </html>
