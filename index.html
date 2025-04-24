@@ -428,7 +428,7 @@
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
 
-        let startx = 5000;
+        let startx = 0;
         let starty = 0;
         let playerMaxHealth = 100; // Player血量
         let bossHealth   = 300;  // Boss血量
@@ -2095,7 +2095,7 @@
                 // 以 boss 的中心與半徑（取寬高平均的一半）為圓
                 const bossCenterX = boss.x + boss.width / 2;
                 const bossCenterY = boss.y + boss.height / 2;
-                const bossRadius = (boss.width + boss.height) / 4; // 取平均
+                const bossRadius = (boss.width + boss.height) / 4 + 10; // 取平均 boss碰撞設定
                 // 判斷 a（通常是子彈或玩家）中心點到 boss 圓心的距離
                 const aCenterX = a.x + (a.width ? a.width / 2 : 0);
                 const aCenterY = a.y + (a.height ? a.height / 2 : 0);
