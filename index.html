@@ -8,12 +8,6 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
-        /* 最常見的 Reset CSS */
-        /* * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        } */
 
         body {
             margin: 0;
@@ -397,109 +391,30 @@
         let FirstLanguage = localStorage.getItem('lang') || 'zh'; //預設語言中文
         // let FirstLanguage = localStorage.getItem('lang') || 'en'; //預設語言英文
 
-        // 顏色設定
-        const COLOR_PLATFORM_NORMAL = '#444';      // 一般平台顏色
-        const COLOR_PLATFORM_BOSS   = '#800';      // Boss區域平台顏色
-        const COLOR_PLAYER          = '#4af';      // 玩家顏色
-        const COLOR_BOSS            = '#2196f3';   // Boss主體顏色
-        const COLOR_BOSS_FAN        = '#ffe082';   // Boss風扇顏色
-        const COLOR_BOSS_FAN_CENTER = '#fff';      // Boss風扇中心顏色
-        const COLOR_BULLET_NORMAL   = '#b3f0ff';   // 玩家普通子彈顏色
-        const COLOR_BULLET_CHARGE   = '#ff0';      // 玩家集氣彈顏色
-        const COLOR_BULLET_ENEMY    = '#f8f';      // 敵人子彈顏色
-        const COLOR_BULLET_BOSS     = '#f4a';      // Boss子彈顏色
-
-        // 音量設定
-        let VOLUME_BGM      = 0.55;  // 背景音樂音量
-        let VOLUME_SHOOT    = 0.55;  // 射擊音效音量
-        let VOLUME_CHARGE   = 0.55;  // 集氣音效音量
-        let VOLUME_BOOM     = 0.45;  // 爆炸音效音量
-        let VOLUME_HURT     = 0.70;  // 受傷音效音量
-        let VOLUME_GAMEOVER = 0.75;  // 遊戲結束音效音量
-        let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量
-        let VOLUME_BOSS     = 0.85;  // Boss出場音效音量
-        let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量
-
-        // 遊戲常數
-        let GRAVITY         = 1;         // 重力加速度
-        let JUMP_POWER      = -15; // 跳躍初速度
-        let JUMP_EXTRA      = -0.5; // 長按跳躍時每幀額外加速度
-        let JUMP_EXTRA_FRAMES = 12;      // 跳躍額外加速最大幀數
-        const WORLD_WIDTH     = 5400;    // 世界寬度
-        const WORLD_HEIGHT    = 500;       // 世界高度
-        const BOSS_AREA_X     = 4600;      // Boss區域起點X座標
-        let CHARGE_MIN_FRAME = 42;       // 集氣彈最少需要的幀數
-        let CHARGE_CANCEL_FRAME = 12;    // 集氣取消的最短幀數
-
         // ===== 遊戲狀態 =====
-        let MAX_FPS = 100; // 最大FPS設定
+        let MAX_FPS = 120; // 最大FPS設定 預設120
         let score        = 0;     // 玩家分數
 
-        let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
-
-        let playerStartX = 5000;   // 玩家初始座標 x 預設200
+        let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
+        let playerStartX = 200;   // 玩家初始座標 x 預設200
         let playerStartY = 100;   // 玩家初始座標 y 預設100 
         let playerMaxHealth = 100000; // 玩家血量
         let bossHealth   = 300;  // Boss血量
 
-        let enemyMaxCount = 20; // 敵人最大數量
-        let BossShootDelay = 10; // Boss射擊間隔 算幀數
-
+        let enemyMaxCount = 12; // 敵人最大數量
         let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否
         let FLY_ORANGE_spawn = 1; // 敵人Ｂ是否生成，1=是，0=否
         let GROUND_RED_spawn = 1; // 敵人Ｃ是否生成，1=是，0=否
         let GROUND_ORANGE_spawn = 1; // 敵人Ｄ是否生成，1=是，0=否
         let GROUND_PINK_spawn = 1; // 敵人Ｅ是否生成，1=是，0=否
 
-        let bossBulletEnable = 0; // boss 子彈是否射擊，1=是，0=否
-        let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否
-
-        let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
-
-        let playerCollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
-        let playerCollisionBoxY = 70; // 碰撞箱高度，值越大越長
-        let playerCollisionBoxNX = 50; //碰撞箱中心移動x
-        let playerCollisionBoxNY = 50; //碰撞箱中心移動y
-        let playerCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-
-        let FLY_RED_CollisionBoxX = 30; // 碰撞箱寬度，值越大越寬
-        let FLY_RED_CollisionBoxY = 30; // 碰撞箱高度，值越大越長
-        let FLY_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
-        let FLY_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
-        let FLY_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-
-        let FLY_ORANGE_CollisionBoxX = 60; // 碰撞箱寬度，值越大越寬
-        let FLY_ORANGE_CollisionBoxY = 70; // 碰撞箱高度，值越大越長
-        let FLY_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
-        let FLY_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
-        let FLY_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-
-        let GROUND_RED_CollisionBoxX = 35; // 碰撞箱寬度，值越大越寬
-        let GROUND_RED_CollisionBoxY = 60; // 碰撞箱高度，值越大越長
-        let GROUND_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
-        let GROUND_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
-        let GROUND_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-
-        let GROUND_ORANGE_CollisionBoxX = 50; // 碰撞箱寬度，值越大越寬
-        let GROUND_ORANGE_CollisionBoxY = 70; // 碰撞箱高度，值越大越長
-        let GROUND_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
-        let GROUND_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
-        let GROUND_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-
-        let GROUND_PINK_CollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
-        let GROUND_PINK_CollisionBoxY = 40; // 碰撞箱高度，值越大越長
-        let GROUND_PINK_CollisionBoxNX = 50; //碰撞箱中心移動x
-        let GROUND_PINK_CollisionBoxNY = 50; //碰撞箱中心移動y
-        let GROUND_PINK_CollisionBoxCircle = 1; // 0=圓形，1=矩形，越小越圓
-
         let bossSetX = 5000; // boss 設定當前座標 x
         let bossSetY = 230; // boss 設定當前座標 y
-        let bossCollisionBoxX = 160; // 碰撞箱寬度，值越大越寬
-        let bossCollisionBoxY = 150; // 碰撞箱高度，值越大越長
-        let bossCollisionBoxNX = 75; //碰撞箱中心移動x
-        let bossCollisionBoxNY = 65; //碰撞箱中心移動y
-        let bossCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+        let bossBulletSpeed = 3; // boss 子彈速度（預設3，數值越大越快）
+        let bossBulletCount = 3; // boss 一次發射幾發（預設3，建議奇數，3=三方向）
+        let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否
+        let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否
 
         let showScore = 1; // score:0 顯示1 隱藏0
         let showMoved = 0; // moved:(0) 顯示1 隱藏0
@@ -512,116 +427,22 @@
         let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉
         let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉
 
-        let autoFlipPlayer = true; // 是否自動水平翻轉角色圖片（true=按方向鍵時自動翻轉，false=永遠朝右），預設true
+        // 音量設定
+        let VOLUME_BGM      = 0.55;  // 背景音樂音量
+        let VOLUME_SHOOT    = 0.55;  // 射擊音效音量
+        let VOLUME_CHARGE   = 0.55;  // 集氣音效音量
+        let VOLUME_BOOM     = 0.45;  // 爆炸音效音量
+        let VOLUME_HURT     = 0.70;  // 受傷音效音量
+        let VOLUME_GAMEOVER = 0.75;  // 遊戲結束音效音量
+        let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量
+        let VOLUME_BOSS     = 0.85;  // Boss出場音效音量
+        let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量
 
-
-        let gameRunning  = false; // 遊戲是否正在進行中
-        let bossActive   = false; // Boss是否啟動
-        let bossTimer    = 0;     // Boss出場動畫計時器
-        let reachedBossArea = false; // 玩家是否已經抵達過boss區域
-        let charging = false; // 是否正在集氣
-        let chargeFrame = 0; // 集氣持續幀數
-        let chargeReady = false; // 是否集氣完成
-        let bossHitFlash = 0; // Boss被擊中閃爍計數
-        let upPressed = false; // 追蹤上鍵是否已經按下
-        let chargeAudioTimeout = null; // 集氣音效延遲計時器
-        let bossCanAttack = false; // Boss是否可以攻擊
-        let bossCanMove = false; // Boss是否可以移動
-        let bossHpAnimating = false; // Boss血條是否正在動畫
-        let canShoot = true; // 玩家是否可以射擊
-        let midEventTriggered = false; // 中途事件是否已觸發
-        let playerDead = false; // 玩家死亡狀態
-        let playerDeadX = 0;   // 死亡時的X
-        let playerDeadY = 0;   // 死亡時的Y
-
-        let isWinInvincible = false; // 勝利畫面無敵狀態
-        let isPaused = false; // 全域暫停旗標
-
-        // ===== 玩家飛行模式 =====
+        // ===== 玩家飛行無敵模式 =====
         let isFlyingMode = 0; // 預設關閉
 
-        let isWinScreen = false;
-        let bossDefeated = false;
-
-        // ===== fakeBoss 全域變數 =====boss.x = 5300
-        let fakeBoss = null;
-        let fakeBossFlashFrame = 0;
-
-        // 新增floor圖片物件
-        const floorImg = new Image(); floorImg.src = 'img/01floor.png';
-        const floorBossImg = new Image(); floorBossImg.src = 'img/02floor.png';
-
-        // FLY_RED 兩張動畫圖
-        const flyRedImgs = [
-            new Image(),
-            new Image()
-        ];
-        flyRedImgs[0].src = 'img/e01-1.png';
-        flyRedImgs[1].src = 'img/e01-2.png';
-
-        // FLY_ORANGE 兩張動畫圖
-        const flyOrangeImgs = [
-            new Image(),
-            new Image(),
-            new Image()
-        ];
-        flyOrangeImgs[0].src = 'img/e02-1.png';
-        flyOrangeImgs[1].src = 'img/e02-2.png';
-        flyOrangeImgs[2].src = 'img/e02-3.png';
-
-        // GROUND_RED 兩張動畫圖
-        const groundRedImgs = [
-            new Image(),
-            new Image()
-        ];
-        groundRedImgs[0].src = 'img/e03-1.png';
-        groundRedImgs[1].src = 'img/e03-2.png';
-
-        // GROUND_ORANGE 兩張動畫圖
-        const groundOrangeImgs = [
-            new Image(),
-            new Image(),
-            new Image(),
-            new Image()
-        ];
-        groundOrangeImgs[0].src = 'img/e04-1.png';
-        groundOrangeImgs[1].src = 'img/e04-2.png';
-        groundOrangeImgs[2].src = 'img/e04-3.png';
-        groundOrangeImgs[3].src = 'img/e04-4.png';
-
-
-        // GROUND_PINK 兩張動畫圖（同 GROUND_ORANGE）
-        const groundPinkImgs = [
-            new Image(),
-            new Image()
-        ];
-        groundPinkImgs[0].src = 'img/e05-1.png';
-        groundPinkImgs[1].src = 'img/e05-2.png';
-
-        // ===== 玩家圖片載入 =====
-        const playerImgs = [
-            new Image(), // 0: 靜止
-            new Image(), // 1: 移動動畫
-            new Image(), // 2: 發射
-        ];
-        playerImgs[0].src = 'img/p1.png';
-        playerImgs[1].src = 'img/p2.png';
-        playerImgs[2].src = 'img/p3.png';
-
-        // ===== Boss圖片載入 =====
-        const bossImgs = [];
-        for (let i = 0; i <= 8; i++) {
-            bossImgs[i] = new Image();
-            bossImgs[i].src = `img/b${i}.png`;
-        };
-
-        // 動態建立 tornado-img 圖片
-        const tornadoImg = new Image();
-        tornadoImg.id = 'tornado-img';
-        tornadoImg.src = 'img/tornadoes.png';
-        tornadoImg.style.display = 'none';
-        document.getElementById('game-wrapper').appendChild(tornadoImg);
-
+        const COLOR_PLATFORM_NORMAL = '#444';      // 一般平台顏色
+        const COLOR_PLATFORM_BOSS   = '#800';      // Boss區域平台顏色
         // 以格數設計的平台資料 地板
         const platformGrid = [
             // 第一區（0~2700）
@@ -642,6 +463,7 @@
             { x: 14, y: 1, color: COLOR_PLATFORM_NORMAL },
             { x: 15, y: 1, color: COLOR_PLATFORM_NORMAL },
             // { x: 16, y: 1, color: COLOR_PLATFORM_NORMAL },
+
             // 中間區域
             { x: 17, y: 2, color: COLOR_PLATFORM_NORMAL },
             { x: 18, y: 2, color: COLOR_PLATFORM_NORMAL },
@@ -746,7 +568,167 @@
             height: 50,
             color: p.color
         }));
-        
+
+
+        // 遊戲常數
+        let GRAVITY         = 1;         // 重力加速度
+        let JUMP_POWER      = -15; // 跳躍初速度
+        let JUMP_EXTRA      = -0.5; // 長按跳躍時每幀額外加速度
+        let JUMP_EXTRA_FRAMES = 12;      // 跳躍額外加速最大幀數
+        const WORLD_WIDTH     = 5400;    // 世界寬度
+        const WORLD_HEIGHT    = 500;       // 世界高度
+        const BOSS_AREA_X     = 4600;      // Boss區域起點X座標
+        let CHARGE_MIN_FRAME = 42;       // 集氣彈最少需要的幀數
+        let CHARGE_CANCEL_FRAME = 12;    // 集氣取消的最短幀數
+        let gameRunning  = false; // 遊戲是否正在進行中
+        let bossActive   = false; // Boss是否啟動
+        let bossTimer    = 0;     // Boss出場動畫計時器
+        let reachedBossArea = false; // 玩家是否已經抵達過boss區域
+        let charging = false; // 是否正在集氣
+        let chargeFrame = 0; // 集氣持續幀數
+        let chargeReady = false; // 是否集氣完成
+        let bossHitFlash = 0; // Boss被擊中閃爍計數
+        let upPressed = false; // 追蹤上鍵是否已經按下
+        let chargeAudioTimeout = null; // 集氣音效延遲計時器
+        let bossCanAttack = false; // Boss是否可以攻擊
+        let bossCanMove = false; // Boss是否可以移動
+        let bossHpAnimating = false; // Boss血條是否正在動畫
+        let canShoot = true; // 玩家是否可以射擊
+        let midEventTriggered = false; // 中途事件是否已觸發
+        let playerDead = false; // 玩家死亡狀態
+        let playerDeadX = 0;   // 死亡時的X
+        let playerDeadY = 0;   // 死亡時的Y
+        let autoFlipPlayer = true; // 是否自動水平翻轉角色圖片（true=按方向鍵時自動翻轉，false=永遠朝右），預設true
+        let isWinInvincible = false; // 勝利畫面無敵狀態
+        let isPaused = false; // 全域暫停旗標
+        let isWinScreen = false;
+        let bossDefeated = false;
+        let fakeBoss = null;
+        let fakeBossFlashFrame = 0;
+
+        // ===== 碰撞箱 =====
+        let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+
+        let playerCollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
+        let playerCollisionBoxY = 70; // 碰撞箱高度，值越大越長
+        let playerCollisionBoxNX = 50; //碰撞箱中心移動x
+        let playerCollisionBoxNY = 50; //碰撞箱中心移動y
+        let playerCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+        let FLY_RED_CollisionBoxX = 30; // 碰撞箱寬度，值越大越寬
+        let FLY_RED_CollisionBoxY = 30; // 碰撞箱高度，值越大越長
+        let FLY_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
+        let FLY_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
+        let FLY_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+        let FLY_ORANGE_CollisionBoxX = 60; // 碰撞箱寬度，值越大越寬
+        let FLY_ORANGE_CollisionBoxY = 70; // 碰撞箱高度，值越大越長
+        let FLY_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
+        let FLY_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
+        let FLY_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+        let GROUND_RED_CollisionBoxX = 35; // 碰撞箱寬度，值越大越寬
+        let GROUND_RED_CollisionBoxY = 60; // 碰撞箱高度，值越大越長
+        let GROUND_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
+        let GROUND_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
+        let GROUND_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+        let GROUND_ORANGE_CollisionBoxX = 50; // 碰撞箱寬度，值越大越寬
+        let GROUND_ORANGE_CollisionBoxY = 70; // 碰撞箱高度，值越大越長
+        let GROUND_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
+        let GROUND_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
+        let GROUND_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+        let GROUND_PINK_CollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
+        let GROUND_PINK_CollisionBoxY = 40; // 碰撞箱高度，值越大越長
+        let GROUND_PINK_CollisionBoxNX = 50; //碰撞箱中心移動x
+        let GROUND_PINK_CollisionBoxNY = 50; //碰撞箱中心移動y
+        let GROUND_PINK_CollisionBoxCircle = 1; // 0=圓形，1=矩形，越小越圓
+        let bossCollisionBoxX = 160; // 碰撞箱寬度，值越大越寬
+        let bossCollisionBoxY = 150; // 碰撞箱高度，值越大越長
+        let bossCollisionBoxNX = 75; //碰撞箱中心移動x
+        let bossCollisionBoxNY = 65; //碰撞箱中心移動y
+        let bossCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+
+        // 顏色設定
+        const COLOR_PLAYER          = '#4af';      // 玩家顏色
+        const COLOR_BOSS            = '#2196f3';   // Boss主體顏色
+        const COLOR_BOSS_FAN        = '#ffe082';   // Boss風扇顏色
+        const COLOR_BOSS_FAN_CENTER = '#fff';      // Boss風扇中心顏色
+        const COLOR_BULLET_NORMAL   = '#b3f0ff';   // 玩家普通子彈顏色
+        const COLOR_BULLET_CHARGE   = '#ff0';      // 玩家集氣彈顏色
+        const COLOR_BULLET_ENEMY    = '#f8f';      // 敵人子彈顏色
+        const COLOR_BULLET_BOSS     = '#f4a';      // Boss子彈顏色
+
+        // 新增floor圖片物件
+        const floorImg = new Image(); floorImg.src = 'img/01floor.png';
+        const floorBossImg = new Image(); floorBossImg.src = 'img/02floor.png';
+
+        // FLY_RED 兩張動畫圖
+        const flyRedImgs = [
+            new Image(),
+            new Image()
+        ];
+        flyRedImgs[0].src = 'img/e01-1.png';
+        flyRedImgs[1].src = 'img/e01-2.png';
+
+        // FLY_ORANGE 兩張動畫圖
+        const flyOrangeImgs = [
+            new Image(),
+            new Image(),
+            new Image()
+        ];
+        flyOrangeImgs[0].src = 'img/e02-1.png';
+        flyOrangeImgs[1].src = 'img/e02-2.png';
+        flyOrangeImgs[2].src = 'img/e02-3.png';
+
+        // GROUND_RED 兩張動畫圖
+        const groundRedImgs = [
+            new Image(),
+            new Image()
+        ];
+        groundRedImgs[0].src = 'img/e03-1.png';
+        groundRedImgs[1].src = 'img/e03-2.png';
+
+        // GROUND_ORANGE 兩張動畫圖
+        const groundOrangeImgs = [
+            new Image(),
+            new Image(),
+            new Image(),
+            new Image()
+        ];
+        groundOrangeImgs[0].src = 'img/e04-1.png';
+        groundOrangeImgs[1].src = 'img/e04-2.png';
+        groundOrangeImgs[2].src = 'img/e04-3.png';
+        groundOrangeImgs[3].src = 'img/e04-4.png';
+
+        // GROUND_PINK 兩張動畫圖（同 GROUND_ORANGE）
+        const groundPinkImgs = [
+            new Image(),
+            new Image()
+        ];
+        groundPinkImgs[0].src = 'img/e05-1.png';
+        groundPinkImgs[1].src = 'img/e05-2.png';
+
+        // ===== 玩家圖片載入 =====
+        const playerImgs = [
+            new Image(), // 0: 靜止
+            new Image(), // 1: 移動動畫
+            new Image(), // 2: 發射
+        ];
+        playerImgs[0].src = 'img/p1.png';
+        playerImgs[1].src = 'img/p2.png';
+        playerImgs[2].src = 'img/p3.png';
+
+        // ===== Boss圖片載入 =====
+        const bossImgs = [];
+        for (let i = 0; i <= 8; i++) {
+            bossImgs[i] = new Image();
+            bossImgs[i].src = `img/b${i}.png`;
+        };
+
+        // 動態建立 tornado-img 圖片
+        const tornadoImg = new Image();
+        tornadoImg.id = 'tornado-img';
+        tornadoImg.src = 'img/tornadoes.png';
+        tornadoImg.style.display = 'none';
+        document.getElementById('game-wrapper').appendChild(tornadoImg);
+
         // ===== DOM 元素選取 =====
         const canvas              = document.getElementById('game-canvas');
         const ctx                 = canvas.getContext('2d');
@@ -768,7 +750,6 @@
         const winScoreElement     = document.getElementById('win-score');
         const cameraDebugElement  = document.getElementById('camera-debug');
 
-        
         // ===== 鏡頭系統 =====
         const camera = {
             x: 0,
@@ -797,10 +778,9 @@
                 this.y = Math.max(0, Math.min(WORLD_HEIGHT - this.height, this.y));
             }
         };
-        
+
         // ===== 玩家物件 =====
         let playerHealth = playerMaxHealth; // 玩家目前血量
-
         let player = {
             x: playerStartX,                // 玩家X座標（連動 playerStartX）
             y: playerStartY,                // 玩家Y座標（連動 playerStartY）
@@ -816,7 +796,7 @@
             shootDelay: Math.round(15 / 1.1), // 射擊間隔
             direction: 1,          // 玩家面向方向（1=右，-1=左）
             invincible: 0,         // 無敵剩餘幀數
-            
+
             // 更新玩家位置
             update: function() {
                 if (playerDead) {
@@ -1198,8 +1178,10 @@
                 if (this.shootCooldown > 0) {
                     this.shootCooldown--;
                 } else if (bossCanAttack && bossBulletEnable) {
-                    // 三方向射擊
-                    for (let i = -1; i <= 1; i++) {
+                    // 多方向射擊，使用 bossBulletCount
+                    let mid = Math.floor(bossBulletCount / 2);
+                    for (let i = -mid; i <= mid; i++) {
+                        if (bossBulletCount % 2 === 0 && i === 0) continue; // 偶數時跳過0，保持對稱
                         const angle = Math.atan2(
                             player.y + player.height/2 - (this.y + this.height/2),
                             player.x + player.width/2 - (this.x + this.width/2)
@@ -1209,8 +1191,8 @@
                             y: this.y + this.height/2 - 13.65,
                             width: 10,
                             height: 20,
-                            speedX: Math.cos(angle) * 3,
-                            speedY: Math.sin(angle) * 3,
+                            speedX: Math.cos(angle) * bossBulletSpeed,
+                            speedY: Math.sin(angle) * bossBulletSpeed,
                             color: '#f4a'
                         });
                     }
@@ -1429,7 +1411,6 @@
         }
         
         // ===== 遊戲狀態更新 =====
-        
         // 更新遊戲所有狀態（玩家、敵人、子彈、Boss等）
         // *無參數，無回傳值
         
@@ -1878,7 +1859,6 @@
         }
         
         // ===== 渲染遊戲 =====
-        //
         // 負責繪製所有畫面元素（背景、平台、玩家、敵人、子彈、Boss、UI等）
         // 無參數，無回傳值
         function render() {
@@ -2660,7 +2640,6 @@
             }
         }
 
-
         // ====== 設定面板 ======
         // 1. 設定按鈕
         const settingsBtn = document.createElement('div');
@@ -2718,7 +2697,6 @@
                     </ul>
                 </div>
             </div>
-
 
             <div style="margin-bottom:16px;">
                 <label><input type="checkbox" id="setting-bgm-on"> Muisc</label>
@@ -2780,7 +2758,6 @@
                 <label><input type="checkbox" id="setting-show-mobile-touch"> Show Mobile Touch</label>
             </div>
 
-            
             <div style="text-align:center;margin-top:18px;">
                 <button id="settings-close-btn" style="padding:6px 24px;font-size:16px;background:#4af;color:#fff;border:none;border-radius:6px;">OK</button>
             </div>
@@ -2978,7 +2955,6 @@
         if (jumpExtraFramesInput2) jumpExtraFramesInput2.addEventListener('input', function() {
             JUMP_EXTRA_FRAMES = parseInt(this.value) || 12;
         });
-
 
         // 補上 simulateKey 實作
         function simulateKey(key, pressed) {
