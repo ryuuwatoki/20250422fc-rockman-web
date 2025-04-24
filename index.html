@@ -424,7 +424,7 @@
         let CHARGE_CANCEL_FRAME = 12;    // 集氣取消的最短幀數
 
         // ===== 遊戲狀態 =====
-        let MAX_FPS = 200; // 最大FPS設定
+        let MAX_FPS = 100; // 最大FPS設定
 
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
@@ -439,19 +439,30 @@
 
         let bossBulletEnable = 0; // boss 子彈是否射擊，1=是，0=否
         let bossFixedPosition = 1; // boss 是否固定座標（取消移動），1=是，0=否
-        
+
+
+        let playerCollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
+        let playerCollisionBoxY = 70; // 碰撞箱高度，值越大越長
+        let playerCollisionBoxNX = 50; //碰撞箱中心移動x
+        let playerCollisionBoxNY = 50; //碰撞箱中心移動y
+        let playerCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+        let ShowPlayerCollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+
+
+
+
         let bossSetX = 5000; // boss 設定當前座標 x
         let bossSetY = 230; // boss 設定當前座標 y
         let bossCollisionBoxX = 160; // 碰撞箱寬度，值越大越寬
         let bossCollisionBoxY = 150; // 碰撞箱高度，值越大越長
         let bossCollisionBoxNX = 75; //碰撞箱中心移動x
         let bossCollisionBoxNY = 65; //碰撞箱中心移動y
-        let bossCollisionBoxCircle = 0; // 0=圓形，1=矩形，越小越圓
+        let bossCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
         let ShowBossCollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
 
 
-        
+
 
 
         let showScore = 1; // score:0 顯示1 隱藏0
@@ -1933,6 +1944,36 @@
                 ctx.globalAlpha = 1;
                 // 發射動畫幀數遞減
                 if (player.shootAnimFrame > 0) player.shootAnimFrame--;
+                // ===== 玩家碰撞箱顯示 =====
+                if (ShowPlayerCollisionBox == 1) {
+                    // 以玩家圖片中心為原點，支援 NX/NY 百分比移動
+                    const playerCenterX = player.x + player.width * (playerCollisionBoxNX / 100);
+                    const playerCenterY = player.y + player.height * (playerCollisionBoxNY / 100);
+                    const boxX1 = playerCenterX - playerCollisionBoxX / 2;
+                    const boxX2 = playerCenterX + playerCollisionBoxX / 2;
+                    const boxY1 = playerCenterY - playerCollisionBoxY / 2;
+                    const boxY2 = playerCenterY + playerCollisionBoxY / 2;
+                    const ellipseRx = playerCollisionBoxX / 2;
+                    const ellipseRy = playerCollisionBoxY / 2;
+                    if (playerCollisionBoxCircle < 1) {
+                        // 畫橢圓
+                        ctx.save();
+                        ctx.globalAlpha = 0.35;
+                        ctx.fillStyle = '#00ff00';
+                        ctx.beginPath();
+                        ctx.ellipse(playerCenterX, playerCenterY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                    if (playerCollisionBoxCircle > 0) {
+                        // 畫矩形
+                        ctx.save();
+                        ctx.globalAlpha = 0.18;
+                        ctx.fillStyle = '#00ff00';
+                        ctx.fillRect(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1);
+                        ctx.restore();
+                    }
+                }
             }
             
             // 繪製子彈
