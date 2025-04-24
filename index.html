@@ -428,8 +428,8 @@
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
 
-        let startx = 5000;
-        let starty = 0;
+        let playerStartX = 5000;
+        let playerStartY = 0;
         let playerMaxHealth = 100; // Player血量
         let bossHealth   = 300;  // Boss血量
 
@@ -745,8 +745,8 @@
         let playerHealth = playerMaxHealth; // 玩家目前血量
 
         let player = {
-            x: startx,                // 玩家X座標（連動 startx）
-            y: starty,                // 玩家Y座標（連動 starty）
+            x: playerStartX,                // 玩家X座標（連動 playerStartX）
+            y: playerStartY,                // 玩家Y座標（連動 playerStartY）
             width: 30,                // 玩家寬度（碰撞箱）
             height: 60,               // 玩家高度（碰撞箱）
             get speed() { return playerMoveSpeed; }, // 玩家移動速度（取自全域變數）
@@ -1314,8 +1314,8 @@
             reachedBossArea = false;
             
             // 重置玩家位置
-            player.x = startx;
-            player.y = starty;
+            player.x = playerStartX;
+            player.y = playerStartY;
             player.vy = 0;
             player.onGround = true;
             player.direction = 1;
@@ -2643,8 +2643,8 @@
                 if (autoFlipPlayerInput) autoFlipPlayer = autoFlipPlayerInput.checked;
                 settingsPanel.style.display = 'none';
                 isPaused = false;
-                if (startXInput) startx = parseInt(startXInput.value) || 0;
-                if (startYInput) starty = parseInt(startYInput.value) || 0;
+                if (startXInput) startXInput.value = playerStartX;
+                if (startYInput) startYInput.value = playerStartY;
             } else {
                 if (bgmOnInput) bgmOnInput.checked = !!isBgmOn;
                 if (sfxOnInput) sfxOnInput.checked = !!isSfxOn;
@@ -2665,8 +2665,8 @@
                 if (autoFlipPlayerInput) autoFlipPlayerInput.checked = !!autoFlipPlayer;
                 settingsPanel.style.display = 'block';
                 isPaused = true;
-                if (startXInput) startXInput.value = startx;
-                if (startYInput) startYInput.value = starty;
+                if (startXInput) startXInput.value = playerStartX;
+                if (startYInput) startYInput.value = playerStartY;
             }
         };
         var settingsCloseBtn = document.getElementById('settings-close-btn');
@@ -2710,8 +2710,8 @@
                 if (autoFlipPlayerInput) autoFlipPlayer = autoFlipPlayerInput.checked;
                 settingsPanel.style.display = 'none';
                 isPaused = false; // 關閉設定時恢復
-                if (startXInput) startx = parseInt(startXInput.value) || 0;
-                if (startYInput) starty = parseInt(startYInput.value) || 0;
+                if (startXInput) startXInput.value = playerStartX;
+                if (startYInput) startYInput.value = playerStartY;
             };
         }
         // checkbox 變動即時同步
@@ -2876,10 +2876,10 @@
         updateMobileTouchDisplay();
 
         document.getElementById('setting-start-x').addEventListener('input', function() {
-            startx = parseInt(this.value) || 0;
+            playerStartX = parseInt(this.value) || 0;
         });
         document.getElementById('setting-start-y').addEventListener('input', function() {
-            starty = parseInt(this.value) || 0;
+            playerStartY = parseInt(this.value) || 0;
         });
 
 
