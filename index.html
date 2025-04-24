@@ -262,7 +262,7 @@
         }
         #start-button,  #play-again-button{
             border-top: 10px;
-            margin-top: 40px;
+            margin-top: 50px;
         }
         
         #lang-toggle {
@@ -424,25 +424,34 @@
         let CHARGE_CANCEL_FRAME = 12;    // 集氣取消的最短幀數
 
         // ===== 遊戲狀態 =====
-        let MAX_FPS = 70; // 最大FPS設定
+        let MAX_FPS = 200; // 最大FPS設定
 
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
 
         let playerStartX = 5000;
         let playerStartY = 0;
-        let playerMaxHealth = 100; // Player血量
+        let playerMaxHealth = 100000; // Player血量
         let bossHealth   = 300;  // Boss血量
 
         let score        = 0;     // 玩家分數
 
 
-        let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否
-        let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否
-        // let bossStartX = 5200;
-        // let bossStartY = 0;
-        let bossSetX = 4550; // boss 設定當前座標 x
-        let bossSetY = 252; // boss 設定當前座標 y
+        let bossBulletEnable = 0; // boss 子彈是否射擊，1=是，0=否
+        let bossFixedPosition = 1; // boss 是否固定座標（取消移動），1=是，0=否
+        
+        let bossSetX = 5000; // boss 設定當前座標 x
+        let bossSetY = 230; // boss 設定當前座標 y
+        let bossCollisionBoxX = 160; // 碰撞箱寬度，值越大越寬
+        let bossCollisionBoxY = 150; // 碰撞箱高度，值越大越長
+        let bossCollisionBoxNX = 75; //碰撞箱中心移動x
+        let bossCollisionBoxNY = 65; //碰撞箱中心移動y
+        let bossCollisionBoxCircle = 0; // 0=圓形，1=矩形，越小越圓
+        let ShowBossCollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+
+
+
+        
 
 
         let showScore = 1; // score:0 顯示1 隱藏0
@@ -2028,6 +2037,37 @@
             
             // 繪製Boss
             if (bossActive && !isWinScreen) {
+                if (ShowBossCollisionBox == 1) {
+                    // 以 boss 圖片中心為原點，支援 NX/NY 百分比移動
+                    const bossCenterX = boss.x + boss.width * (bossCollisionBoxNX / 100);
+                    const bossCenterY = boss.y + boss.height * (bossCollisionBoxNY / 100);
+                    // 以中心為圓心，bossCollisionBoxX 為寬度，bossCollisionBoxY 為高度
+                    const boxX1 = bossCenterX - bossCollisionBoxX / 2;
+                    const boxX2 = bossCenterX + bossCollisionBoxX / 2;
+                    const boxY1 = bossCenterY - bossCollisionBoxY / 2;
+                    const boxY2 = bossCenterY + bossCollisionBoxY / 2;
+                    const ellipseRx = bossCollisionBoxX / 2;
+                    const ellipseRy = bossCollisionBoxY / 2;
+                    // 混合遮罩顯示
+                    if (bossCollisionBoxCircle < 1) {
+                        // 畫橢圓
+                        ctx.save();
+                        ctx.globalAlpha = 0.35;
+                        ctx.fillStyle = '#ffff00';
+                        ctx.beginPath();
+                        ctx.ellipse(bossCenterX, bossCenterY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                    if (bossCollisionBoxCircle > 0) {
+                        // 畫矩形
+                        ctx.save();
+                        ctx.globalAlpha = 0.18;
+                        ctx.fillStyle = '#ffff00';
+                        ctx.fillRect(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1);
+                        ctx.restore();
+                    }
+                }
                 if (bossHitFlash > 0) {
                     if (boss.lastHitCharge) {
                         ctx.globalAlpha = 1;
@@ -2116,32 +2156,30 @@
         
         // ===== 工具函數 =====
         function checkCollision(a, b) {
-            // 如果 b 是 boss，改用圓形碰撞
+            // 如果 b 是 boss，改用自訂碰撞箱
             if (b === boss) {
-                // 以 boss 的中心與半徑（取寬高平均的一半）為圓
-                const bossCenterX = boss.x + boss.width / 2;
-                const bossCenterY = boss.y + boss.height / 2;
-                const bossRadius = (boss.width + boss.height) / 4 + 10; // 取平均 boss碰撞設定
-                // 判斷 a（通常是子彈或玩家）中心點到 boss 圓心的距離
+                const bossCenterX = boss.x + boss.width * (bossCollisionBoxNX / 100);
+                const bossCenterY = boss.y + boss.height * (bossCollisionBoxNY / 100);
+                // 以中心為圓心，bossCollisionBoxX 為寬度，bossCollisionBoxY 為高度
+                const boxX1 = bossCenterX - bossCollisionBoxX / 2;
+                const boxX2 = bossCenterX + bossCollisionBoxX / 2;
+                const boxY1 = bossCenterY - bossCollisionBoxY / 2;
+                const boxY2 = bossCenterY + bossCollisionBoxY / 2;
+                const mix = bossCollisionBoxCircle;
                 const aCenterX = a.x + (a.width ? a.width / 2 : 0);
                 const aCenterY = a.y + (a.height ? a.height / 2 : 0);
-                const dx = aCenterX - bossCenterX;
-                const dy = aCenterY - bossCenterY;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                // 若 a 是矩形（玩家），需考慮邊緣最近點
-                if (a.width && a.height && a !== player) {
-                    // 子彈等直接用中心
-                    return dist < bossRadius;
-                } else if (a === player) {
-                    // 玩家用最近點到圓心
-                    // 找出玩家矩形最近 boss 圓心的點
-                    const closestX = Math.max(player.x, Math.min(bossCenterX, player.x + player.width));
-                    const closestY = Math.max(player.y, Math.min(bossCenterY, player.y + player.height));
-                    const pdx = closestX - bossCenterX;
-                    const pdy = closestY - bossCenterY;
-                    const pdist = Math.sqrt(pdx * pdx + pdy * pdy);
-                    return pdist < bossRadius;
-                }
+                let rectHit = (aCenterX > boxX1 && aCenterX < boxX2 && aCenterY > boxY1 && aCenterY < boxY2);
+                // 橢圓碰撞
+                const ellipseCx = bossCenterX;
+                const ellipseCy = bossCenterY;
+                const ellipseRx = bossCollisionBoxX / 2;
+                const ellipseRy = bossCollisionBoxY / 2;
+                const dx = aCenterX - ellipseCx;
+                const dy = aCenterY - ellipseCy;
+                let ellipseHit = ((dx * dx) / (ellipseRx * ellipseRx) + (dy * dy) / (ellipseRy * ellipseRy)) <= 1;
+                if (mix <= 0) return ellipseHit;
+                if (mix >= 1) return rectHit;
+                return (ellipseHit && Math.random() > mix) || (rectHit && Math.random() < mix);
             }
             // 其他情況維持原本矩形碰撞
             return a.x < b.x + b.width &&
