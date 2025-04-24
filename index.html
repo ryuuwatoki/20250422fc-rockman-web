@@ -428,12 +428,20 @@
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
 
-        let startx = 0;
+        let startx = 5000;
         let starty = 0;
         let playerMaxHealth = 100; // Player血量
         let bossHealth   = 300;  // Boss血量
 
         let score        = 0;     // 玩家分數
+
+
+        let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否
+        let bossFixedPosition = 1; // boss 是否固定座標（取消移動），1=是，0=否
+        let bossStartX = 5200;
+        let bossStartY = 0;
+        let bossSetX = 5200; // boss 設定當前座標 x
+        let bossSetY = 0; // boss 設定當前座標 y
 
 
         let showScore = 1; // score:0 顯示1 隱藏0
@@ -449,10 +457,6 @@
 
         let autoFlipPlayer = true; // 是否自動水平翻轉角色圖片（true=按方向鍵時自動翻轉，false=永遠朝右），預設true
 
-        let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否
-        let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否
-        let bossSetX = 0; // boss 設定當前座標 x
-        let bossSetY = 0; // boss 設定當前座標 y
 
         let gameRunning  = false; // 遊戲是否正在進行中
         let bossActive   = false; // Boss是否啟動
@@ -482,7 +486,7 @@
         let isWinScreen = false;
         let bossDefeated = false;
 
-        // ===== fakeBoss 全域變數 =====
+        // ===== fakeBoss 全域變數 =====boss.x = 5300
         let fakeBoss = null;
         let fakeBossFlashFrame = 0;
 
@@ -1059,6 +1063,23 @@
             
             // Boss 行為模式
             update: function() {
+                // ===== 新增 Boss 固定座標功能 =====
+                if (bossFixedPosition) {
+                    this.x = bossSetX;
+                    this.y = bossSetY;
+                    // 仍然要處理動畫切換
+                    if (!bossCanMove) {
+                        this.imgIndex = 0;
+                    } else {
+                        this.animFrame++;
+                        if (this.animFrame % 6 === 0) {
+                            this.imgIndex++;
+                            if (this.imgIndex > 8) this.imgIndex = 1;
+                        }
+                    }
+                    // 固定時不移動也不射擊
+                    return;
+                }
                 // 動畫切換
                 if (!bossCanMove) {
                     this.imgIndex = 0;
@@ -1119,7 +1140,7 @@
                 // Boss 射擊
                 if (this.shootCooldown > 0) {
                     this.shootCooldown--;
-                } else if (bossCanAttack) {
+                } else if (bossCanAttack && bossBulletEnable) {
                     // 三方向射擊
                     for (let i = -1; i <= 1; i++) {
                         const angle = Math.atan2(
