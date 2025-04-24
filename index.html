@@ -305,6 +305,8 @@
         let meteorSpawnRate = 0.1; // 隕石生成率
         let boosMeteorSpawnFrequency = 20; // 每次生成隕石的間隔幀數
         let bossMeteorSpawnRate = 1; // 隕石生成率
+        let enterBossArea = 30; //進入boss區間變時間 (單位秒)
+        let outBossArea = 30; //離開boss區間變時間 (單位秒)
 
 
         // ===== 碰撞箱 =====
@@ -1587,6 +1589,11 @@
                         meteors.push({ x: mx, y: my, vx, vy, life, bossMeteor: true });
                     }
                 }
+                // === Boss區背景漸變 ===
+                if (bossBgTransition < 1) {
+                    bossBgTransition += 1 / (enterBossArea * MAX_FPS); // 進入boss區間變時間
+                    if (bossBgTransition > 1) bossBgTransition = 1;
+                }
             } else {
                 // 一般區
                 if (meteorSpawnTimer >= meteorSpawnFrequency) {
@@ -1602,6 +1609,11 @@
                         let life = 20 + Math.floor(Math.random() * 41); // 20~60 幀
                         meteors.push({ x: mx, y: my, vx, vy, life });
                     }
+                }
+                // === 離開Boss區時背景漸變回去 ===
+                if (bossBgTransition > 0) {
+                    bossBgTransition -= 1 / (outBossArea * MAX_FPS); // 離開boss區間變時間
+                    if (bossBgTransition < 0) bossBgTransition = 0;
                 }
             }
             // 更新隕石
@@ -1630,7 +1642,23 @@
             ctx.translate(-camera.x, -camera.y);
             
             // 繪製背景 (簡單的星空效果)
-            ctx.fillStyle = '#112';
+            // ctx.fillStyle = '#112';
+            // ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+            // === Boss區漸層背景 ===
+            let grad = ctx.createLinearGradient(0, 0, 0, WORLD_HEIGHT);
+            // 原本顏色 #112，Boss區顏色 #000(上)~#c44a17(下)
+            function lerpColor(a, b, t) {
+                // a, b: hex string, t: 0~1
+                let ah = a.length === 4 ? a.replace(/#/g, '').split('').map(x=>parseInt(x+x,16)) : a.replace('#','').match(/../g).map(x=>parseInt(x,16));
+                let bh = b.length === 4 ? b.replace(/#/g, '').split('').map(x=>parseInt(x+x,16)) : b.replace('#','').match(/../g).map(x=>parseInt(x,16));
+                return '#' + ah.map((v,i)=>Math.round(v*(1-t)+bh[i]*t).toString(16).padStart(2,'0')).join('');
+            }
+            let topColor = lerpColor('#112', '#000000', bossBgTransition);
+            let bottomColor = lerpColor('#112', '#c44a17', bossBgTransition);
+            grad.addColorStop(0.85, topColor);            // 黑
+            grad.addColorStop(0.92, lerpColor(topColor, bottomColor, 0.5)); // 中間過渡色
+            grad.addColorStop(1.0, bottomColor);          // 橘紅
+            ctx.fillStyle = grad;
             ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
             
             // 繪製星星
@@ -3007,6 +3035,7 @@
         // ===== 隕石系統 =====
         let meteors = [];
         let meteorSpawnTimer = 0;
+        let bossBgTransition = 0; // Boss區背景漸變進度 0~1
 
     </script>
 </body>
