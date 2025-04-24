@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>オックセンマン by watokiryuu</title>
+    <title>オックセンマン by watoki</title>
     <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/style2.css">
@@ -87,13 +87,12 @@
 
         // ===== 遊戲狀態 =====
         let MAX_FPS = 120; // 最大FPS設定 預設120
-        let score        = 0;     // 玩家分數
 
         let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6
         let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高
-        let playerStartX = 200;   // 玩家初始座標 x 預設200
+        let playerStartX = 5000;   // 玩家初始座標 x 預設200
         let playerStartY = 100;   // 玩家初始座標 y 預設100 
-        let playerMaxHealth = 100000; // 玩家血量
+        let playerMaxHealth = 10000; // 玩家血量
 
         // ===== 玩家飛行無敵模式 =====
         let isFlyingMode = 0; // 預設關閉
@@ -108,8 +107,8 @@
         let bossHealth   = 300;  // Boss血量
         let bossSetX = 5000; // boss 設定當前座標 x
         let bossSetY = 230; // boss 設定當前座標 y
-        let bossBulletSpeed = 3; // boss 子彈速度（預設3，數值越大越快）
-        let bossBulletCount = 3; // boss 一次發射幾發（預設3，建議奇數，3=三方向）
+        let bossBulletSpeed = 10; // boss 子彈速度（預設3，數值越大越快）
+
         let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否
         let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否
 
@@ -264,8 +263,8 @@
             color: p.color
         }));
 
-
         // 遊戲常數
+        let score= 0;     // 玩家分數
         let GRAVITY         = 1;         // 重力加速度
         let JUMP_POWER      = -15; // 跳躍初速度
         let JUMP_EXTRA      = -0.5; // 長按跳躍時每幀額外加速度
@@ -275,6 +274,7 @@
         const BOSS_AREA_X     = 4600;      // Boss區域起點X座標
         let CHARGE_MIN_FRAME = 42;       // 集氣彈最少需要的幀數
         let CHARGE_CANCEL_FRAME = 12;    // 集氣取消的最短幀數
+        let bossBulletCount = 3; // boss子彈數量
         let gameRunning  = false; // 遊戲是否正在進行中
         let bossActive   = false; // Boss是否啟動
         let bossTimer    = 0;     // Boss出場動畫計時器
