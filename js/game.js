@@ -12,6 +12,8 @@ let playerStartX = 200;   // 玩家初始座標 x 預設200｜プレイヤー初
 let playerStartY = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100; // 玩家血量 預設100｜プレイヤー体力 デフォルト100
 let JUMP_POWER      = 15; // 跳躍速度
+let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';;
+let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';;
 
 
 // ===== 玩家飛行無敵模式 =====｜プレイヤー飛行無敵モード
@@ -52,8 +54,7 @@ let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ�
 let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
 
 // ===== 設定選單狀態顯示全開/全關 =====
-let checkBoxShowHideAll = 1; // 是否顯示所有元素 1=顯示 0=隱藏 2=pass 或者可以直接註釋
-
+checkBoxShowHideAll(1);
 
 // 音量設定｜音量設定
 let isBgmOn = 0;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
@@ -267,10 +268,11 @@ let outBossAreaDelayTimer = 0; // 離開Boss區延遲計時器（幀）
 let isInBossAreaMeteor = false; // 目前隕石是否為Boss區型態
 
 
-checkBoxShowHideAll(1);
+checkBoxShowHideAll(0);
 // ===== 物件面積 ===== //
 let PLAYER_size = [50,60]; //玩家尺寸 寬度,高度
 let PLAYER_SHOOT_size = [55,60];
+let PLAYER_Charge_Attack_size = [60,60];
 let FLY_RED_size = [30,30];
 let FLY_ORANGE_size = [60,70];
 let GROUND_RED_size = [35,60];
@@ -1103,7 +1105,7 @@ function update() {
             width: 40,
             height: 24,
             speed: 10 * 1.1 * player.direction, // 1.1倍
-            color: '#ff0',
+            color: PLAYER_Charge_Attack_shoot_color,
             isCharge: true // 標記為集氣彈
         });
         player.shootCooldown = player.shootDelay; // 給一點冷卻
@@ -1692,6 +1694,25 @@ function render() {
     
     // 繪製玩家 (無敵時閃爍)
     if (!playerDead) { // 死亡時不繪製
+        // ===== 蓄氣特效：長按空白鍵0.2秒以上才顯示 =====
+        if (charging && chargeFrame >= CHARGE_CANCEL_FRAME) {
+            ctx.save();
+            // 閃爍透明度
+            let alpha = 0.25 + 0.25 * Math.abs(Math.sin(Date.now() / 120));
+            ctx.globalAlpha = alpha;
+            ctx.beginPath();
+            // 以玩家中心為圓心
+            let cx = player.x + player.width / 2;
+            let cy = player.y + player.height / 2;
+            let rx = PLAYER_Charge_Attack_size[0] / 2;
+            let ry = PLAYER_Charge_Attack_size[1] / 2;
+            ctx.arc(cx, cy, Math.max(rx, ry), 0, Math.PI * 2);
+            ctx.fillStyle = PLAYER_Charge_Attack_color;
+            ctx.shadowColor = PLAYER_Charge_Attack_color;
+            ctx.shadowBlur = 18;
+            ctx.fill();
+            ctx.restore();
+        }
         if (isWinInvincible) {
             ctx.globalAlpha = 0.2;
         }
@@ -1800,7 +1821,7 @@ function render() {
         ctx.fillStyle = bullet.color;
         if (bullet.isCharge) {
             ctx.save();
-            ctx.shadowColor = '#ff0';
+            ctx.shadowColor = PLAYER_Charge_Attack_shoot_color;
             ctx.shadowBlur = 20;
             // 集氣彈：上下窄的橢圓
             ctx.beginPath();
