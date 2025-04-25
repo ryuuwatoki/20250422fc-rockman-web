@@ -58,7 +58,7 @@ checkBoxShowHideAll(1);
 
 // 音量設定｜音量設定
 let isBgmOn = 0;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
-let isSfxOn = 0; // 效果音是否開啟，1=開啟，0=關閉｜効果音オンオフ 1=オン 0=オフ
+let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉｜効果音オンオフ 1=オン 0=オフ
 
 let VOLUME_BGM      = 0.55;  // 背景音樂音量｜BGM音量
 let VOLUME_SHOOT    = 0.55;  // 射擊音效音量｜射撃効果音音量
@@ -268,7 +268,7 @@ let outBossAreaDelayTimer = 0; // 離開Boss區延遲計時器（幀）
 let isInBossAreaMeteor = false; // 目前隕石是否為Boss區型態
 
 
-checkBoxShowHideAll(0);
+checkBoxShowHideAll(1);
 // ===== 物件面積 ===== //
 let PLAYER_size = [50,60]; //玩家尺寸 寬度,高度
 let PLAYER_SHOOT_size = [55,60];
@@ -282,27 +282,27 @@ let BOSS_size = [190,190];
 
 
 // ===== 碰撞箱 =====
-let playerCollisionBox = [40, 70]; // [寬度, 高度]
+let playerCollisionBox = [140, 60]; // [寬度, 高度]
 let playerCollisionBoxNX = 50; //碰撞箱中心移動x
 let playerCollisionBoxNY = 50; //碰撞箱中心移動y
 let playerCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let FLY_RED_CollisionBox = [30, 30];
+let FLY_RED_CollisionBox = [230, 30];
 let FLY_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
 let FLY_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
 let FLY_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let FLY_ORANGE_CollisionBox = [60, 70];
+let FLY_ORANGE_CollisionBox = [260, 70];
 let FLY_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
 let FLY_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
 let FLY_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_RED_CollisionBox = [35, 60];
+let GROUND_RED_CollisionBox = [235, 60];
 let GROUND_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
 let GROUND_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
 let GROUND_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_ORANGE_CollisionBox = [50, 70];
+let GROUND_ORANGE_CollisionBox = [250, 70];
 let GROUND_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
 let GROUND_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
 let GROUND_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_PINK_CollisionBox = [40, 40];
+let GROUND_PINK_CollisionBox = [240, 40];
 let GROUND_PINK_CollisionBoxNX = 50; //碰撞箱中心移動x
 let GROUND_PINK_CollisionBoxNY = 50; //碰撞箱中心移動y
 let GROUND_PINK_CollisionBoxCircle = 1; // 0=圓形，1=矩形，越小越圓
@@ -2103,37 +2103,78 @@ function render() {
 }
 
 // ===== 工具函數 =====
+function getCollisionBoxParams(obj) {
+    // 玩家
+    if (obj === player) {
+        return {
+            box: playerCollisionBox,
+            nx: playerCollisionBoxNX,
+            ny: playerCollisionBoxNY,
+            circle: playerCollisionBoxCircle
+        };
+    }
+    // Boss
+    if (obj === boss) {
+        return {
+            box: bossCollisionBox,
+            nx: bossCollisionBoxNX,
+            ny: bossCollisionBoxNY,
+            circle: bossCollisionBoxCircle
+        };
+    }
+    // 敵人
+    if (obj.behavior === ENEMY_TYPES.FLY_RED.behavior) {
+        return { box: FLY_RED_CollisionBox, nx: FLY_RED_CollisionBoxNX, ny: FLY_RED_CollisionBoxNY, circle: FLY_RED_CollisionBoxCircle };
+    }
+    if (obj.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
+        return { box: FLY_ORANGE_CollisionBox, nx: FLY_ORANGE_CollisionBoxNX, ny: FLY_ORANGE_CollisionBoxNY, circle: FLY_ORANGE_CollisionBoxCircle };
+    }
+    if (obj.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
+        return { box: GROUND_RED_CollisionBox, nx: GROUND_RED_CollisionBoxNX, ny: GROUND_RED_CollisionBoxNY, circle: GROUND_RED_CollisionBoxCircle };
+    }
+    if (obj.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
+        return { box: GROUND_ORANGE_CollisionBox, nx: GROUND_ORANGE_CollisionBoxNX, ny: GROUND_ORANGE_CollisionBoxNY, circle: GROUND_ORANGE_CollisionBoxCircle };
+    }
+    if (obj.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
+        return { box: GROUND_PINK_CollisionBox, nx: GROUND_PINK_CollisionBoxNX, ny: GROUND_PINK_CollisionBoxNY, circle: GROUND_PINK_CollisionBoxCircle };
+    }
+    // 其他物件（如子彈）直接用自身 x, y, width, height
+    return null;
+}
+
 function checkCollision(a, b) {
-    // 如果 b 是 boss，改用自訂碰撞箱
-    if (b === boss) {
-        const bossCenterX = boss.x + boss.width * (bossCollisionBoxNX / 100);
-        const bossCenterY = boss.y + boss.height * (bossCollisionBoxNY / 100);
-        // 以中心為圓心，bossCollisionBoxX 為寬度，bossCollisionBoxY 為高度
-        const boxX1 = bossCenterX - bossCollisionBox[0] / 2;
-        const boxX2 = bossCenterX + bossCollisionBox[0] / 2;
-        const boxY1 = bossCenterY - bossCollisionBox[1] / 2;
-        const boxY2 = bossCenterY + bossCollisionBox[1] / 2;
-        const mix = bossCollisionBoxCircle;
-        const aCenterX = a.x + (a.width ? a.width / 2 : 0);
-        const aCenterY = a.y + (a.height ? a.height / 2 : 0);
-        let rectHit = (aCenterX > boxX1 && aCenterX < boxX2 && aCenterY > boxY1 && aCenterY < boxY2);
+    const aBox = getCollisionBoxParams(a);
+    const bBox = getCollisionBoxParams(b);
+
+    if (aBox && bBox) {
+        // 算出中心
+        const aCenterX = a.x + a.width * (aBox.nx / 100);
+        const aCenterY = a.y + a.height * (aBox.ny / 100);
+        const bCenterX = b.x + b.width * (bBox.nx / 100);
+        const bCenterY = b.y + b.height * (bBox.ny / 100);
         // 橢圓碰撞
-        const ellipseCx = bossCenterX;
-        const ellipseCy = bossCenterY;
-        const ellipseRx = bossCollisionBox[0] / 2;
-        const ellipseRy = bossCollisionBox[1] / 2;
-        const dx = aCenterX - ellipseCx;
-        const dy = aCenterY - ellipseCy;
-        let ellipseHit = ((dx * dx) / (ellipseRx * ellipseRx) + (dy * dy) / (ellipseRy * ellipseRy)) <= 1;
+        const dx = aCenterX - bCenterX;
+        const dy = aCenterY - bCenterY;
+        const ellipseHit = ((dx * dx) / Math.pow((aBox.box[0] + bBox.box[0]) / 2 / 2, 2) +
+                            (dy * dy) / Math.pow((aBox.box[1] + bBox.box[1]) / 2 / 2, 2)) <= 1;
+        // 矩形碰撞
+        const aX1 = aCenterX - aBox.box[0] / 2, aX2 = aCenterX + aBox.box[0] / 2;
+        const aY1 = aCenterY - aBox.box[1] / 2, aY2 = aCenterY + aBox.box[1] / 2;
+        const bX1 = bCenterX - bBox.box[0] / 2, bX2 = bCenterX + bBox.box[0] / 2;
+        const bY1 = bCenterY - bBox.box[1] / 2, bY2 = bCenterY + bBox.box[1] / 2;
+        const rectHit = !(aX2 < bX1 || aX1 > bX2 || aY2 < bY1 || aY1 > bY2);
+        // 混合
+        const mix = Math.max(aBox.circle, bBox.circle);
         if (mix <= 0) return ellipseHit;
         if (mix >= 1) return rectHit;
         return (ellipseHit && Math.random() > mix) || (rectHit && Math.random() < mix);
     }
-    // 其他情況維持原本矩形碰撞
+
+    // 只要有一方沒自訂碰撞箱，維持原本矩形碰撞
     return a.x < b.x + b.width &&
-            a.x + a.width > b.x &&
-            a.y < b.y + b.height &&
-            a.y + a.height > b.y;
+           a.x + a.width > b.x &&
+           a.y < b.y + b.height &&
+           a.y + a.height > b.y;
 }
 
 //更新玩家血條顯示
