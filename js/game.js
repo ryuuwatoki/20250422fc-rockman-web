@@ -1,6 +1,6 @@
 // ===== 遊戲設定（集中整理） =====｜ゲーム設定（集中管理）
-// let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文｜デフォルト言語：日本語
-let FirstLanguage = localStorage.getItem('lang') || 'zh'; //預設語言中文｜デフォルト言語：中国語
+let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文｜デフォルト言語：日本語
+// let FirstLanguage = localStorage.getItem('lang') || 'zh'; //預設語言中文｜デフォルト言語：中国語
 // let FirstLanguage = localStorage.getItem('lang') || 'en'; //預設語言英文｜デフォルト言語：英語
 
 // ===== 遊戲狀態 =====｜ゲーム状態
