@@ -11,9 +11,7 @@ let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈
 let playerStartX = 200;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
 let playerStartY = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100; // 玩家血量 預設100｜プレイヤー体力 デフォルト100
-let JUMP_POWER      = 15; // 跳躍初速度（正數，實際運算自動轉負）
-let JUMP_EXTRA      = 0.5; // 長按跳躍時每幀額外加速度（正數，實際運算自動轉負）
-let JUMP_EXTRA_FRAMES = 12;      // 跳躍額外加速最大幀數
+let JUMP_POWER      = 15; // 跳躍速度
 
 
 // ===== 玩家飛行無敵模式 =====｜プレイヤー飛行無敵モード
@@ -43,8 +41,8 @@ let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ�
 let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
 
 // 音量設定｜音量設定
-let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
-let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉｜効果音オンオフ 1=オン 0=オフ
+let isBgmOn = 0;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
+let isSfxOn = 0; // 效果音是否開啟，1=開啟，0=關閉｜効果音オンオフ 1=オン 0=オフ
 
 let VOLUME_BGM      = 0.55;  // 背景音樂音量｜BGM音量
 let VOLUME_SHOOT    = 0.55;  // 射擊音效音量｜射撃効果音音量
@@ -213,6 +211,8 @@ let midEventTriggered = false; // 中途事件是否已觸發
 let playerDead = false; // 玩家死亡狀態
 let playerDeadX = 0;   // 死亡時的X
 let playerDeadY = 0;   // 死亡時的Y
+let JUMP_EXTRA      = 0.5; // 長按跳躍時每幀額外加速度（正數，實際運算自動轉負）
+let JUMP_EXTRA_FRAMES = 12;      // 跳躍額外加速最大幀數
 let autoFlipPlayer = true; // 是否自動水平翻轉角色圖片（true=按方向鍵時自動翻轉，false=永遠朝右），預設true
 let isWinInvincible = false; // 勝利畫面無敵狀態
 let isPaused = false; // 全域暫停旗標
@@ -2191,9 +2191,7 @@ const LANGUAGES = {
             weaponPower: '武器攻擊力',
             maxFps: '最大 FPS',
             gravity: '重力',
-            jumpPower: '跳躍初速度',
-            jumpExtra: '跳躍額外加速度',
-            jumpExtraFrames: '跳躍額外加速幀數',
+            jumpPower: '跳躍力',
             enemyMaxCount: '敵人最大數量',
             bossBulletSpeed: 'Boss子彈速度',
             bossBulletPattern: 'Boss子彈模式：',
@@ -2234,9 +2232,7 @@ const LANGUAGES = {
             weaponPower: '武器パワー',
             maxFps: '最大 FPS',
             gravity: '重力',
-            jumpPower: 'ジャンプ初速度',
-            jumpExtra: 'ジャンプ追加加速度',
-            jumpExtraFrames: 'ジャンプ追加フレーム',
+            jumpPower: 'ジャンプ力',
             enemyMaxCount: '敵最大数',
             bossBulletSpeed: 'ボス弾スピード',
             bossBulletPattern: 'ボス弾パターン：',
@@ -2278,8 +2274,6 @@ const LANGUAGES = {
             maxFps: 'Max FPS',
             gravity: 'Gravity',
             jumpPower: 'Jump Power',
-            jumpExtra: 'Jump Extra',
-            jumpExtraFrames: 'Jump Extra Frames',
             enemyMaxCount: 'Enemy Max Count',
             bossBulletSpeed: 'Boss Bullet Speed',
             bossBulletPattern: 'Boss Bullet Pattern:',
@@ -2511,20 +2505,13 @@ settingsPanel.innerHTML = `
     </div>
 
     <div style="margin-bottom:16px;">
-        <label>Jump Extra <input id="setting-jump-extra" type="number" min="0.01" max="5" step="0.01" style="width:80px;"> </label>
-    </div>
-
-    <div style="margin-bottom:16px;">
-        <label>Jump Extra Frames <input id="setting-jump-extra-frames" type="number" min="1" max="60" step="1" style="width:80px;"> </label>
-    </div>
-
-    <!-- 新增：敵人最大數量、Boss子彈速度、Boss子彈模式 -->
-    <div style="margin-bottom:16px;">
         <label id="label-enemy-max-count">敵人最大數量 <input id="setting-enemy-max-count" type="number" min="1" max="50" step="1" style="width:80px;"></label>
     </div>
+
     <div style="margin-bottom:16px;">
         <label id="label-boss-bullet-speed">Boss子彈速度 <input id="setting-boss-bullet-speed" type="number" min="1" max="20" step="1" style="width:80px;"></label>
     </div>
+
     <div style="margin-bottom:16px;">
         <span id="label-boss-bullet-pattern">Boss子彈模式：</span>
         <label style="margin-left:8px;"><input type="radio" name="setting-boss-bullet-pattern" id="setting-boss-bullet-pattern-1" value="1"> <span id="label-boss-pattern-easy">簡單</span></label>
@@ -2573,8 +2560,6 @@ settingsBtn.onclick = function() {
     var maxFpsInput = document.getElementById('setting-max-fps');
     var gravityInput = document.getElementById('setting-gravity');
     var jumpPowerInput = document.getElementById('setting-jump-power');
-    var jumpExtraInput = document.getElementById('setting-jump-extra');
-    var jumpExtraFramesInput = document.getElementById('setting-jump-extra-frames');
     var enemyMaxCountInput = document.getElementById('setting-enemy-max-count');
     var bossBulletSpeedInput = document.getElementById('setting-boss-bullet-speed');
     var bossPattern1 = document.getElementById('setting-boss-bullet-pattern-1');
@@ -2599,8 +2584,6 @@ settingsBtn.onclick = function() {
         if (maxFpsInput) MAX_FPS = parseInt(maxFpsInput.value) || 10;
         if (gravityInput) GRAVITY = parseFloat(gravityInput.value) || 1;
         if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || 11.5*1.3;
-        if (jumpExtraInput) JUMP_EXTRA = parseFloat(jumpExtraInput.value) || 0.35*1.3;
-        if (jumpExtraFramesInput) JUMP_EXTRA_FRAMES = parseInt(jumpExtraFramesInput.value) || 12;
         if (enemyMaxCountInput) enemyMaxCount = parseInt(enemyMaxCountInput.value) || 1;
         if (bossBulletSpeedInput) bossBulletSpeed = parseInt(bossBulletSpeedInput.value) || 1;
         if (bossPattern1 && bossPattern1.checked) bossBulletPatternMode = 1;
@@ -2627,8 +2610,6 @@ settingsBtn.onclick = function() {
         if (maxFpsInput) maxFpsInput.value = MAX_FPS;
         if (gravityInput) gravityInput.value = GRAVITY;
         if (jumpPowerInput) jumpPowerInput.value = JUMP_POWER;
-        if (jumpExtraInput) jumpExtraInput.value = JUMP_EXTRA;
-        if (jumpExtraFramesInput) jumpExtraFramesInput.value = JUMP_EXTRA_FRAMES;
         if (enemyMaxCountInput) enemyMaxCountInput.value = enemyMaxCount;
         if (bossBulletSpeedInput) bossBulletSpeedInput.value = bossBulletSpeed;
         if (bossPattern1) bossPattern1.checked = bossBulletPatternMode === 1;
@@ -2659,8 +2640,6 @@ if (settingsCloseBtn) {
         var maxFpsInput = document.getElementById('setting-max-fps');
         var gravityInput = document.getElementById('setting-gravity');
         var jumpPowerInput = document.getElementById('setting-jump-power');
-        var jumpExtraInput = document.getElementById('setting-jump-extra');
-        var jumpExtraFramesInput = document.getElementById('setting-jump-extra-frames');
         var enemyMaxCountInput = document.getElementById('setting-enemy-max-count');
         var bossBulletSpeedInput = document.getElementById('setting-boss-bullet-speed');
         var bossPattern1 = document.getElementById('setting-boss-bullet-pattern-1');
@@ -2684,8 +2663,6 @@ if (settingsCloseBtn) {
         if (maxFpsInput) MAX_FPS = parseInt(maxFpsInput.value) || 10;
         if (gravityInput) GRAVITY = parseFloat(gravityInput.value) || 1;
         if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || 11.5*1.3;
-        if (jumpExtraInput) JUMP_EXTRA = parseFloat(jumpExtraInput.value) || 0.35*1.3;
-        if (jumpExtraFramesInput) JUMP_EXTRA_FRAMES = parseInt(jumpExtraFramesInput.value) || 12;
         if (enemyMaxCountInput) enemyMaxCount = parseInt(enemyMaxCountInput.value) || 1;
         if (bossBulletSpeedInput) bossBulletSpeed = parseInt(bossBulletSpeedInput.value) || 1;
         if (bossPattern1 && bossPattern1.checked) bossBulletPatternMode = 1;
