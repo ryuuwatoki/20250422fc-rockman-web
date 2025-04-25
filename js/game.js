@@ -245,45 +245,44 @@ let outBossAreaDelayTimer = 0; // 離開Boss區延遲計時器（幀）
 let isInBossAreaMeteor = false; // 目前隕石是否為Boss區型態
 
 // ===== 物件面積 ===== //
-
-
+let PLAYER_size = [50,60]; //玩家尺寸 寬度,高度
+let PLAYER_SHOOT_size = [60,70];
+let FLY_RED_size = [30,30];
+let FLY_ORANGE_size = [60,70];
+let GROUND_RED_size = [35,60];
+let GROUND_ORANGE_size = [50,70];
+let GROUND_PINK_size = [40,40];
+let BOSS_size = [190,190];
 
 
 
 
 // ===== 碰撞箱 =====
-let playerCollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
-let playerCollisionBoxY = 70; // 碰撞箱高度，值越大越長
+let playerCollisionBox = [40, 70]; // [寬度, 高度]
 let playerCollisionBoxNX = 50; //碰撞箱中心移動x
 let playerCollisionBoxNY = 50; //碰撞箱中心移動y
 let playerCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let FLY_RED_CollisionBoxX = 30; // 碰撞箱寬度，值越大越寬
-let FLY_RED_CollisionBoxY = 30; // 碰撞箱高度，值越大越長
+let FLY_RED_CollisionBox = [30, 30];
 let FLY_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
 let FLY_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
 let FLY_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let FLY_ORANGE_CollisionBoxX = 60; // 碰撞箱寬度，值越大越寬
-let FLY_ORANGE_CollisionBoxY = 70; // 碰撞箱高度，值越大越長
+let FLY_ORANGE_CollisionBox = [60, 70];
 let FLY_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
 let FLY_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
 let FLY_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_RED_CollisionBoxX = 35; // 碰撞箱寬度，值越大越寬
-let GROUND_RED_CollisionBoxY = 60; // 碰撞箱高度，值越大越長
+let GROUND_RED_CollisionBox = [35, 60];
 let GROUND_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
 let GROUND_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
 let GROUND_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_ORANGE_CollisionBoxX = 50; // 碰撞箱寬度，值越大越寬
-let GROUND_ORANGE_CollisionBoxY = 70; // 碰撞箱高度，值越大越長
+let GROUND_ORANGE_CollisionBox = [50, 70];
 let GROUND_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
 let GROUND_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
 let GROUND_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_PINK_CollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
-let GROUND_PINK_CollisionBoxY = 40; // 碰撞箱高度，值越大越長
+let GROUND_PINK_CollisionBox = [40, 40];
 let GROUND_PINK_CollisionBoxNX = 50; //碰撞箱中心移動x
 let GROUND_PINK_CollisionBoxNY = 50; //碰撞箱中心移動y
 let GROUND_PINK_CollisionBoxCircle = 1; // 0=圓形，1=矩形，越小越圓
-let bossCollisionBoxX = 160; // 碰撞箱寬度，值越大越寬
-let bossCollisionBoxY = 150; // 碰撞箱高度，值越大越長
+let bossCollisionBox = [160, 150];
 let bossCollisionBoxNX = 75; //碰撞箱中心移動x
 let bossCollisionBoxNY = 65; //碰撞箱中心移動y
 let bossCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
@@ -430,8 +429,8 @@ let wa_player_to_Health_ki = playerMaxHealth; // 玩家目前血量 byLiuWatoki
 let player = {
     x: playerStartX,                // 玩家X座標（連動 playerStartX）
     y: playerStartY,                // 玩家Y座標（連動 playerStartY）
-    width: 30,                // 玩家寬度（碰撞箱）
-    height: 60,               // 玩家高度（碰撞箱）
+    get width() { return (this.shootAnimFrame > 0 ? PLAYER_SHOOT_size[0] : PLAYER_size[0]); }, // 玩家寬度
+    get height() { return (this.shootAnimFrame > 0 ? PLAYER_SHOOT_size[1] : PLAYER_size[1]); }, // 玩家高度
     get speed() { return playerMoveSpeed; }, // 玩家移動速度（取自全域變數）
     vy: 0,                 // 垂直速度
     onGround: false,       // 是否在地面上
@@ -728,8 +727,8 @@ const enemyHitFlash = new WeakMap(); // Map<enemy, frame>
 const boss = {
     x: 5200,
     y: 350, // 固定初始座標
-    width: 180, // 碰撞箱 boss大小 boss圖片大小
-    height: 170, // 碰撞箱 boss大小 boss圖片大小
+    get width() { return BOSS_size[0]; }, // Boss寬度
+    get height() { return BOSS_size[1]; }, // Boss高度
     speed: 2 * 1.1, // 1.1倍
     vy: 0, // 不再需要重力
     color: '#2196f3', // 主體藍色（Airman主色）
@@ -1210,8 +1209,8 @@ function update() {
         const enemy = {
             x: camera.x + camera.width + 50, // 初始X座標（生成在鏡頭右側）
             y: type.isFlying ? (Math.random() * (WORLD_HEIGHT - 200) + 50) : (Math.random() * (WORLD_HEIGHT - 100) + 50), // 初始Y座標
-            width: 35, // 寬度
-            height: 35, // 高度
+            width: 35, // 寬度（稍後根據型別覆蓋）
+            height: 35, // 高度（稍後根據型別覆蓋）
             speed: type.speed, // 移動速度
             health: hp, // 當前血量
             maxHealth: hp, // 最大血量
@@ -1232,36 +1231,32 @@ function update() {
         if (type === ENEMY_TYPES.FLY_RED) {
             enemy._animFrame = 0;
             enemy._imgIndex = 0;
-            enemy.width = 30;   // 設定寬度
-            enemy.height = 30;  // 設定高度
-
+            enemy.width = FLY_RED_size[0];
+            enemy.height = FLY_RED_size[1];
         }
         if (type === ENEMY_TYPES.FLY_ORANGE) {
             enemy._animFrame = 0;
             enemy._imgIndex = 0;
-            enemy.width = 70;   // 設定寬度
-            enemy.height = 70;  // 設定高度
+            enemy.width = FLY_ORANGE_size[0];
+            enemy.height = FLY_ORANGE_size[1];
         }
         if (type === ENEMY_TYPES.GROUND_RED) {
             enemy._animFrame = 0;
             enemy._imgIndex = 0;
-            enemy.width = 50;   // 設定寬度
-            enemy.height = 50;  // 設定高度
-
+            enemy.width = GROUND_RED_size[0];
+            enemy.height = GROUND_RED_size[1];
         }
         if (type === ENEMY_TYPES.GROUND_ORANGE) {
             enemy._animFrame = 0;
             enemy._imgIndex = 0;
-            enemy.width = 60;   // 設定寬度
-            enemy.height = 66;  // 設定高度
-
+            enemy.width = GROUND_ORANGE_size[0];
+            enemy.height = GROUND_ORANGE_size[1];
         }
         if (type === ENEMY_TYPES.GROUND_PINK) {
             enemy._animFrame = 0;
             enemy._imgIndex = 0;
-            enemy.width = 40;   // 設定寬度
-            enemy.height = 40;  // 設定高度
-
+            enemy.width = GROUND_PINK_size[0];
+            enemy.height = GROUND_PINK_size[1];
         }
         enemies.push(enemy);
     }
@@ -1695,9 +1690,15 @@ function render() {
         } else {
             window._playerMoveAnimFrame = 0;
         }
-        // 顯示圖片大小
-        const imgDrawWidth = 50; // 玩家實際寬度
-        const imgDrawHeight = 60; //玩家實際高度
+        // 顯示圖片大小（依狀態切換）
+        let imgDrawWidth, imgDrawHeight;
+        if (player.shootAnimFrame > 0) {
+            imgDrawWidth = 60; // 發射狀態
+            imgDrawHeight = 70;
+        } else {
+            imgDrawWidth = 50; // 普通狀態
+            imgDrawHeight = 60;
+        }
         // 以底部對齊碰撞箱，左右置中
         if (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0) {
             ctx.save();
@@ -1748,12 +1749,12 @@ function render() {
             // 以玩家圖片中心為原點，支援 NX/NY 百分比移動
             const playerCenterX = player.x + player.width * (playerCollisionBoxNX / 100);
             const playerCenterY = player.y + player.height * (playerCollisionBoxNY / 100);
-            const boxX1 = playerCenterX - playerCollisionBoxX / 2;
-            const boxX2 = playerCenterX + playerCollisionBoxX / 2;
-            const boxY1 = playerCenterY - playerCollisionBoxY / 2;
-            const boxY2 = playerCenterY + playerCollisionBoxY / 2;
-            const ellipseRx = playerCollisionBoxX / 2;
-            const ellipseRy = playerCollisionBoxY / 2;
+            const boxX1 = playerCenterX - playerCollisionBox[0] / 2;
+            const boxX2 = playerCenterX + playerCollisionBox[0] / 2;
+            const boxY1 = playerCenterY - playerCollisionBox[1] / 2;
+            const boxY2 = playerCenterY + playerCollisionBox[1] / 2;
+            const ellipseRx = playerCollisionBox[0] / 2;
+            const ellipseRy = playerCollisionBox[1] / 2;
             if (playerCollisionBoxCircle < 1) {
                 // 畫橢圓
                 ctx.save();
@@ -1877,32 +1878,32 @@ function render() {
         // 依據敵人類型選擇對應參數
         let boxX = 0, boxY = 0, boxNX = 50, boxNY = 50, boxCircle = 0.4;
         if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
-            boxX = FLY_RED_CollisionBoxX;
-            boxY = FLY_RED_CollisionBoxY;
+            boxX = FLY_RED_CollisionBox[0];
+            boxY = FLY_RED_CollisionBox[1];
             boxNX = FLY_RED_CollisionBoxNX;
             boxNY = FLY_RED_CollisionBoxNY;
             boxCircle = FLY_RED_CollisionBoxCircle;
         } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
-            boxX = FLY_ORANGE_CollisionBoxX;
-            boxY = FLY_ORANGE_CollisionBoxY;
+            boxX = FLY_ORANGE_CollisionBox[0];
+            boxY = FLY_ORANGE_CollisionBox[1];
             boxNX = FLY_ORANGE_CollisionBoxNX;
             boxNY = FLY_ORANGE_CollisionBoxNY;
             boxCircle = FLY_ORANGE_CollisionBoxCircle;
         } else if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
-            boxX = GROUND_RED_CollisionBoxX;
-            boxY = GROUND_RED_CollisionBoxY;
+            boxX = GROUND_RED_CollisionBox[0];
+            boxY = GROUND_RED_CollisionBox[1];
             boxNX = GROUND_RED_CollisionBoxNX;
             boxNY = GROUND_RED_CollisionBoxNY;
             boxCircle = GROUND_RED_CollisionBoxCircle;
         } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
-            boxX = GROUND_ORANGE_CollisionBoxX;
-            boxY = GROUND_ORANGE_CollisionBoxY;
+            boxX = GROUND_ORANGE_CollisionBox[0];
+            boxY = GROUND_ORANGE_CollisionBox[1];
             boxNX = GROUND_ORANGE_CollisionBoxNX;
             boxNY = GROUND_ORANGE_CollisionBoxNY;
             boxCircle = GROUND_ORANGE_CollisionBoxCircle;
         } else if (enemy.color === '#f8c' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
-            boxX = GROUND_PINK_CollisionBoxX;
-            boxY = GROUND_PINK_CollisionBoxY;
+            boxX = GROUND_PINK_CollisionBox[0];
+            boxY = GROUND_PINK_CollisionBox[1];
             boxNX = GROUND_PINK_CollisionBoxNX;
             boxNY = GROUND_PINK_CollisionBoxNY;
             boxCircle = GROUND_PINK_CollisionBoxCircle;
@@ -1952,16 +1953,9 @@ function render() {
     // 繪製Boss
     if (bossActive && !isWinScreen) {
         if (ShowCollisionBox == 1) {
-            // 以 boss 圖片中心為原點，支援 NX/NY 百分比移動
-            const bossCenterX = boss.x + boss.width * (bossCollisionBoxNX / 100);
-            const bossCenterY = boss.y + boss.height * (bossCollisionBoxNY / 100);
-            // 以中心為圓心，bossCollisionBoxX 為寬度，bossCollisionBoxY 為高度
-            const boxX1 = bossCenterX - bossCollisionBoxX / 2;
-            const boxX2 = bossCenterX + bossCollisionBoxX / 2;
-            const boxY1 = bossCenterY - bossCollisionBoxY / 2;
-            const boxY2 = bossCenterY + bossCollisionBoxY / 2;
-            const ellipseRx = bossCollisionBoxX / 2;
-            const ellipseRy = bossCollisionBoxY / 2;
+            // 直接用 boss.x, boss.y 畫出碰撞箱
+            const ellipseRx = bossCollisionBox[0] / 2;
+            const ellipseRy = bossCollisionBox[1] / 2;
             // 混合遮罩顯示
             if (bossCollisionBoxCircle < 1) {
                 // 畫橢圓
@@ -1969,7 +1963,7 @@ function render() {
                 ctx.globalAlpha = 0.35;
                 ctx.fillStyle = '#ffff00';
                 ctx.beginPath();
-                ctx.ellipse(bossCenterX, bossCenterY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
+                ctx.ellipse(boss.x + bossCollisionBox[0] / 2, boss.y + bossCollisionBox[1] / 2, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
             }
@@ -1978,7 +1972,7 @@ function render() {
                 ctx.save();
                 ctx.globalAlpha = 0.18;
                 ctx.fillStyle = '#ffff00';
-                ctx.fillRect(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1);
+                ctx.fillRect(boss.x, boss.y, bossCollisionBox[0], bossCollisionBox[1]);
                 ctx.restore();
             }
         }
@@ -2075,10 +2069,10 @@ function checkCollision(a, b) {
         const bossCenterX = boss.x + boss.width * (bossCollisionBoxNX / 100);
         const bossCenterY = boss.y + boss.height * (bossCollisionBoxNY / 100);
         // 以中心為圓心，bossCollisionBoxX 為寬度，bossCollisionBoxY 為高度
-        const boxX1 = bossCenterX - bossCollisionBoxX / 2;
-        const boxX2 = bossCenterX + bossCollisionBoxX / 2;
-        const boxY1 = bossCenterY - bossCollisionBoxY / 2;
-        const boxY2 = bossCenterY + bossCollisionBoxY / 2;
+        const boxX1 = bossCenterX - bossCollisionBox[0] / 2;
+        const boxX2 = bossCenterX + bossCollisionBox[0] / 2;
+        const boxY1 = bossCenterY - bossCollisionBox[1] / 2;
+        const boxY2 = bossCenterY + bossCollisionBox[1] / 2;
         const mix = bossCollisionBoxCircle;
         const aCenterX = a.x + (a.width ? a.width / 2 : 0);
         const aCenterY = a.y + (a.height ? a.height / 2 : 0);
@@ -2086,8 +2080,8 @@ function checkCollision(a, b) {
         // 橢圓碰撞
         const ellipseCx = bossCenterX;
         const ellipseCy = bossCenterY;
-        const ellipseRx = bossCollisionBoxX / 2;
-        const ellipseRy = bossCollisionBoxY / 2;
+        const ellipseRx = bossCollisionBox[0] / 2;
+        const ellipseRy = bossCollisionBox[1] / 2;
         const dx = aCenterX - ellipseCx;
         const dy = aCenterY - ellipseCy;
         let ellipseHit = ((dx * dx) / (ellipseRx * ellipseRx) + (dy * dy) / (ellipseRy * ellipseRy)) <= 1;
