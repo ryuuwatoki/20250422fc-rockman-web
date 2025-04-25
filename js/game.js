@@ -1078,7 +1078,7 @@ function update() {
         if (shootAudio) {
             shootAudio.currentTime = 0;
             shootAudio.volume = VOLUME_SHOOT;
-            shootAudio.play();
+            if (isSfxOn) shootAudio.play();
         }
         player.shootAnimFrame = 14; // 集氣彈顯示0.2秒
         chargeReady = false;
