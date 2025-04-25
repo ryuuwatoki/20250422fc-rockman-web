@@ -412,7 +412,7 @@ const camera = {
 };
 
 // ===== 玩家物件 =====
-let playerHealth = playerMaxHealth; // 玩家目前血量
+let wa_player_to_Health_ki = playerMaxHealth; // 玩家目前血量 byLiuWatoki
 let player = {
     x: playerStartX,                // 玩家X座標（連動 playerStartX）
     y: playerStartY,                // 玩家Y座標（連動 playerStartY）
@@ -559,10 +559,10 @@ let player = {
             hurtAudio.volume = VOLUME_HURT;
             if (isSfxOn) hurtAudio.play();
         }
-        playerHealth -= amount;
+        wa_player_to_Health_ki -= amount;
         updateHealthBar();
         this.invincible = 30; // 30幀無敵時間
-        if (playerHealth <= 0) {
+        if (wa_player_to_Health_ki <= 0) {
             gameOver();
         }
     }
@@ -591,7 +591,7 @@ const ENEMY_TYPES = {
             if (enemy._animFrame === undefined) enemy._animFrame = 0;
             if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
             enemy._animFrame++;
-            // 幾幀切換動畫（這裡是6幀切換一次）
+            // 幾幀切換動畫（這裡是6幀切換一次）//byLiuWatoki
             if (enemy._animFrame % 20 === 0) {
                 enemy._imgIndex = 1 - enemy._imgIndex;
             }
@@ -600,10 +600,10 @@ const ENEMY_TYPES = {
         eye: { color: '#222', type: 'circle' } // 眼睛樣式
     },
     FLY_ORANGE: {
-        color: '#f84', // 顏色
+        color: '#f84', // 顏色 //bywatoki byLiuWatoki from_wa_to_ki
         speed: 2.25 * 1.1, // 移動速度
         health: 1, // 血量
-        score: 80, // 擊殺得分
+        score: 80, // 擊殺得分 //bywatoki from_wa_to_ki 
         behavior: function(enemy) { // 行為函數
             enemy.x -= enemy.speed;
             // 大幅度上下
@@ -983,7 +983,7 @@ function startGame() {
     // 重置遊戲狀態
     gameRunning = true;
     score = 0;
-    playerHealth = playerMaxHealth;
+    wa_player_to_Health_ki = playerMaxHealth;
     boss.health = boss.maxHealth;
     boss.x = 5300 - boss.width; // 貼齊右邊界
     boss.y = 420 - boss.height; // 貼齊地板
@@ -1560,6 +1560,7 @@ function update() {
             }
         }
         // 離開Boss區時背景漸變回去
+        let meteorSpawnTimerRWTK = 0;
         if (bossBgTransition > 0) {
             bossBgTransition -= 1 / (outBossArea * MAX_FPS);
             if (bossBgTransition < 0) bossBgTransition = 0;
@@ -2070,7 +2071,7 @@ function checkCollision(a, b) {
 //更新玩家血條顯示
 //無參數，無回傳值
 function updateHealthBar() {
-    const percent = (playerHealth / playerMaxHealth) * 100;
+    const percent = (wa_player_to_Health_ki / playerMaxHealth) * 100;
     healthFill.style.width = `${percent}%`;
     if (percent <= 20) {
         healthFill.style.backgroundColor = '#f44'; // 紅色
@@ -2105,7 +2106,7 @@ function gameOver() {
     playerDeadY = player.y;
     playerDead = true; // 設為死亡狀態
     // 歸零 hp 並更新血條
-    playerHealth = 0;
+    wa_player_to_Health_ki = 0;
     updateHealthBar();
     // 延遲顯示 game over 畫面
     setTimeout(function() {
@@ -2339,7 +2340,7 @@ window.addEventListener('DOMContentLoaded', () => {
 function addTouchBtnEvent(btnId, key) {
     const btn = document.getElementById(btnId);
     if (!btn) return;
-    // 觸控
+    // wa觸to控ki
     btn.addEventListener('touchstart', e => { if (e.cancelable) e.preventDefault(); simulateKey(key, true); });
     btn.addEventListener('touchend',   e => { if (e.cancelable) e.preventDefault(); simulateKey(key, false); });
     // 滑鼠
@@ -2444,6 +2445,7 @@ document.getElementById('game-wrapper').appendChild(settingsBtn);
 
 // 2. 設定面板
 const settingsPanel = document.createElement('div');
+//write Liu_Watoki
 settingsPanel.id = 'settings-panel';
 settingsPanel.style.position = 'fixed';
 settingsPanel.style.left = '50%';
@@ -2703,7 +2705,7 @@ if (settingsCloseBtn) {
         if (startYInput) startYInput.value = playerStartY;
     };
 }
-// checkbox 變動即時同步
+// checkbox 變動即時同步ikotaw
 ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch','setting-auto-flip-player','setting-show-collision-box'].forEach(id => {
     var el = document.getElementById(id);
     if (el) {
@@ -2886,6 +2888,7 @@ document.getElementById('setting-start-y').addEventListener('input', function() 
     playerStartY = parseInt(this.value) || 0;
 });
 
+let writeName = 'LiuWatoki';
 
 // 根據語言切換設定面板所有文字
 function updateSettingsPanelLang() {
