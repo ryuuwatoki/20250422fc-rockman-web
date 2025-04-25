@@ -45,6 +45,7 @@ let showXY = 0; //show xy｜XY座標表示
 let showNXY = 0; //show new xy｜グリッド座標表示
 let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ数表示
 let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
+let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 
 // 音量設定｜音量設定
 let isBgmOn = 0;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
@@ -244,7 +245,6 @@ let outBossAreaDelayTimer = 0; // 離開Boss區延遲計時器（幀）
 let isInBossAreaMeteor = false; // 目前隕石是否為Boss區型態
 
 // ===== 碰撞箱 =====
-let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
 let playerCollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
 let playerCollisionBoxY = 70; // 碰撞箱高度，值越大越長
 let playerCollisionBoxNX = 50; //碰撞箱中心移動x
@@ -1908,11 +1908,24 @@ function render() {
             const ellipseRy = boxY / 2;
             const boxX1 = centerX - boxX / 2;
             const boxY1 = centerY - boxY / 2;
+            // 依敵人類型決定碰撞箱顏色
+            let collisionBoxColor = 'rgba(0, 145, 255, 0.7)'; // 預設藍色
+            if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
+                collisionBoxColor = 'rgba(255,0,0,0.7)'; // 紅色
+            } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
+                collisionBoxColor = 'rgba(255,128,0,0.7)'; // 橘色
+            } else if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
+                collisionBoxColor = 'rgba(255,0,0,0.7)'; // 紅色
+            } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
+                collisionBoxColor = 'rgba(255,128,0,0.7)'; // 橘色
+            } else if (enemy.color === '#f8c' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
+                collisionBoxColor = 'rgba(255,182,193,0.7)'; // 粉紅色
+            }
             // 畫橢圓
             if (boxCircle < 1) {
                 ctx.save();
                 ctx.globalAlpha = 0.35;
-                ctx.fillStyle = 'rgba(255,140,0,0.7)';
+                ctx.fillStyle = collisionBoxColor;
                 ctx.beginPath();
                 ctx.ellipse(centerX, centerY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
                 ctx.fill();
@@ -1922,7 +1935,7 @@ function render() {
             if (boxCircle > 0) {
                 ctx.save();
                 ctx.globalAlpha = 0.18;
-                ctx.fillStyle = 'rgba(255,140,0,0.7)';
+                ctx.fillStyle = collisionBoxColor;
                 ctx.fillRect(boxX1, boxY1, boxX, boxY);
                 ctx.restore();
             }
