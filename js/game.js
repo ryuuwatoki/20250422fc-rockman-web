@@ -24,6 +24,12 @@ let GROUND_RED_spawn = 1; // 敵人Ｃ是否生成，1=是，0=否｜敵C生成�
 let GROUND_ORANGE_spawn = 1; // 敵人Ｄ是否生成，1=是，0=否｜敵D生成するか 1=はい 0=いいえ
 let GROUND_PINK_spawn = 1; // 敵人Ｅ是否生成，1=是，0=否｜敵E生成するか 1=はい 0=いいえ
 
+let Fly_RED_HP = 1; // 飛行紅色敵人血量｜飛行赤色敵体の体力
+let Fly_ORANGE_HP = 3; // 飛行橘色敵人血量｜飛行オレンジ敵体の体力
+let GROUND_RED_HP = 3; // 地面紅色敵人血量｜地上赤色敵体の体力
+let GROUND_ORANGE_HP = 3; // 地面橘色敵人血量｜地上オレンジ敵体の体力
+let GROUND_PINK_HP = 5; // 地面粉紅敵人血量｜地上ピンク敵体の体力
+
 let bossHealth   = 300;  // Boss血量 預設300｜ボス体力 デフォルト300
 let bossSetX = 5000; // boss 座標 x 預設5000｜ボス座標 x デフォルト5000
 let bossSetY = 230; // boss 座標 y 預設230｜ボス座標 y デフォルト230
@@ -1187,14 +1193,21 @@ function update() {
             break;
         } while (tryCount < 10);
         // 給每隻敵人一個唯一 id 供飄浮用
+        // 依照敵人類型決定血量
+        let hp = 3;
+        if (type === ENEMY_TYPES.FLY_RED) hp = Fly_RED_HP; // 飛行紅色敵人血量｜飛行赤色敵体の体力
+        if (type === ENEMY_TYPES.FLY_ORANGE) hp = Fly_ORANGE_HP; // 飛行橘色敵人血量｜飛行オレンジ敵体の体力
+        if (type === ENEMY_TYPES.GROUND_RED) hp = GROUND_RED_HP; // 地面紅色敵人血量｜地上赤色敵体の体力
+        if (type === ENEMY_TYPES.GROUND_ORANGE) hp = GROUND_ORANGE_HP; // 地面橘色敵人血量｜地上オレンジ敵体の体力
+        if (type === ENEMY_TYPES.GROUND_PINK) hp = GROUND_PINK_HP; // 地面粉紅敵人血量｜地上ピンク敵体の体力
         const enemy = {
             x: camera.x + camera.width + 50, // 初始X座標（生成在鏡頭右側）
             y: type.isFlying ? (Math.random() * (WORLD_HEIGHT - 200) + 50) : (Math.random() * (WORLD_HEIGHT - 100) + 50), // 初始Y座標
             width: 35, // 寬度
             height: 35, // 高度
             speed: type.speed, // 移動速度
-            health: 3, // 當前血量
-            maxHealth: 3, // 最大血量
+            health: hp, // 當前血量
+            maxHealth: hp, // 最大血量
             score: type.score, // 擊殺得分
             color: type.color, // 顏色
             behavior: type.behavior, // 行為函數
