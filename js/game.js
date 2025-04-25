@@ -8,7 +8,7 @@ let MAX_FPS = 60; // 最大FPS設定 預設60｜最大FPS設定 デフォルト6
 
 let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
 let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
-let playerStartX = 200;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
+let playerStartX = 5200;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
 let playerStartY = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100; // 玩家血量 預設100｜プレイヤー体力 デフォルト100
 let JUMP_POWER      = 15; // 跳躍速度
@@ -282,34 +282,35 @@ let BOSS_size = [190,190];
 
 
 // ===== 碰撞箱 =====
-let playerCollisionBox = [140, 60]; // [寬度, 高度]
+let playerCollisionBox = [40, 60]; // [寬度, 高度]
 let playerCollisionBoxNX = 50; //碰撞箱中心移動x
 let playerCollisionBoxNY = 50; //碰撞箱中心移動y
 let playerCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let FLY_RED_CollisionBox = [230, 30];
+let FLY_RED_CollisionBox = [30, 30];
 let FLY_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
 let FLY_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
 let FLY_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let FLY_ORANGE_CollisionBox = [260, 70];
+let FLY_ORANGE_CollisionBox = [60, 70];
 let FLY_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
 let FLY_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
 let FLY_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_RED_CollisionBox = [235, 60];
+let GROUND_RED_CollisionBox = [35, 60];
 let GROUND_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
 let GROUND_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
 let GROUND_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_ORANGE_CollisionBox = [250, 70];
+let GROUND_ORANGE_CollisionBox = [50, 70];
 let GROUND_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
 let GROUND_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
 let GROUND_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_PINK_CollisionBox = [240, 40];
+let GROUND_PINK_CollisionBox = [40, 40];
 let GROUND_PINK_CollisionBoxNX = 50; //碰撞箱中心移動x
 let GROUND_PINK_CollisionBoxNY = 50; //碰撞箱中心移動y
 let GROUND_PINK_CollisionBoxCircle = 1; // 0=圓形，1=矩形，越小越圓
+
 let bossCollisionBox = [160, 150];
-let bossCollisionBoxNX = 75; //碰撞箱中心移動x
-let bossCollisionBoxNY = 65; //碰撞箱中心移動y
-let bossCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
+let bossCollisionBoxNX = 50; //碰撞箱中心移動x
+let bossCollisionBoxNY = 40; //碰撞箱中心移動y
+let bossCollisionBoxCircle = 0.3; // 0=圓形，1=矩形，越小越圓
 
 // 顏色設定
 const COLOR_PLAYER          = '#4af';      // 玩家顏色
@@ -1992,30 +1993,7 @@ function render() {
     
     // 繪製Boss
     if (bossActive && !isWinScreen) {
-        if (ShowCollisionBox == 1) {
-            // 直接用 boss.x, boss.y 畫出碰撞箱
-            const ellipseRx = bossCollisionBox[0] / 2;
-            const ellipseRy = bossCollisionBox[1] / 2;
-            // 混合遮罩顯示
-            if (bossCollisionBoxCircle < 1) {
-                // 畫橢圓
-                ctx.save();
-                ctx.globalAlpha = 0.35;
-                ctx.fillStyle = '#ffff00';
-                ctx.beginPath();
-                ctx.ellipse(boss.x + bossCollisionBox[0] / 2, boss.y + bossCollisionBox[1] / 2, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-            if (bossCollisionBoxCircle > 0) {
-                // 畫矩形
-                ctx.save();
-                ctx.globalAlpha = 0.18;
-                ctx.fillStyle = '#ffff00';
-                ctx.fillRect(boss.x, boss.y, bossCollisionBox[0], bossCollisionBox[1]);
-                ctx.restore();
-            }
-        }
+        // 只顯示 Boss 圖片，不再顯示碰撞箱遮罩
         if (bossHitFlash > 0) {
             if (boss.lastHitCharge) {
                 ctx.globalAlpha = 1;
@@ -2033,16 +2011,45 @@ function render() {
                 }
             }
         }
-        // 圖片繪製 80x80，中心對齊碰撞箱
         let drawImg = bossImgs[boss.imgIndex || 0];
-        //boss圖片大小 boss大小
-        ctx.drawImage(drawImg, boss.x + (boss.width - 80) / 2,
-        boss.y + (boss.height - 80) / 2, 190, 190);
+        ctx.drawImage(drawImg, boss.x, boss.y, boss.width, boss.height);
         ctx.globalAlpha = 1;
         if (bossHitFlash > 0 && boss.lastHitCharge) {
             ctx.restore();
         }
         ctx.globalAlpha = 1;
+        // ===== Boss 碰撞箱顯示 =====
+        if (ShowCollisionBox == 1 && bossActive && !isWinScreen) {
+            // 算出中心
+            const centerX = boss.x + boss.width * (bossCollisionBoxNX / 100);
+            const centerY = boss.y + boss.height * (bossCollisionBoxNY / 100);
+            const boxW = bossCollisionBox[0];
+            const boxH = bossCollisionBox[1];
+            const ellipseRx = boxW / 2;
+            const ellipseRy = boxH / 2;
+            const boxX1 = centerX - boxW / 2;
+            const boxY1 = centerY - boxH / 2;
+            // 顏色
+            const collisionBoxColor = 'rgba(255,255,0,0.7)';
+            // 畫橢圓
+            if (bossCollisionBoxCircle < 1) {
+                ctx.save();
+                ctx.globalAlpha = 0.35;
+                ctx.fillStyle = collisionBoxColor;
+                ctx.beginPath();
+                ctx.ellipse(centerX, centerY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+            // 畫矩形
+            if (bossCollisionBoxCircle > 0) {
+                ctx.save();
+                ctx.globalAlpha = 0.18;
+                ctx.fillStyle = collisionBoxColor;
+                ctx.fillRect(boxX1, boxY1, boxW, boxH);
+                ctx.restore();
+            }
+        }
     }
     // ===== fakeBoss 閃爍效果 =====
     if (fakeBoss) {
