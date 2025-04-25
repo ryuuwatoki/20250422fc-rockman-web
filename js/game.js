@@ -244,6 +244,13 @@ let inBossAreaDelayTimer = 0; // 進入Boss區延遲計時器（幀）
 let outBossAreaDelayTimer = 0; // 離開Boss區延遲計時器（幀）
 let isInBossAreaMeteor = false; // 目前隕石是否為Boss區型態
 
+// ===== 物件面積 ===== //
+
+
+
+
+
+
 // ===== 碰撞箱 =====
 let playerCollisionBoxX = 40; // 碰撞箱寬度，值越大越寬
 let playerCollisionBoxY = 70; // 碰撞箱高度，值越大越長
