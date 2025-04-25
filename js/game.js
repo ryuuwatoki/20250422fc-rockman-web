@@ -4,13 +4,17 @@ let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文�
 // let FirstLanguage = localStorage.getItem('lang') || 'en'; //預設語言英文｜デフォルト言語：英語
 
 // ===== 遊戲狀態 =====｜ゲーム状態
-let MAX_FPS = 70; // 最大FPS設定 預設70｜最大FPS設定 デフォルト70
+let MAX_FPS = 60; // 最大FPS設定 預設60｜最大FPS設定 デフォルト60
 
 let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
 let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
 let playerStartX = 200;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
 let playerStartY = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100; // 玩家血量 預設100｜プレイヤー体力 デフォルト100
+let JUMP_POWER      = 15; // 跳躍初速度（正數，實際運算自動轉負）
+let JUMP_EXTRA      = 0.5; // 長按跳躍時每幀額外加速度（正數，實際運算自動轉負）
+let JUMP_EXTRA_FRAMES = 12;      // 跳躍額外加速最大幀數
+
 
 // ===== 玩家飛行無敵模式 =====｜プレイヤー飛行無敵モード
 let isFlyingMode = 0; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
@@ -185,9 +189,6 @@ const basePlatforms = platformGrid.map(p => ({
 // 遊戲常數
 let score= 0;     // 玩家分數
 let GRAVITY         = 1;         // 重力加速度
-let JUMP_POWER      = -15; // 跳躍初速度
-let JUMP_EXTRA      = -0.5; // 長按跳躍時每幀額外加速度
-let JUMP_EXTRA_FRAMES = 12;      // 跳躍額外加速最大幀數
 const WORLD_WIDTH     = 5400;    // 世界寬度
 const WORLD_HEIGHT    = 500;       // 世界高度
 const BOSS_AREA_X     = 4600;      // Boss區域起點X座標
@@ -469,7 +470,7 @@ let player = {
         
         // 跳躍
         if (keys.ArrowUp && this.onGround && !upPressed) {
-            this.vy = JUMP_POWER;
+            this.vy = -JUMP_POWER; // 這裡加負號
             this.onGround = false;
             upPressed = true;
             isJumping = true;
@@ -510,7 +511,7 @@ let player = {
         }
         // 跳躍增力（可變高度）
         if (isJumping && !this.onGround && this.vy < 0 && jumpHoldFrames < JUMP_EXTRA_FRAMES) {
-            this.vy += JUMP_EXTRA;
+            this.vy += -JUMP_EXTRA; // 這裡加負號
             jumpHoldFrames++;
         } else if (jumpHoldFrames >= JUMP_EXTRA_FRAMES) {
             isJumping = false;
@@ -1333,7 +1334,7 @@ function update() {
                 if (bullet.isCharge) {
                     enemy.health -= weaponPower * 5; // 集氣彈攻擊力5倍
                 } else {
-                    enemy.health -= weaponPower * 1.5; // 普通子彈攻擊力
+                    enemy.health -= weaponPower * 1; // 普通子彈攻擊力
                 }
                 enemyHitFlash.set(enemy, 12); // 0.2秒閃爍
                 // 播放boom音效（集氣彈也有）
@@ -2506,11 +2507,11 @@ settingsPanel.innerHTML = `
     </div>
 
     <div style="margin-bottom:16px;">
-        <label>Jump Power <input id="setting-jump-power" type="number" min="-50" max="0" step="0.1" style="width:80px;"> </label>
+        <label>Jump Power <input id="setting-jump-power" type="number" min="0.1" max="50" step="0.1" style="width:80px;"> </label>
     </div>
 
     <div style="margin-bottom:16px;">
-        <label>Jump Extra <input id="setting-jump-extra" type="number" min="-5" max="0" step="0.01" style="width:80px;"> </label>
+        <label>Jump Extra <input id="setting-jump-extra" type="number" min="0.01" max="5" step="0.01" style="width:80px;"> </label>
     </div>
 
     <div style="margin-bottom:16px;">
@@ -2597,8 +2598,8 @@ settingsBtn.onclick = function() {
         if (weaponPowerInput) weaponPower = parseInt(weaponPowerInput.value) || 1;
         if (maxFpsInput) MAX_FPS = parseInt(maxFpsInput.value) || 10;
         if (gravityInput) GRAVITY = parseFloat(gravityInput.value) || 1;
-        if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || -11.5*1.3;
-        if (jumpExtraInput) JUMP_EXTRA = parseFloat(jumpExtraInput.value) || -0.35*1.3;
+        if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || 11.5*1.3;
+        if (jumpExtraInput) JUMP_EXTRA = parseFloat(jumpExtraInput.value) || 0.35*1.3;
         if (jumpExtraFramesInput) JUMP_EXTRA_FRAMES = parseInt(jumpExtraFramesInput.value) || 12;
         if (enemyMaxCountInput) enemyMaxCount = parseInt(enemyMaxCountInput.value) || 1;
         if (bossBulletSpeedInput) bossBulletSpeed = parseInt(bossBulletSpeedInput.value) || 1;
@@ -2682,8 +2683,8 @@ if (settingsCloseBtn) {
         if (weaponPowerInput) weaponPower = parseInt(weaponPowerInput.value) || 1;
         if (maxFpsInput) MAX_FPS = parseInt(maxFpsInput.value) || 10;
         if (gravityInput) GRAVITY = parseFloat(gravityInput.value) || 1;
-        if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || -11.5*1.3;
-        if (jumpExtraInput) JUMP_EXTRA = parseFloat(jumpExtraInput.value) || -0.35*1.3;
+        if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || 11.5*1.3;
+        if (jumpExtraInput) JUMP_EXTRA = parseFloat(jumpExtraInput.value) || 0.35*1.3;
         if (jumpExtraFramesInput) JUMP_EXTRA_FRAMES = parseInt(jumpExtraFramesInput.value) || 12;
         if (enemyMaxCountInput) enemyMaxCount = parseInt(enemyMaxCountInput.value) || 1;
         if (bossBulletSpeedInput) bossBulletSpeed = parseInt(bossBulletSpeedInput.value) || 1;
@@ -2765,11 +2766,11 @@ if (gravityInput2) gravityInput2.addEventListener('input', function() {
 });
 var jumpPowerInput2 = document.getElementById('setting-jump-power');
 if (jumpPowerInput2) jumpPowerInput2.addEventListener('input', function() {
-    JUMP_POWER = parseFloat(this.value) || -11.5*1.3;
+    JUMP_POWER = parseFloat(this.value) || 11.5*1.3;
 });
 var jumpExtraInput2 = document.getElementById('setting-jump-extra');
 if (jumpExtraInput2) jumpExtraInput2.addEventListener('input', function() {
-    JUMP_EXTRA = parseFloat(this.value) || -0.35*1.3;
+    JUMP_EXTRA = parseFloat(this.value) || 0.35*1.3;
 });
 var jumpExtraFramesInput2 = document.getElementById('setting-jump-extra-frames');
 if (jumpExtraFramesInput2) jumpExtraFramesInput2.addEventListener('input', function() {
