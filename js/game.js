@@ -39,32 +39,19 @@ let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否｜ボス弾
 let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否｜ボス座標固定するか（移動しない）1=はい 0=いいえ
 
 let showScore = 1; // score:0 顯示1 隱藏0｜スコア表示 1=表示 0=非表示
-let showMoved = 1; // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
+let showMoved = 0; // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
 let showFPS = 1; //showfps｜FPS表示
 
-let showXY = 1; //show xy｜XY座標表示
-let showNXY = 1; //show new xy｜グリッド座標表示
-let ShowCollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
-
-let showAutoFlipPlayer = 1; // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1
-let showEntityCounts = 1; //show 人物怪物子彈數量｜エンティティ数表示
+let showXY = 0; //show xy｜XY座標表示
+let showNXY = 0; //show new xy｜グリッド座標表示
+let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+let AutoFlipPlayer = 1; // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1
+let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ数表示
 
 let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
 
-// ===== 狀態顯示全開/全關 =====
-let showAll = 2; // 是否顯示所有元素 1=顯示 0=隱藏 1=表示 0=非表示
-if (typeof showAll !== 'undefined' && (showAll === 0 || showAll === 1)) {
-    showScore = showAll;
-    showMoved = showAll;
-    showFPS = showAll;
-    showXY = showAll;
-    showNXY = showAll;
-    showEntityCounts = showAll;
-    ShowCollisionBox = showAll;
-    showAutoFlipPlayer = showAll;
-    showMobileTouch = showAll;
-}
-
+// ===== 設定選單狀態顯示全開/全關 =====
+let showAll = 1; // 是否顯示所有元素 1=顯示 0=隱藏 2=pass 或者可以直接註釋
 
 
 // 音量設定｜音量設定
@@ -247,7 +234,18 @@ let bossDefeated = false;
 let fakeBoss = null;
 let fakeBossFlashFrame = 0;
 
-
+// ===== 設定選單狀態全開 全關 =====
+if (typeof showAll !== 'undefined' && (showAll === 0 || showAll === 1)) {
+    showScore = showAll;
+    showMoved = showAll;
+    showFPS = showAll;
+    showXY = showAll;
+    showNXY = showAll;
+    showEntityCounts = showAll;
+    ShowCollisionBox = showAll;
+    AutoFlipPlayer = showAll;
+    showMobileTouch = showAll;
+}
 
 // ===== 隕石系統 =====
 let meteors = [];
@@ -274,8 +272,6 @@ let GROUND_RED_size = [35,60];
 let GROUND_ORANGE_size = [50,70];
 let GROUND_PINK_size = [40,40];
 let BOSS_size = [190,190];
-
-
 
 
 // ===== 碰撞箱 =====
@@ -1723,7 +1719,7 @@ function render() {
         // 以底部對齊碰撞箱，左右置中
         if (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0) {
             ctx.save();
-            if (showAutoFlipPlayer === 1 && player.direction === -1) {
+            if (AutoFlipPlayer === 1 && player.direction === -1) {
                 ctx.translate(player.x + player.width / 2, player.y + player.height - imgDrawHeight / 2);
                 ctx.scale(-1, 1);
                 ctx.drawImage(
@@ -2622,7 +2618,7 @@ settingsBtn.onclick = function() {
     var showMobileTouchInput = document.getElementById('setting-show-mobile-touch');
     var startXInput = document.getElementById('setting-start-x');
     var startYInput = document.getElementById('setting-start-y');
-    var showAutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
+    var AutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
     var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
     if (settingsPanel.style.display === 'block') {
         if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
@@ -2644,7 +2640,7 @@ settingsBtn.onclick = function() {
         if (showNXYInput) showNXY = showNXYInput.checked ? 1 : 0;
         if (showEntityCountsInput) showEntityCounts = showEntityCountsInput.checked ? 1 : 0;
         if (showMobileTouchInput) showMobileTouch = showMobileTouchInput.checked ? 1 : 0;
-        if (showAutoFlipPlayerInput) showAutoFlipPlayer = showAutoFlipPlayerInput.checked ? 1 : 0;
+        if (AutoFlipPlayerInput) AutoFlipPlayer = AutoFlipPlayerInput.checked ? 1 : 0;
         if (showCollisionBoxInput) ShowCollisionBox = showCollisionBoxInput.checked ? 1 : 0;
         settingsPanel.style.display = 'none';
         isPaused = false;
@@ -2670,7 +2666,7 @@ settingsBtn.onclick = function() {
         if (showNXYInput) showNXYInput.checked = !!showNXY;
         if (showEntityCountsInput) showEntityCountsInput.checked = !!showEntityCounts;
         if (showMobileTouchInput) showMobileTouchInput.checked = !!showMobileTouch;
-        if (showAutoFlipPlayerInput) showAutoFlipPlayerInput.checked = !!showAutoFlipPlayer;
+        if (AutoFlipPlayerInput) AutoFlipPlayerInput.checked = !!AutoFlipPlayer;
         if (showCollisionBoxInput) showCollisionBoxInput.checked = !!ShowCollisionBox;
         settingsPanel.style.display = 'block';
         isPaused = true;
@@ -2702,7 +2698,7 @@ if (settingsCloseBtn) {
         var showMobileTouchInput = document.getElementById('setting-show-mobile-touch');
         var startXInput = document.getElementById('setting-start-x');
         var startYInput = document.getElementById('setting-start-y');
-        var showAutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
+        var AutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
         var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
         if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
         if (sfxOnInput) isSfxOn = sfxOnInput.checked ? 1 : 0;
@@ -2723,7 +2719,7 @@ if (settingsCloseBtn) {
         if (showNXYInput) showNXY = showNXYInput.checked ? 1 : 0;
         if (showEntityCountsInput) showEntityCounts = showEntityCountsInput.checked ? 1 : 0;
         if (showMobileTouchInput) showMobileTouch = showMobileTouchInput.checked ? 1 : 0;
-        if (showAutoFlipPlayerInput) showAutoFlipPlayer = showAutoFlipPlayerInput.checked ? 1 : 0;
+        if (AutoFlipPlayerInput) AutoFlipPlayer = AutoFlipPlayerInput.checked ? 1 : 0;
         if (showCollisionBoxInput) ShowCollisionBox = showCollisionBoxInput.checked ? 1 : 0;
         settingsPanel.style.display = 'none';
         isPaused = false; // 關閉設定時恢復
@@ -2744,7 +2740,7 @@ if (settingsCloseBtn) {
                 case 'setting-show-nxy': showNXY = this.checked ? 1 : 0; break;
                 case 'setting-show-entity-counts': showEntityCounts = this.checked ? 1 : 0; break;
                 case 'setting-show-mobile-touch': showMobileTouch = this.checked ? 1 : 0; updateMobileTouchDisplay(); break;
-                case 'setting-auto-flip-player': showAutoFlipPlayer = this.checked ? 1 : 0; break;
+                case 'setting-auto-flip-player': AutoFlipPlayer = this.checked ? 1 : 0; break;
                 case 'setting-show-collision-box': ShowCollisionBox = this.checked ? 1 : 0; break;
             }
         });
