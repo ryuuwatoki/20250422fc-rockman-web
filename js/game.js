@@ -45,13 +45,14 @@ let showFPS = 1; //showfps｜FPS表示
 let showXY = 0; //show xy｜XY座標表示
 let showNXY = 0; //show new xy｜グリッド座標表示
 let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+
 let AutoFlipPlayer = 1; // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1
 let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ数表示
 
 let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
 
 // ===== 設定選單狀態顯示全開/全關 =====
-let showAll = 1; // 是否顯示所有元素 1=顯示 0=隱藏 2=pass 或者可以直接註釋
+let checkBoxShowHideAll = 1; // 是否顯示所有元素 1=顯示 0=隱藏 2=pass 或者可以直接註釋
 
 
 // 音量設定｜音量設定
@@ -235,17 +236,19 @@ let fakeBoss = null;
 let fakeBossFlashFrame = 0;
 
 // ===== 設定選單狀態全開 全關 =====
-if (typeof showAll !== 'undefined' && (showAll === 0 || showAll === 1)) {
-    showScore = showAll;
-    showMoved = showAll;
-    showFPS = showAll;
-    showXY = showAll;
-    showNXY = showAll;
-    showEntityCounts = showAll;
-    ShowCollisionBox = showAll;
-    AutoFlipPlayer = showAll;
-    showMobileTouch = showAll;
-}
+function checkBoxShowHideAll(mode) {
+    if (mode === 2) return; // 2 = 不做任何事
+    if (mode !== 0 && mode !== 1) return; // 非 0/1 的值也略過
+    showScore = mode;
+    showMoved = mode;
+    showFPS = mode;
+    showXY = mode;
+    showNXY = mode;
+    ShowCollisionBox = mode;
+    AutoFlipPlayer = mode;
+    showEntityCounts = mode;
+    showMobileTouch = mode;
+};
 
 // ===== 隕石系統 =====
 let meteors = [];
@@ -263,9 +266,11 @@ let inBossAreaDelayTimer = 0; // 進入Boss區延遲計時器（幀）
 let outBossAreaDelayTimer = 0; // 離開Boss區延遲計時器（幀）
 let isInBossAreaMeteor = false; // 目前隕石是否為Boss區型態
 
+
+checkBoxShowHideAll(1);
 // ===== 物件面積 ===== //
 let PLAYER_size = [50,60]; //玩家尺寸 寬度,高度
-let PLAYER_SHOOT_size = [60,70];
+let PLAYER_SHOOT_size = [55,60];
 let FLY_RED_size = [30,30];
 let FLY_ORANGE_size = [60,70];
 let GROUND_RED_size = [35,60];
@@ -446,8 +451,8 @@ let wa_player_to_Health_ki = playerMaxHealth; // 玩家目前血量 byLiuWatoki
 let player = {
     x: playerStartX,                // 玩家X座標（連動 playerStartX）
     y: playerStartY,                // 玩家Y座標（連動 playerStartY）
-    get width() { return (this.shootAnimFrame > 0 ? PLAYER_SHOOT_size[0] : PLAYER_size[0]); }, // 玩家寬度
-    get height() { return (this.shootAnimFrame > 0 ? PLAYER_SHOOT_size[1] : PLAYER_size[1]); }, // 玩家高度
+    get width() { return PLAYER_size[0]; }, // 玩家寬度永遠固定
+    get height() { return PLAYER_size[1]; }, // 玩家高度永遠固定
     get speed() { return playerMoveSpeed; }, // 玩家移動速度（取自全域變數）
     vy: 0,                 // 垂直速度
     onGround: false,       // 是否在地面上
@@ -1692,13 +1697,11 @@ function render() {
         }
         // 狀態判斷
         let imgToDraw = playerImgs[0]; // 預設靜止
-        if (player.shootAnimFrame > 0) {
-            imgToDraw = playerImgs[2]; // 發射
-        } else if (keys.ArrowLeft || keys.ArrowRight) {
-            // 左右移動時切換 p1/p2 動畫
+        let drawBase = true;
+        // 左右移動動畫
+        if (keys.ArrowLeft || keys.ArrowRight) {
             if (!window._playerMoveAnimFrame) window._playerMoveAnimFrame = 0;
             window._playerMoveAnimFrame++;
-            // 每 8 幀切換一次
             if (Math.floor(window._playerMoveAnimFrame / 8) % 2 === 0) {
                 imgToDraw = playerImgs[0];
             } else {
@@ -1707,54 +1710,55 @@ function render() {
         } else {
             window._playerMoveAnimFrame = 0;
         }
-        // 顯示圖片大小（依狀態切換）
-        let imgDrawWidth, imgDrawHeight;
+        // 發射時底層圖隱藏
         if (player.shootAnimFrame > 0) {
-            imgDrawWidth = 60; // 發射狀態
-            imgDrawHeight = 70;
-        } else {
-            imgDrawWidth = 50; // 普通狀態
-            imgDrawHeight = 60;
+            drawBase = false;
         }
-        // 以底部對齊碰撞箱，左右置中
-        if (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0) {
+        // 畫底層圖（只有非發射時）
+        if (drawBase && (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0)) {
             ctx.save();
             if (AutoFlipPlayer === 1 && player.direction === -1) {
-                ctx.translate(player.x + player.width / 2, player.y + player.height - imgDrawHeight / 2);
+                ctx.translate(player.x + PLAYER_size[0] / 2, player.y + PLAYER_size[1] / 2);
                 ctx.scale(-1, 1);
                 ctx.drawImage(
                     imgToDraw,
-                    -(imgDrawWidth / 2),
-                    -(imgDrawHeight / 2),
-                    imgDrawWidth,
-                    imgDrawHeight
+                    -(PLAYER_size[0] / 2),
+                    -(PLAYER_size[1] / 2),
+                    PLAYER_size[0],
+                    PLAYER_size[1]
                 );
             } else {
                 ctx.drawImage(
                     imgToDraw,
-                    player.x + (player.width - imgDrawWidth) / 2,
-                    player.y + (player.height - imgDrawHeight),
-                    imgDrawWidth,
-                    imgDrawHeight
+                    player.x,
+                    player.y,
+                    PLAYER_size[0],
+                    PLAYER_size[1]
                 );
             }
-            // ===== 集氣時黃色閃爍遮罩 =====
-            if (charging && chargeFrame >= 30) { // 只有集氣超過0.5秒才閃爍
-                if (Math.floor(Date.now() / 100) % 2 === 0) { // 每0.1秒閃爍
-                    ctx.save();
-                    ctx.globalAlpha = 0.2; // 透明度
-                    ctx.fillStyle = '#ffff00';
-                    ctx.beginPath();
-                    ctx.ellipse(
-                        player.x + player.width / 2,
-                        player.y + player.height / 2,
-                        imgDrawWidth / 2,
-                        imgDrawHeight / 2,
-                        0, 0, Math.PI * 2
-                    );
-                    ctx.fill();
-                    ctx.restore();
-                }
+            ctx.restore();
+        }
+        // 發射時額外疊一張 shoot 圖
+        if (player.shootAnimFrame > 0 && (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0)) {
+            ctx.save();
+            if (AutoFlipPlayer === 1 && player.direction === -1) {
+                ctx.translate(player.x + PLAYER_size[0] / 2, player.y + PLAYER_size[1] / 2);
+                ctx.scale(-1, 1);
+                ctx.drawImage(
+                    playerImgs[2],
+                    -(PLAYER_SHOOT_size[0] / 2),
+                    -(PLAYER_SHOOT_size[1] / 2),
+                    PLAYER_SHOOT_size[0],
+                    PLAYER_SHOOT_size[1]
+                );
+            } else {
+                ctx.drawImage(
+                    playerImgs[2],
+                    player.x + (PLAYER_size[0] - PLAYER_SHOOT_size[0]) / 2,
+                    player.y + (PLAYER_size[1] - PLAYER_SHOOT_size[1]),
+                    PLAYER_SHOOT_size[0],
+                    PLAYER_SHOOT_size[1]
+                );
             }
             ctx.restore();
         }
@@ -1764,8 +1768,8 @@ function render() {
         // ===== 玩家碰撞箱顯示 =====
         if (ShowCollisionBox == 1) {
             // 以玩家圖片中心為原點，支援 NX/NY 百分比移動
-            const playerCenterX = player.x + player.width * (playerCollisionBoxNX / 100);
-            const playerCenterY = player.y + player.height * (playerCollisionBoxNY / 100);
+            const playerCenterX = player.x + PLAYER_size[0] * (playerCollisionBoxNX / 100);
+            const playerCenterY = player.y + PLAYER_size[1] * (playerCollisionBoxNY / 100);
             const boxX1 = playerCenterX - playerCollisionBox[0] / 2;
             const boxX2 = playerCenterX + playerCollisionBox[0] / 2;
             const boxY1 = playerCenterY - playerCollisionBox[1] / 2;
@@ -1773,7 +1777,6 @@ function render() {
             const ellipseRx = playerCollisionBox[0] / 2;
             const ellipseRy = playerCollisionBox[1] / 2;
             if (playerCollisionBoxCircle < 1) {
-                // 畫橢圓
                 ctx.save();
                 ctx.globalAlpha = 0.35;
                 ctx.fillStyle = '#00ff00';
@@ -1783,7 +1786,6 @@ function render() {
                 ctx.restore();
             }
             if (playerCollisionBoxCircle > 0) {
-                // 畫矩形
                 ctx.save();
                 ctx.globalAlpha = 0.18;
                 ctx.fillStyle = '#00ff00';
