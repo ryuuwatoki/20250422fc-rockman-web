@@ -41,12 +41,30 @@ let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是�
 let showScore = 1; // score:0 顯示1 隱藏0｜スコア表示 1=表示 0=非表示
 let showMoved = 1; // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
 let showFPS = 1; //showfps｜FPS表示
+
 let showXY = 1; //show xy｜XY座標表示
 let showNXY = 1; //show new xy｜グリッド座標表示
-let showEntityCounts = 1; //show 人物怪物子彈數量｜エンティティ数表示
-let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
-let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+let ShowCollisionBox = 1; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+
 let showAutoFlipPlayer = 1; // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1
+let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ数表示
+
+let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
+
+// ===== 狀態顯示全開/全關 =====
+let showAll = 1; // 是否顯示所有元素 1=顯示 0=隱藏 1=表示 0=非表示
+if (typeof showAll !== 'undefined' && (showAll === 0 || showAll === 1)) {
+    showScore = showAll;
+    showMoved = showAll;
+    showFPS = showAll;
+    showXY = showAll;
+    showNXY = showAll;
+    showEntityCounts = showAll;
+    ShowCollisionBox = showAll;
+    showAutoFlipPlayer = showAll;
+    showMobileTouch = showAll;
+}
+
 
 
 // 音量設定｜音量設定
@@ -228,6 +246,8 @@ let isWinScreen = false;
 let bossDefeated = false;
 let fakeBoss = null;
 let fakeBossFlashFrame = 0;
+
+
 
 // ===== 隕石系統 =====
 let meteors = [];
@@ -2650,8 +2670,8 @@ settingsBtn.onclick = function() {
         if (showNXYInput) showNXYInput.checked = !!showNXY;
         if (showEntityCountsInput) showEntityCountsInput.checked = !!showEntityCounts;
         if (showMobileTouchInput) showMobileTouchInput.checked = !!showMobileTouch;
-        if (showAutoFlipPlayerInput) showAutoFlipPlayer = showAutoFlipPlayerInput.checked ? 1 : 0;
-        if (showCollisionBoxInput) ShowCollisionBox = showCollisionBoxInput.checked ? 1 : 0;
+        if (showAutoFlipPlayerInput) showAutoFlipPlayerInput.checked = !!showAutoFlipPlayer;
+        if (showCollisionBoxInput) showCollisionBoxInput.checked = !!ShowCollisionBox;
         settingsPanel.style.display = 'block';
         isPaused = true;
         if (startXInput) startXInput.value = playerStartX;
