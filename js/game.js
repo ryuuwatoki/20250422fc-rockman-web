@@ -2592,6 +2592,7 @@ settingsPanel.innerHTML = `
     <div style="margin-bottom:16px;">
         <label><input type="checkbox" id="setting-bgm-on"> Muisc</label>
         <label style="margin-left:16px;"><input type="checkbox" id="setting-sfx-on"> Effects Sound</label>
+        <label style="margin-left:16px;"><input type="checkbox" id="setting-show-mobile-touch"> Show Mobile Touch</label>
     </div>
 
     <div style="margin-bottom:16px;">
@@ -2638,23 +2639,20 @@ settingsPanel.innerHTML = `
         <label><input type="checkbox" id="setting-show-score"> Show Score</label>
         <label style="margin-left:16px;"><input type="checkbox" id="setting-show-moved"> Show Moved</label>
         <label style="margin-left:16px;"><input type="checkbox" id="setting-show-fps"> Show FPS</label>
+        <label style="margin-left:16px;"><input type="checkbox" id="setting-show-xy"> Show XY</label>
     </div>
 
     <div style="margin-bottom:16px;">
-        <label><input type="checkbox" id="setting-show-xy"> Show XY</label>
-        <label style="margin-left:16px;"><input type="checkbox" id="setting-show-nxy"> Show NXY</label>
+        <label><input type="checkbox" id="setting-show-nxy"> Show NXY</label>
         <label style="margin-left:16px;"><input type="checkbox" id="setting-show-entity-counts"> Show Entity Counts</label>
     </div>
 
     <div style="margin-bottom:16px;">
-        <label><input type="checkbox" id="setting-auto-flip-player"> 自動翻轉角色</label>
-        <label style="margin-left:16px;"><input type="checkbox" id="setting-show-collision-box"> 顯示碰撞箱</label>
+        <label><input type="checkbox" id="setting-show-collision-box"> 顯示碰撞箱</label>
+        <label style="margin-left:16px;"><input type="checkbox" id="setting-auto-flip-player"> 自動翻轉角色</label>
+
     </div>
 
-
-    <div style="margin-bottom:16px;">
-        <label><input type="checkbox" id="setting-show-mobile-touch"> Show Mobile Touch</label>
-    </div>
 
     <div style="text-align:center;margin-top:18px;">
         <button id="settings-close-btn" style="padding:6px 24px;font-size:16px;background:#4af;color:#fff;border:none;border-radius:6px;">OK</button>
