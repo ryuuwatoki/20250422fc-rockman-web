@@ -6,13 +6,13 @@ let FirstLanguage = localStorage.getItem('lang') || 'ja';  //預設語言日文�
 // ===== 遊戲狀態 =====｜ゲーム状態
 let MAX_FPS = 60;            // 最大FPS設定 預設60｜最大FPS設定 デフォルト60
 
-let playerMoveSpeed = 8;     // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
+let playerMoveSpeed = 6;     // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
 let weaponPower     = 1;     // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
-let playerStartX    = 5150;  // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
-let playerStartY    = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
+let playerStartX    = 150;  // 玩家初始座標 x 預設150｜プレイヤー初期座標 x デフォルト150
+let playerStartY    = 150;   // 玩家初始座標 y 預設150 ｜プレイヤー初期座標 y デフォルト150
 let playerMaxHealth = 100;   // 玩家血量 預設100｜プレイヤー体力 デフォルト100
-let GRAVITY         = 1.6;   // 重力｜重力
-let JUMP_POWER      = 21;    // 跳躍力量｜ジャンプ力
+let GRAVITY         = 1.6;   // 重力1.6｜重力
+let JUMP_POWER      = 21;    // 跳躍力量21｜ジャンプ力
 
 let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';  // 玩家攻擊子彈顏色｜プレイヤー攻撃弾の色
 let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';  // 玩家集氣攻擊子彈顏色｜プレイヤー溜め攻撃弾の色
@@ -43,17 +43,18 @@ let bossBulletDelay       = [40, 90];  // boss 子彈延遲時間(每幾偵～�
 let bossBulletEnable      = 1;         // boss 子彈是否射擊，1=是，0=否｜ボス弾発射するか 1=はい 0=いいえ
 let bossFixedPosition     = 0;         // boss 是否固定座標（取消移動），1=是，0=否｜ボス座標固定するか（移動しない）1=はい 0=いいえ
 
-let showScore        = 1;  // score:0 顯示1 隱藏0｜スコア表示 1=表示 0=非表示
-let showMoved        = 0;  // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
-let showFPS          = 1;  //showfps｜FPS表示
-let showXY           = 0;  //show xy｜XY座標表示
-let showNXY          = 0;  //show new xy｜グリッド座標表示
-let ShowCollisionBox = 0;  //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60｜当たり判定表示 1=表示 0=非表示（中心0、上60、下-60）
-let AutoFlipPlayer   = 1;  // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1｜自動左右反転 1=キーで反転 0=常に右 デフォルト1
-let showEntityCounts = 0;  //show 人物怪物子彈數量｜エンティティ数表示
-let showMobileTouch  = 1;  // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
-let showStar         = 1;  // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
-let showMeteor       = 1;  // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
+let showScore                = 1;  // score:0 顯示1 隱藏0｜スコア表示 1=表示 0=非表示
+let showMoved                = 0;  // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
+let showFPS                  = 1;  //showfps｜FPS表示
+let showXY                   = 0;  //show xy｜XY座標表示
+let showNXY                  = 0;  //show new xy｜グリッド座標表示
+let ShowCollisionBox         = 0;  //是否顯示遮圖顯示目前碰撞箱 ｜当たり判定表示
+let show_PLAYER_ground_check = 1;  //是否顯示地面偵測
+let AutoFlipPlayer           = 1;  // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1｜自動左右反転 1=キーで反転 0=常に右 デフォルト1
+let showEntityCounts         = 0;  //show 人物怪物子彈數量｜エンティティ数表示
+let showMobileTouch          = 1;  // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
+let showStar                 = 1;  // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
+let showMeteor               = 1;  // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
 
 // **玩家飛行無敵模式 =｜プレイヤー飛行無敵モード**
 let isFlyingMode = 0; // 預設關閉 請預設上面hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
@@ -325,7 +326,15 @@ function checkBoxShowHideAll(mode) {
 
 };
 
+//地板確認面積 原則上高度要跟PLAYER_size設定不一樣用NY調整
+
+let PLAYER_ground_check = [15,50]; //寬度 高度
+let PLAYER_ground_check_NX = 50; // 中心左右偏移度數值越大越右邊50為中心
+let PLAYER_ground_check_NY = 50; // 中心上下偏移樹數值越大越下方50為中心
+let PLAYER_ground_check_color = "rgb(255, 255, 96)";
+
 // ===== 物件面積 =====｜オブジェクトサイズ
+
 let PLAYER_size               = [38,50];    //玩家尺寸 寬度,高度｜プレイヤーサイズ 幅,高さ
 let PLAYER_SHOOT_size         = [40,50];    //發射子彈時玩家尺寸｜射撃時プレイヤーサイズ
 let PLAYER_Charge_Attack_size = [38,50];    //蓄氣光圈尺寸｜チャージエフェクトサイズ
@@ -604,10 +613,23 @@ let player = {
         
         // 平台碰撞檢測 // プラットフォーム衝突判定
         this.onGround = false;
+        // 以 PLAYER_ground_check 計算偵測區域中心
+        const groundCheckCenterX = this.x + this.width * (PLAYER_ground_check_NX / 100);
+        const groundCheckCenterY = this.y + this.height * (PLAYER_ground_check_NY / 100);
+        const groundCheckX1 = groundCheckCenterX - PLAYER_ground_check[0] / 2;
+        const groundCheckX2 = groundCheckCenterX + PLAYER_ground_check[0] / 2;
+        const groundCheckY1 = groundCheckCenterY - PLAYER_ground_check[1] / 2;
+        const groundCheckY2 = groundCheckCenterY + PLAYER_ground_check[1] / 2;
         for (let p of platforms) {
-            const overlapX = this.x + this.width > p.x && this.x < p.x + p.width;
-            if (overlapX && this.y + this.height <= p.y && newY + this.height >= p.y) {
-                newY = p.y - this.height;
+            // 判斷偵測區域與平台是否有重疊
+            const overlapX = groundCheckX2 > p.x && groundCheckX1 < p.x + p.width;
+            // 只考慮腳下的碰撞（偵測區域下緣觸碰平台上緣）
+            if (overlapX && groundCheckY2 <= p.y && groundCheckY2 + this.vy >= p.y) {
+                // 將玩家 y 位置調整到平台上方（根據原本的修正方式）
+                // 這裡要反推玩家 y 位置，讓偵測區域下緣剛好貼齊平台
+                const offset = groundCheckCenterY - this.y;
+                const checkBottomToPlayerTop = offset - PLAYER_ground_check[1] / 2;
+                newY = p.y - checkBottomToPlayerTop - this.height;
                 this.vy = 0;
                 this.onGround = true;
             }
@@ -1956,6 +1978,22 @@ function render() {
             }
             ctx.restore();
         }
+        // ===== 玩家地面檢查區顯示 =====
+        if (show_PLAYER_ground_check == 1) {
+            ctx.save();
+            // 以玩家圖片中心為原點，支援 NX/NY 百分比移動
+            const checkCenterX = player.x + PLAYER_size[0] * (PLAYER_ground_check_NX / 100);
+            const checkCenterY = player.y + PLAYER_size[1] * (PLAYER_ground_check_NY / 100);
+            ctx.globalAlpha = 0.5;
+            ctx.fillStyle = PLAYER_ground_check_color;
+            ctx.fillRect(
+                checkCenterX - PLAYER_ground_check[0] / 2,
+                checkCenterY - PLAYER_ground_check[1] / 2,
+                PLAYER_ground_check[0],
+                PLAYER_ground_check[1]
+            );
+            ctx.restore();
+        }
         // 劉羽發射時額外疊一張 shoot 圖 // 発射時に追加で shoot画像 を重ねる
         if (player.shootAnimFrame > 0 && (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0)) {
             ctx.save();
@@ -3054,7 +3092,7 @@ if (settingsCloseBtn) {
     };
 }
 // checkbox 變動即時同步｜checkbox変更時即時同期
-['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch','setting-auto-flip-player','setting-show-collision-box','setting-show-star','setting-show-meteor'].forEach(id => {
+['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch','setting-auto-flip-player','setting-show-collision-box','setting-show-star','setting-show-meteor','setting-show-player-ground-check'].forEach(id => {
     var el = document.getElementById(id);
     if (el) {
         el.addEventListener('change', function() {
@@ -3070,10 +3108,18 @@ if (settingsCloseBtn) {
                 case 'setting-show-collision-box': ShowCollisionBox = this.checked ? 1 : 0; break;
                 case 'setting-show-star': showStar = this.checked ? 1 : 0; break;
                 case 'setting-show-meteor': showMeteor = this.checked ? 1 : 0; break;
+                case 'setting-show-player-ground-check': show_PLAYER_ground_check = this.checked ? 1 : 0; break;
             }
         });
     }
 });
+// 設定面板開啟時同步 checkbox 狀態
+function openSettingsPanel() {
+    // ...原本的同步程式碼...
+    var showPlayerGroundCheckInput = document.getElementById('setting-show-player-ground-check');
+    if (showPlayerGroundCheckInput) showPlayerGroundCheckInput.checked = !!show_PLAYER_ground_check;
+    // ...原本的同步程式碼...
+}
 // 音樂/效果音即時同步｜音楽/エフェクト音即時同期
 var bgmOnInput2 = document.getElementById('setting-bgm-on');
 if (bgmOnInput2) {
