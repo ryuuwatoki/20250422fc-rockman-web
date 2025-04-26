@@ -6,12 +6,13 @@ let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文�
 // ===== 遊戲狀態 =====｜ゲーム状態
 let MAX_FPS = 60; // 最大FPS設定 預設60｜最大FPS設定 デフォルト60
 
-let playerMoveSpeed = 9; // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
+let playerMoveSpeed = 8; // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
 let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
 let playerStartX = 150;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
 let playerStartY = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100; // 玩家血量 預設100｜プレイヤー体力 デフォルト100
-let JUMP_POWER      = 15; // 跳躍力量
+let GRAVITY         = 1.6;         // 重力加速度
+let JUMP_POWER      = 21; // 跳躍力量
 let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';  // 玩家攻擊子彈顏色   
 let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';  // 玩家集氣攻擊子彈顏色
 let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';  // 玩家集氣攻擊子彈顏色
@@ -24,7 +25,8 @@ let Fly_ORANGE_HP = 3; // 飛行橘色敵人血量｜飛行オレンジ敵体の
 let GROUND_RED_HP = 3; // 地面紅色敵人血量｜地上赤色敵体の体力
 let GROUND_ORANGE_HP = 3; // 地面橘色敵人血量｜地上オレンジ敵体の体力
 let GROUND_PINK_HP = 5; // 地面粉紅敵人血量｜地上ピンク敵体の体力
-let enemyMaxCount = 12; // 敵人最大數量 預設12｜敵最大数 デフォルト12
+
+let enemyMaxCount = 15; // 敵人最大數量 預設15｜敵最大数 デフォルト15
 
 let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
 let FLY_ORANGE_spawn = 1; // 敵人Ｂ是否生成，1=是，0=否｜敵B生成するか 1=はい 0=いいえ
@@ -32,7 +34,7 @@ let GROUND_RED_spawn = 1; // 敵人Ｃ是否生成，1=是，0=否｜敵C生成�
 let GROUND_ORANGE_spawn = 1; // 敵人Ｄ是否生成，1=是，0=否｜敵D生成するか 1=はい 0=いいえ
 let GROUND_PINK_spawn = 1; // 敵人Ｅ是否生成，1=是，0=否｜敵E生成するか 1=はい 0=いいえ
 
-let bossHealth   = 300;  // Boss血量 預設300｜ボス体力 デフォルト300
+let bossHealth   = 200;  // Boss血量 預設200｜ボス体力 デフォルト200
 let bossSetX = 5000; // boss 座標 x 預設5000｜ボス座標 x デフォルト5000
 let bossSetY = 230; // boss 座標 y 預設230｜ボス座標 y デフォルト230
 let bossBulletSpeed = 4; // boss 子彈速度（預設4，數值越大越快）｜ボス弾スピード（デフォルト4、数値が大きいほど速い）
@@ -120,7 +122,7 @@ let boss_area_color5 = 'rgba(12, 0, 0, 1)';
 let boss_area_color6 = 'rgba(12, 0, 0, 1)';
 let boss_area_color7 = 'rgba(12, 0, 0, 1)';
 let boss_area_color8 = 'rgba(12, 0, 0, 1)';
-let boss_area_color9 = 'rgb(110, 0, 0)';
+let boss_area_color9 = 'rgb(110, 0, 57)';
 let boss_area_color10 = 'rgba(12, 0, 0, 1)';
 
 // 地板顏色 過去設定 請無視～ // 床の色の過去の設定です。無視してください〜
@@ -253,7 +255,6 @@ const basePlatforms = platformGrid.map(p => ({
 
 // 遊戲常數
 let score= 0;     // 玩家分數
-let GRAVITY         = 1;         // 重力加速度
 const WORLD_WIDTH     = 5400;    // 世界寬度
 const WORLD_HEIGHT    = 500;       // 世界高度
 const BOSS_AREA_X     = 4600;      // Boss區域起點X座標
