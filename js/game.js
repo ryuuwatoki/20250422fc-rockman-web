@@ -6,32 +6,31 @@ let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文�
 // ===== 遊戲狀態 =====｜ゲーム状態
 let MAX_FPS = 60; // 最大FPS設定 預設60｜最大FPS設定 デフォルト60
 
-let playerMoveSpeed = 100; // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
+let playerMoveSpeed = 9; // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
 let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
-let playerStartX = 5200;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
+let playerStartX = 150;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
 let playerStartY = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100; // 玩家血量 預設100｜プレイヤー体力 デフォルト100
-let JUMP_POWER      = 15; // 跳躍速度
-let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';;
-let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';;
-let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';;
-
+let JUMP_POWER      = 15; // 跳躍力量
+let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';  // 玩家攻擊子彈顏色   
+let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';  // 玩家集氣攻擊子彈顏色
+let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';  // 玩家集氣攻擊子彈顏色
 
 // **玩家飛行無敵模式 =｜プレイヤー飛行無敵モード**
-let isFlyingMode = 1; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
-
-let enemyMaxCount = 12; // 敵人最大數量 預設12｜敵最大数 デフォルト12
-let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
-let FLY_ORANGE_spawn = 1; // 敵人Ｂ是否生成，1=是，0=否｜敵B生成するか 1=はい 0=いいえ
-let GROUND_RED_spawn = 1; // 敵人Ｃ是否生成，1=是，0=否｜敵C生成するか 1=はい 0=いいえ
-let GROUND_ORANGE_spawn = 1; // 敵人Ｄ是否生成，1=是，0=否｜敵D生成するか 1=はい 0=いいえ
-let GROUND_PINK_spawn = 1; // 敵人Ｅ是否生成，1=是，0=否｜敵E生成するか 1=はい 0=いいえ
+let isFlyingMode = 0; // 預設關閉 請預設上面hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
 
 let Fly_RED_HP = 1; // 飛行紅色敵人血量｜飛行赤色敵体の体力
 let Fly_ORANGE_HP = 3; // 飛行橘色敵人血量｜飛行オレンジ敵体の体力
 let GROUND_RED_HP = 3; // 地面紅色敵人血量｜地上赤色敵体の体力
 let GROUND_ORANGE_HP = 3; // 地面橘色敵人血量｜地上オレンジ敵体の体力
 let GROUND_PINK_HP = 5; // 地面粉紅敵人血量｜地上ピンク敵体の体力
+let enemyMaxCount = 12; // 敵人最大數量 預設12｜敵最大数 デフォルト12
+
+let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
+let FLY_ORANGE_spawn = 1; // 敵人Ｂ是否生成，1=是，0=否｜敵B生成するか 1=はい 0=いいえ
+let GROUND_RED_spawn = 1; // 敵人Ｃ是否生成，1=是，0=否｜敵C生成するか 1=はい 0=いいえ
+let GROUND_ORANGE_spawn = 1; // 敵人Ｄ是否生成，1=是，0=否｜敵D生成するか 1=はい 0=いいえ
+let GROUND_PINK_spawn = 1; // 敵人Ｅ是否生成，1=是，0=否｜敵E生成するか 1=はい 0=いいえ
 
 let bossHealth   = 300;  // Boss血量 預設300｜ボス体力 デフォルト300
 let bossSetX = 5000; // boss 座標 x 預設5000｜ボス座標 x デフォルト5000
@@ -44,20 +43,14 @@ let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是�
 let showScore = 1; // score:0 顯示1 隱藏0｜スコア表示 1=表示 0=非表示
 let showMoved = 0; // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
 let showFPS = 1; //showfps｜FPS表示
-
 let showXY = 0; //show xy｜XY座標表示
 let showNXY = 0; //show new xy｜グリッド座標表示
 let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
-
 let AutoFlipPlayer = 1; // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1
 let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ数表示
-
 let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
-
-//繪製星星 繪製隕石
 let showStar = 1; // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
 let showMeteor = 1; // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
-
 
 // ===== 設定選單狀態顯示全開/全關 1=全開 0=全關 2=pass =====
 checkBoxShowHideAll(2);
@@ -78,9 +71,9 @@ let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量｜ボス死亡効果音�
 let VOLUME_BOSS     = 0.85;  // Boss出場音效音量｜ボス登場効果音音量
 let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量｜勝利BGM音量
 
-// 背景色變化時間
+// 背景色變化時間 參數有問題 請參考就好
 let enter_boss_area_color_change_time = 10000; //Fps
-let enter_normal_area_color_change_time = 2000; //Fps
+let enter_normal_area_color_change_time = 10000; //Fps
 let enter_boss_area_meteor_change_time = 400; //Fps
 let enter_normal_area_meteor_change_time = 1000; //Fps
 
@@ -107,17 +100,16 @@ const boss_meteor_params = {
     position: [0, 800, 0, 400] // 流星生成位置範圍
 };
 
-
 // 一般區域顏色
 let normal_area_color1 = 'rgba(0, 0, 0, 1)';
-let normal_area_color2 = 'rgb(33, 33, 33)';
+let normal_area_color2 = 'rgb(0, 0, 0, 1)';
 let normal_area_color3 = 'rgba(0, 0, 0, 1)';
 let normal_area_color4 = 'rgba(0, 0, 0, 1)';
-let normal_area_color5 = 'rgb(35, 35, 35)';
+let normal_area_color5 = 'rgba(0,0,0,0)';
 let normal_area_color6 = 'rgba(0, 0, 0, 1)';
 let normal_area_color7 = 'rgba(0, 0, 0, 1)';
-let normal_area_color8 = 'rgba(0, 0, 0, 1)';
-let normal_area_color9 = 'rgb(33, 33, 33)';
+let normal_area_color8 = 'rgba(48, 47, 47, 0.95)';
+let normal_area_color9 = 'rgba(0,0,0,0)';
 let normal_area_color10 = 'rgba(0, 0, 0, 1)';
 // Boss區域顏色
 let boss_area_color1 = 'rgba(12, 0, 0, 1)';
@@ -155,7 +147,6 @@ const platformGrid = [
     { x: 14, y: 1, color: COLOR_PLATFORM_NORMAL },
     { x: 15, y: 1, color: COLOR_PLATFORM_NORMAL },
     // { x: 16, y: 1, color: COLOR_PLATFORM_NORMAL },
-
     // 中間區域｜中間エリア
     { x: 17, y: 2, color: COLOR_PLATFORM_NORMAL },
     { x: 18, y: 2, color: COLOR_PLATFORM_NORMAL },
@@ -231,7 +222,6 @@ const platformGrid = [
     // { x: 88, y: 9, color: COLOR_PLATFORM_NORMAL },
     { x: 89, y: 2, color: COLOR_PLATFORM_NORMAL },
     // { x: 90, y: 2, color: COLOR_PLATFORM_NORMAL },
-
     // Boss 區域地板（x=4600 之後）｜ボスエリア床（x=4600以降）
     { x: 91, y: 1, color: COLOR_PLATFORM_BOSS },
     { x: 92, y: 1, color: COLOR_PLATFORM_BOSS },
@@ -297,14 +287,11 @@ let bossDefeated = false;
 let fakeBoss = null;
 let fakeBossFlashFrame = 0;
 
-checkBoxShowHideAll(1); // 測試用 1=全開 0=全關 2=pass
-
 // ===== 流星雨（隕石）相關設定 =====
 let meteor_params = {...normal_meteor_params};
 let meteor_params_target = {...normal_meteor_params};
 let meteor_params_transition_frame = 0;
 let meteor_params_transition_total = 0;
-
 let meteor_color = meteor_params.color; // 流星顏色
 let meteor_size = meteor_params.size.slice(); // 流星大小
 let meteor_speed = meteor_params.speed; // 流星速度（每秒像素，預設1000）
@@ -342,7 +329,6 @@ let GROUND_ORANGE_size = [50,70];
 let GROUND_PINK_size = [40,40];
 let BOSS_size = [190,190];
 
-
 // ===== 碰撞箱 =====
 let playerCollisionBox = [40, 60]; // [寬度, 高度]
 let playerCollisionBoxNX = 50; //碰撞箱中心移動x
@@ -368,7 +354,6 @@ let GROUND_PINK_CollisionBox = [40, 40];
 let GROUND_PINK_CollisionBoxNX = 50; //碰撞箱中心移動x
 let GROUND_PINK_CollisionBoxNY = 50; //碰撞箱中心移動y
 let GROUND_PINK_CollisionBoxCircle = 1; // 0=圓形，1=矩形，越小越圓
-
 let bossCollisionBox = [160, 150];
 let bossCollisionBoxNX = 50; //碰撞箱中心移動x
 let bossCollisionBoxNY = 40; //碰撞箱中心移動y
@@ -377,8 +362,6 @@ let bossCollisionBoxCircle = 0.3; // 0=圓形，1=矩形，越小越圓
 // 顏色設定
 const COLOR_PLAYER          = 'rgba(68,170,255,1)';      // 玩家顏色
 const COLOR_BOSS            = 'rgba(33,150,243,1)';   // Boss主體顏色
-const COLOR_BOSS_FAN        = 'rgba(255,224,130,1)';   // Boss風扇顏色
-const COLOR_BOSS_FAN_CENTER = 'rgba(255,255,255,1)';      // Boss風扇中心顏色
 const COLOR_BULLET_NORMAL   = 'rgba(179,240,255,1)';   // 玩家普通子彈顏色
 const COLOR_BULLET_CHARGE   = 'rgba(255,255,0,1)';      // 玩家集氣彈顏色
 const COLOR_BULLET_ENEMY    = 'rgba(255,136,255,1)';      // 敵人子彈顏色
@@ -518,7 +501,7 @@ let player = {
     get speed() { return playerMoveSpeed; }, // 玩家移動速度（取自全域變數）
     vy: 0,                 // 垂直速度
     onGround: false,       // 是否在地面上
-    color: '#4af',         // 玩家顏色
+    color: 'rgba(68,170,255,1)',         // 玩家顏色
     isShooting: false,     // 是否正在射擊（已廢棄，保留相容）
     shootAnimFrame: 0,     // 發射動畫剩餘幀數
     shootCooldown: 0,      // 射擊冷卻計時器
@@ -1542,6 +1525,10 @@ function update() {
                     bgm.pause();
                     bgm.currentTime = 0;
                 }
+                if (bgm2) {
+                    bgm2.pause();
+                    bgm2.currentTime = 0;
+                }
                 // 播放bossdie音效
                 const bossdieAudio = document.getElementById('bossdie-audio');
                 if (bossdieAudio) {
@@ -1683,10 +1670,7 @@ function update() {
             meteor_params_target = {...normal_meteor_params};
             meteor_params_transition_total = enter_normal_area_meteor_change_time; // 這裡改用 meteor 變數
             // ===== 離開 boss 區切回 BGM =====
-            if (isBgmOn) {
-                if (bgm2) { bgm2.pause(); }
-                if (bgm) { bgm.currentTime = 0; bgm.volume = VOLUME_BGM; bgm.play(); }
-            }
+            // 這裡移除BGM切換，不做任何事
         }
         area_color_transition_frame = 0;
         meteor_params_transition_frame = 0;
