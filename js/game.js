@@ -6,9 +6,9 @@ let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文�
 // ===== 遊戲狀態 =====｜ゲーム状態
 let MAX_FPS = 60; // 最大FPS設定 預設60｜最大FPS設定 デフォルト60
 
-let playerMoveSpeed = 6; // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
+let playerMoveSpeed = 100; // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
 let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
-let playerStartX = 5200;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
+let playerStartX = 200;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
 let playerStartY = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100; // 玩家血量 預設100｜プレイヤー体力 デフォルト100
 let JUMP_POWER      = 15; // 跳躍速度
@@ -18,7 +18,7 @@ let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';;
 
 
 // **玩家飛行無敵模式 =｜プレイヤー飛行無敵モード**
-let isFlyingMode = 0; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
+let isFlyingMode = 1; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
 
 let enemyMaxCount = 12; // 敵人最大數量 預設12｜敵最大数 デフォルト12
 let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
@@ -1534,6 +1534,7 @@ function update() {
 // 負責繪製所有畫面元素（背景、平台、玩家、敵人、子彈、Boss、UI等）
 // 無參數，無回傳值
 function render() {
+    let bossBgTransition = 0;
     // 清除畫布
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
@@ -1543,34 +1544,10 @@ function render() {
     // 應用鏡頭變換
     ctx.translate(-camera.x, -camera.y);
     
-    // 繪製背景 (簡單的星空效果)
-    // ctx.fillStyle = '#112';
-    // ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-    // === Boss區漸層背景 ===
-    let grad = ctx.createLinearGradient(0, 0, 0, WORLD_HEIGHT);
-    // 原本顏色 #112，Boss區顏色 #000(上)~#c44a17(下)
-    function lerpColor(a, b, t) {
-        // a, b: hex string, t: 0~1
-        let ah = a.length === 4 ? a.replace(/#/g, '').split('').map(x=>parseInt(x+x,16)) : a.replace('#','').match(/../g).map(x=>parseInt(x,16));
-        let bh = b.length === 4 ? b.replace(/#/g, '').split('').map(x=>parseInt(x+x,16)) : b.replace('#','').match(/../g).map(x=>parseInt(x,16));
-        return '#' + ah.map((v,i)=>Math.round(v*(1-t)+bh[i]*t).toString(16).padStart(2,'0')).join('');
-    }
-    let topColor = lerpColor('#112', '#000000', bossBgTransition);
-    let bottomColor = lerpColor('#112', '#c44a17', bossBgTransition);
-    grad.addColorStop(0.85, topColor);            // 黑
-    grad.addColorStop(0.92, lerpColor(topColor, bottomColor, 0.5)); // 中間過渡色
-    grad.addColorStop(1.0, bottomColor);          // 橘紅
-    ctx.fillStyle = grad;
+    // === 只繪製全黑背景 ===
+    ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     
-    // 繪製星星
-    ctx.fillStyle = '#fff';
-    for (let i = 0; i < 100; i++) {
-        const x = (i * 24 + (camera.x / 2)) % WORLD_WIDTH;
-        const y = (i * 19 + (camera.y / 2)) % WORLD_HEIGHT;
-        const size = 1 + (i % 3);
-        ctx.fillRect(x, y, size, size);
-    }
     
     // 繪製平台
     platforms.forEach(platform => {
