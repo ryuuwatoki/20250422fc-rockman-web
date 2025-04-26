@@ -54,6 +54,11 @@ let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ�
 
 let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
 
+//繪製星星 繪製隕石
+let showStar = 0; // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
+let showMeteor = 0; // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
+
+
 // ===== 設定選單狀態顯示全開/全關 1=全開 0=全關 2=pass =====
 checkBoxShowHideAll(2);
 // checkBoxShowHideAll(0); // 測試用 1=全開 0=全關 2=pass
@@ -1793,12 +1798,14 @@ function render() {
     ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     
     // 繪製星星
-    ctx.fillStyle = '#fff';
-    for (let i = 0; i < 100; i++) {
-        const x = (i * 24 + (camera.x / 2)) % WORLD_WIDTH;
-        const y = (i * 19 + (camera.y / 2)) % WORLD_HEIGHT;
-        const size = 1 + (i % 3);
-        ctx.fillRect(x, y, size, size);
+    if (showStar) {
+        ctx.fillStyle = '#fff';
+        for (let i = 0; i < 100; i++) {
+            const x = (i * 24 + (camera.x / 2)) % WORLD_WIDTH;
+            const y = (i * 19 + (camera.y / 2)) % WORLD_HEIGHT;
+            const size = 1 + (i % 3);
+            ctx.fillRect(x, y, size, size);
+        }
     }
     
     
@@ -1816,17 +1823,19 @@ function render() {
     });
 
     // ===== 繪製流星雨（在背景和人物之間）=====
-    meteors.forEach(m => {
-        ctx.save();
-        ctx.globalAlpha = m.alpha !== undefined ? m.alpha : 0.85;
-        ctx.fillStyle = m.color;
-        ctx.translate(m.x, m.y);
-        // 畫圓形流星
-        ctx.beginPath();
-        ctx.arc(0, 0, Math.max(m.size[0], m.size[1]) / 2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-    });
+    if (showMeteor) {
+        meteors.forEach(m => {
+            ctx.save();
+            ctx.globalAlpha = m.alpha !== undefined ? m.alpha : 0.85;
+            ctx.fillStyle = m.color;
+            ctx.translate(m.x, m.y);
+            // 畫圓形流星
+            ctx.beginPath();
+            ctx.arc(0, 0, Math.max(m.size[0], m.size[1]) / 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        });
+    }
     
     // 繪製玩家 (無敵時閃爍)
     if (!playerDead) { // 死亡時不繪製
