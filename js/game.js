@@ -328,7 +328,7 @@ function checkBoxShowHideAll(mode) {
 // ===== 物件面積 =====｜オブジェクトサイズ
 let PLAYER_size               = [38,50];    //玩家尺寸 寬度,高度｜プレイヤーサイズ 幅,高さ
 let PLAYER_SHOOT_size         = [40,50];    //發射子彈時玩家尺寸｜射撃時プレイヤーサイズ
-let PLAYER_Charge_Attack_size = [60,60];    //蓄氣光圈尺寸｜チャージエフェクトサイズ
+let PLAYER_Charge_Attack_size = [38,50];    //蓄氣光圈尺寸｜チャージエフェクトサイズ
 let FLY_RED_size              = [30,30];    //飛行紅色敵人尺寸｜飛行赤色敵体サイズ
 let FLY_ORANGE_size           = [60,70];    //飛行橙色敵人尺寸｜飛行オレンジ敵体サイズ
 let GROUND_RED_size           = [35,60];    //地面紅掃敵人尺寸｜地上赤色敵体サイズ
@@ -374,7 +374,7 @@ let GROUND_PINK_CollisionBoxNY     = 50;        //碰撞箱中心移動y｜当�
 let GROUND_PINK_CollisionBoxCircle = 0.9;       // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
 
 //魔王
-let bossCollisionBox       = [160, 150];  // [寬度, 高度]｜[幅, 高さ]
+let bossCollisionBox       = [160, 50];  // [寬度, 高度]｜[幅, 高さ]
 let bossCollisionBoxNX     = 50;          //碰撞箱中心移動x｜当たり判定中心移動x
 let bossCollisionBoxNY     = 40;          //碰撞箱中心移動y｜当たり判定中心移動y
 let bossCollisionBoxCircle = 0.3;         // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
@@ -2387,7 +2387,53 @@ function checkCollision(a, b) {
         return (ellipseHit && Math.random() > mix) || (rectHit && Math.random() < mix);
     }
 
-    // 只要有一方沒自訂碰撞箱，維持原本矩形碰撞｜自訂の衝突箱がない場合は元の矩形の衝突を維持
+    // === 新增：一方有碰撞箱，另一方沒有 ===
+    // a 有碰撞箱，b 沒有
+    if (aBox && !bBox) {
+        // a: 碰撞箱（中心+橢圓/矩形），b: 矩形
+        const aCenterX = a.x + a.width * (aBox.nx / 100);
+        const aCenterY = a.y + a.height * (aBox.ny / 100);
+        const aX1 = aCenterX - aBox.box[0] / 2, aX2 = aCenterX + aBox.box[0] / 2;
+        const aY1 = aCenterY - aBox.box[1] / 2, aY2 = aCenterY + aBox.box[1] / 2;
+        // b: 直接用 x, y, width, height
+        const bX1 = b.x, bX2 = b.x + b.width;
+        const bY1 = b.y, bY2 = b.y + b.height;
+        // 橢圓碰撞
+        const dx = aCenterX - (b.x + b.width / 2);
+        const dy = aCenterY - (b.y + b.height / 2);
+        const ellipseHit = ((dx * dx) / Math.pow((aBox.box[0] + b.width) / 2 / 2, 2) +
+                            (dy * dy) / Math.pow((aBox.box[1] + b.height) / 2 / 2, 2)) <= 1;
+        // 矩形碰撞
+        const rectHit = !(aX2 < bX1 || aX1 > bX2 || aY2 < bY1 || aY1 > bY2);
+        const mix = aBox.circle;
+        if (mix <= 0) return ellipseHit;
+        if (mix >= 1) return rectHit;
+        return (ellipseHit && Math.random() > mix) || (rectHit && Math.random() < mix);
+    }
+    // b 有碰撞箱，a 沒有
+    if (!aBox && bBox) {
+        // b: 碰撞箱，a: 矩形
+        const bCenterX = b.x + b.width * (bBox.nx / 100);
+        const bCenterY = b.y + b.height * (bBox.ny / 100);
+        const bX1 = bCenterX - bBox.box[0] / 2, bX2 = bCenterX + bBox.box[0] / 2;
+        const bY1 = bCenterY - bBox.box[1] / 2, bY2 = bCenterY + bBox.box[1] / 2;
+        // a: 直接用 x, y, width, height
+        const aX1 = a.x, aX2 = a.x + a.width;
+        const aY1 = a.y, aY2 = a.y + a.height;
+        // 橢圓碰撞
+        const dx = (a.x + a.width / 2) - bCenterX;
+        const dy = (a.y + a.height / 2) - bCenterY;
+        const ellipseHit = ((dx * dx) / Math.pow((a.width + bBox.box[0]) / 2 / 2, 2) +
+                            (dy * dy) / Math.pow((a.height + bBox.box[1]) / 2 / 2, 2)) <= 1;
+        // 矩形碰撞
+        const rectHit = !(aX2 < bX1 || aX1 > bX2 || aY2 < bY1 || aY1 > bY2);
+        const mix = bBox.circle;
+        if (mix <= 0) return ellipseHit;
+        if (mix >= 1) return rectHit;
+        return (ellipseHit && Math.random() > mix) || (rectHit && Math.random() < mix);
+    }
+
+    // 兩邊都沒碰撞箱，維持原本矩形碰撞
     return a.x < b.x + b.width &&
             a.x + a.width > b.x &&
             a.y < b.y + b.height &&
