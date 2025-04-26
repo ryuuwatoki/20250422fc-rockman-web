@@ -91,7 +91,7 @@ const normal_meteor_params = {
 // Boss區域流星雨參數
 const boss_meteor_params = {
     color: 'rgba(153, 21, 76, 0.74)', // 流星顏色
-    size: [11, 11], // 流星大小
+    size: [8, 8], // 流星大小
     speed: 600, // 流星速度
     update_random: 0.2, // 流星生成機率
     update_interval: 3, // 幾幀產生一次流星
@@ -359,11 +359,17 @@ let bossCollisionBoxNX = 50; //碰撞箱中心移動x
 let bossCollisionBoxNY = 40; //碰撞箱中心移動y
 let bossCollisionBoxCircle = 0.3; // 0=圓形，1=矩形，越小越圓
 
-// 顏色設定
-const COLOR_PLAYER          = 'rgba(68,170,255,1)';      // 玩家顏色
-const COLOR_BOSS            = 'rgba(33,150,243,1)';   // Boss主體顏色
-const COLOR_BULLET_NORMAL   = 'rgba(179,240,255,1)';   // 玩家普通子彈顏色
-const COLOR_BULLET_CHARGE   = 'rgba(255,255,0,1)';      // 玩家集氣彈顏色
+
+checkBoxShowHideAll(1);
+
+// 碰撞顏色設定
+const COLOR_PLAYER          = 'rgb(68, 255, 121)';      // 玩家顏色
+const COLOR_FLY_RED         = 'rgba(255,0,0,1)';      // 飛行紅色顏色
+const COLOR_FLY_ORANGE      = 'rgba(255,165,0,1)';      // 飛行橙色顏色
+const COLOR_GROUND_RED      = 'rgba(255,0,0,1)';      // 地面紅色顏色
+const COLOR_GROUND_ORANGE   = 'rgba(255,165,0,1)';      // 地面橙色顏色
+const COLOR_GROUND_PINK     = 'rgba(255,105,180,1)';      // 地面粉色顏色   
+const COLOR_BOSS            = 'rgba(243, 240, 33, 0.95)';   // Boss主體顏色
 const COLOR_BULLET_ENEMY    = 'rgba(255,136,255,1)';      // 敵人子彈顏色
 const COLOR_BULLET_BOSS     = 'rgba(255,68,170,1)';      // Boss子彈顏色
 
@@ -1951,7 +1957,7 @@ function render() {
             if (playerCollisionBoxCircle < 1) {
                 ctx.save();
                 ctx.globalAlpha = 0.35;
-                ctx.fillStyle = '#00ff00';
+                ctx.fillStyle = COLOR_PLAYER; // 直接用 rgba 顏色
                 ctx.beginPath();
                 ctx.ellipse(playerCenterX, playerCenterY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
                 ctx.fill();
@@ -1960,7 +1966,7 @@ function render() {
             if (playerCollisionBoxCircle > 0) {
                 ctx.save();
                 ctx.globalAlpha = 0.18;
-                ctx.fillStyle = '#00ff00';
+                ctx.fillStyle = COLOR_PLAYER; // 直接用 rgba 顏色
                 ctx.fillRect(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1);
                 ctx.restore();
             }
@@ -2108,18 +2114,14 @@ function render() {
             const boxX1 = centerX - boxX / 2;
             const boxY1 = centerY - boxY / 2;
             // 依敵人類型決定碰撞箱顏色
-            let collisionBoxColor = 'rgba(0, 145, 255, 0.7)'; // 預設藍色
-            if (enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
-                collisionBoxColor = 'rgba(255,0,0,0.7)'; // 紅色
-            } else if (enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
-                collisionBoxColor = 'rgba(255,128,0,0.7)'; // 橘色
-            } else if (enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
-                collisionBoxColor = 'rgba(255,0,0,0.7)'; // 紅色
-            } else if (enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
-                collisionBoxColor = 'rgba(255,128,0,0.7)'; // 橘色
-            } else if (enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
-                collisionBoxColor = 'rgba(255,182,193,0.7)'; // 粉紅色
+            // const collisionBoxColor = COLOR_BOSS.replace(')', ',0.7)').replace('rgb(', 'rgba(');
+            // 改為正確解析 rgba 並設 alpha=0.7
+            function toRgbaWithAlpha(color, alpha) {
+                let m = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+                if (!m) return color;
+                return `rgba(${m[1]},${m[2]},${m[3]},${alpha})`;
             }
+            const collisionBoxColor = toRgbaWithAlpha(COLOR_BOSS, 0.7);
             // 畫橢圓
             if (boxCircle < 1) {
                 ctx.save();
@@ -2180,7 +2182,14 @@ function render() {
             const boxX1 = centerX - boxW / 2;
             const boxY1 = centerY - boxH / 2;
             // 顏色
-            const collisionBoxColor = 'rgba(255,255,0,0.7)';
+            // const collisionBoxColor = COLOR_BOSS.replace(')', ',0.7)').replace('rgb(', 'rgba(');
+            // 改為正確解析 rgba 並設 alpha=0.7
+            function toRgbaWithAlpha(color, alpha) {
+                let m = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+                if (!m) return color;
+                return `rgba(${m[1]},${m[2]},${m[3]},${alpha})`;
+            }
+            const collisionBoxColor = toRgbaWithAlpha(COLOR_BOSS, 0.7);
             // 畫橢圓
             if (bossCollisionBoxCircle < 1) {
                 ctx.save();
