@@ -1824,24 +1824,24 @@ function update() {
     }
 }
 
-// ===== 渲染遊戲 =====
+// ===== 渲染遊戲 ===== ｜ゲームをレンダリング
 // 負責繪製所有畫面元素（背景、平台、玩家、敵人、子彈、Boss、UI等）
 // 無參數，無回傳值
 function render() {
     let bossBgTransition = 0;
-    // 清除畫布
+    // 清除畫布｜キャンバスをクリア
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // 保存當前狀態
+    // 保存當前狀態｜現在の状態を保存
     ctx.save();
     
-    // 應用鏡頭變換
+    // 應用鏡頭變換｜カメラ変換を適用
     ctx.translate(-camera.x, -camera.y);
     
-    // // === 只繪製全黑背景 ===
+    // === 只繪製全黑背景 ===
     // ctx.fillStyle = '#000';
     
-    // === 漸層背景 ===
+    // === 漸層背景 ===グラデーション背景
     let grad = ctx.createLinearGradient(0, 0, 0, WORLD_HEIGHT);
     for (let i = 0; i < 10; i++) {
         grad.addColorStop(i / 9, current_area_colors[i]);
@@ -1849,7 +1849,7 @@ function render() {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     
-    // 繪製星星
+    // 繪製星星｜星を描画
     if (showStar) {
         ctx.fillStyle = '#fff';
         for (let i = 0; i < 100; i++) {
@@ -1862,7 +1862,7 @@ function render() {
     
     
     
-    // 繪製平台
+    // 繪製平台｜プラットフォームを描画
     platforms.forEach(platform => {
         if (platform.color === COLOR_PLATFORM_NORMAL) {
             ctx.drawImage(floorImg, platform.x, platform.y, 50, 50);
@@ -1881,7 +1881,7 @@ function render() {
             ctx.globalAlpha = m.alpha !== undefined ? m.alpha : 0.85;
             ctx.fillStyle = m.color;
             ctx.translate(m.x, m.y);
-            // 畫圓形流星
+            // 畫圓形流星｜円形の流星を描画
             ctx.beginPath();
             ctx.arc(0, 0, Math.max(m.size[0], m.size[1]) / 2, 0, Math.PI * 2);
             ctx.fill();
@@ -1889,16 +1889,16 @@ function render() {
         });
     }
     
-    // 繪製玩家 (無敵時閃爍)
+    // 繪製玩家 (無敵時閃爍)｜プレイヤーを描画（無敵時は点滅）
     if (!playerDead) { // 死亡時不繪製
-        // ===== 蓄氣特效：長按空白鍵0.2秒以上才顯示 =====
+        // ===== 蓄氣特效：長按空白鍵0.2秒以上才顯示 =====｜蓄氣エフェクト：長押しスペースキー0.2秒以上で表示
         if (charging && chargeFrame >= CHARGE_CANCEL_FRAME) {
             ctx.save();
-            // 閃爍透明度
+            // 閃爍透明度｜点滅透明度
             let alpha = 0.25 + 0.25 * Math.abs(Math.sin(Date.now() / 120));
             ctx.globalAlpha = alpha;
             ctx.beginPath();
-            // 以玩家中心為圓心
+            // 以玩家中心為圓心｜プレイヤーの中心を円の中心にする
             let cx = player.x + player.width / 2;
             let cy = player.y + player.height / 2;
             let rx = PLAYER_Charge_Attack_size[0] / 2;
@@ -1913,10 +1913,10 @@ function render() {
         if (isWinInvincible) {
             ctx.globalAlpha = 0.2;
         }
-        // 狀態判斷
-        let imgToDraw = playerImgs[0]; // 預設靜止
+        // 狀態判斷｜状態判断
+        let imgToDraw = playerImgs[0]; // 預設靜止｜デフォルトの静止
         let drawBase = true;
-        // 左右移動動畫
+        // 左右移動動畫｜左右移動アニメーション 
         if (keys.ArrowLeft || keys.ArrowRight) {
             if (!window._playerMoveAnimFrame) window._playerMoveAnimFrame = 0;
             window._playerMoveAnimFrame++;
@@ -1928,11 +1928,11 @@ function render() {
         } else {
             window._playerMoveAnimFrame = 0;
         }
-        // 發射時底層圖隱藏
+        // 發射時底層圖隱藏｜発射時底層画像を非表示
         if (player.shootAnimFrame > 0) {
             drawBase = false;
         }
-        // 畫底層圖（只有非發射時）
+        // 畫底層圖（只有非發射時）｜底層画像を描画（発射時は描画しない）
         if (drawBase && (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0)) {
             ctx.save();
             if (AutoFlipPlayer === 1 && player.direction === -1) {
@@ -1956,7 +1956,7 @@ function render() {
             }
             ctx.restore();
         }
-        // 發射時額外疊一張 shoot 圖
+        // 劉羽發射時額外疊一張 shoot 圖 // 発射時に追加で shoot画像 を重ねる
         if (player.shootAnimFrame > 0 && (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0)) {
             ctx.save();
             if (AutoFlipPlayer === 1 && player.direction === -1) {
@@ -1981,11 +1981,11 @@ function render() {
             ctx.restore();
         }
         ctx.globalAlpha = 1;
-        // 發射動畫幀數遞減
+        // 發射動畫幀數遞減｜発射アニメーションフレーム数を減らす
         if (player.shootAnimFrame > 0) player.shootAnimFrame--;
-        // ===== 玩家碰撞箱顯示 =====
+        // ===== 玩家碰撞箱顯示 =====｜プレイヤーの衝突箱を表示
         if (ShowCollisionBox == 1) {
-            // 以玩家圖片中心為原點，支援 NX/NY 百分比移動
+            // 以玩家圖片中心為原點，支援 NX/NY 百分比移動｜プレイヤーの画像の中心を原点に、NX/NY パーセント移動をサポート
             const playerCenterX = player.x + PLAYER_size[0] * (playerCollisionBoxNX / 100);
             const playerCenterY = player.y + PLAYER_size[1] * (playerCollisionBoxNY / 100);
             const boxX1 = playerCenterX - playerCollisionBox[0] / 2;
@@ -2013,7 +2013,7 @@ function render() {
         }
     }
     
-    // 繪製子彈
+    // 繪製子彈｜弾丸を描画
     bullets.forEach(bullet => {
         ctx.fillStyle = bullet.color;
         if (bullet.isCharge) {
@@ -2036,9 +2036,9 @@ function render() {
         }
     });
     
-    // 繪製敵人
+    // 繪製敵人｜敵を描画
     enemies.forEach(enemy => {
-        // 閃爍效果
+        // 閃爍效果｜点滅エフェクト
         if (enemyHitFlash.has(enemy)) {
             if (Math.floor(Date.now() / 50) % 2 === 0) {
                 ctx.globalAlpha = 0.3;
@@ -2047,7 +2047,7 @@ function render() {
             }
         }
         if (enemy.isFlying) {
-            // FLY_RED 用圖片動畫
+            // FLY_RED 用圖片動畫｜FLY_RED 用画像アニメーション 
             if (enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(flyRedImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
@@ -2055,13 +2055,13 @@ function render() {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(flyOrangeImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             } else {
-                // 其他飛行敵人維持原本畫圓
+                // 其他飛行敵人維持原本畫圓｜他の飛行敵人は元の円を維持 
                 ctx.save();
                 ctx.beginPath();
                 ctx.ellipse(enemy.x + enemy.width/2, enemy.y + enemy.height/2, enemy.width/2, enemy.height/2, 0, 0, Math.PI*2);
                 ctx.fillStyle = enemy.color;
                 ctx.fill();
-                // 眼睛
+                // 眼睛｜目
                 ctx.beginPath();
                 ctx.arc(enemy.x + enemy.width*0.75, enemy.y + enemy.height/2, enemy.width/8, 0, Math.PI*2);
                 ctx.fillStyle = 'rgba(255,255,255,1)';
@@ -2069,23 +2069,23 @@ function render() {
                 ctx.restore();
             }
         } else {
-            // GROUND_RED
+            // GROUND_RED｜GROUND_RED
             if (enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(groundRedImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             }
-            // GROUND_ORANGE
+            // GROUND_ORANGE｜GROUND_ORANGE
             else if (enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(groundOrangeImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             }
-            // GROUND_PINK
+            // GROUND_PINK｜GROUND_PINK 
             else if (enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(groundPinkImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             }
             else {
-                // 其他地面敵人維持原本半圓
+                // 其他地面敵人維持原本半圓｜他の地面敵人は元の半円を維持
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(enemy.x + enemy.width/2, enemy.y + enemy.height, enemy.width/2, Math.PI, 0, false);
@@ -2094,7 +2094,7 @@ function render() {
                 ctx.closePath();
                 ctx.fillStyle = enemy.color;
                 ctx.fill();
-                // 眼睛（左前方）
+                // 眼睛（左前方）｜目（左前方） 
                 ctx.beginPath();
                 ctx.arc(enemy.x + enemy.width*0.25, enemy.y + enemy.height*0.75, enemy.width/8, 0, Math.PI*2);
                 ctx.fillStyle = 'rgba(255,255,255,1)';
@@ -2111,7 +2111,7 @@ function render() {
                 ctx.globalAlpha = 1;
             }
         }
-        // ====== 新增碰撞箱顯示 ======
+        // ====== 新增碰撞箱顯示 ======｜新しい衝突箱を表示
         // 依據敵人類型選擇對應參數
         let boxX = 0, boxY = 0, boxNX = 50, boxNY = 50, boxCircle = 0.4;
         if (enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
@@ -2194,7 +2194,7 @@ function render() {
         }
     });
     
-    // 繪製Boss
+    // 繪製Boss｜ボスを描画
     if (bossActive && !isWinScreen) {
         // 只顯示 Boss 圖片，不再顯示碰撞箱遮罩
         if (bossHitFlash > 0) {
@@ -2221,7 +2221,7 @@ function render() {
             ctx.restore();
         }
         ctx.globalAlpha = 1;
-        // ===== Boss 碰撞箱顯示 =====
+        // ===== Boss 碰撞箱顯示 =====｜ボスの衝突箱を表示
         if (ShowCollisionBox == 1 && bossActive && !isWinScreen) {
             // 算出中心
             const centerX = boss.x + boss.width * (bossCollisionBoxNX / 100);
@@ -2241,7 +2241,7 @@ function render() {
                 return `rgba(${m[1]},${m[2]},${m[3]},${alpha})`;
             }
             const collisionBoxColor = toRgbaWithAlpha(COLOR_BOSS, 0.7);
-            // 畫橢圓
+            // 畫橢圓｜楕円を描画
             if (bossCollisionBoxCircle < 1) {
                 ctx.save();
                 ctx.globalAlpha = 0.35;
@@ -2251,7 +2251,7 @@ function render() {
                 ctx.fill();
                 ctx.restore();
             }
-            // 畫矩形
+            // 畫矩形｜矩形を描画
             if (bossCollisionBoxCircle > 0) {
                 ctx.save();
                 ctx.globalAlpha = 0.18;
@@ -2261,7 +2261,7 @@ function render() {
             }
         }
     }
-    // ===== fakeBoss 閃爍效果 =====
+    // ===== fakeBoss 閃爍效果 =====｜fakeBoss 点滅エフェクト
     if (fakeBoss) {
         fakeBossFlashFrame++;
         let drawImg = bossImgs[0];
@@ -2283,14 +2283,14 @@ function render() {
         ctx.restore();
     }
     
-    // 繪製敵方子彈
+    // 繪製敵方子彈｜敵の弾丸を描画
     enemyBullets.forEach(bullet => {
-        // Boss子彈（tornado）
+        // Boss子彈（tornado）｜ボスの弾丸（tornado）
         if (bullet.color === 'rgba(255,68,170,1)') {
             const tornadoImg = document.getElementById('tornado-img');
             if (tornadoImg && tornadoImg.complete) {
                 ctx.save();
-                // 旋轉方向
+                // 旋轉方向｜回転方向
                 const angle = Math.atan2(bullet.speedY, bullet.speedX);
                 ctx.translate(bullet.x + 3.4125, bullet.y + 13.65); // 6.825x27.3中心
                 ctx.rotate(angle + Math.PI);
@@ -2306,22 +2306,22 @@ function render() {
         }
     });
     
-    // 恢復狀態
+    // 恢復狀態｜状態を復元
     ctx.restore();
     
-    // 繪製UI
+    // 繪製UI｜UIを描画
     updateHealthBar();
     updateBossHealthBar();
     updateScore();
     
-    // 調試信息
+    // 調試信息｜デバッグ情報
     cameraDebugElement.textContent = `moved: (${Math.floor(camera.x)})`;
     cameraDebugElement.style.display = showMoved == 1 ? 'block' : 'none';
 }
 
-// ===== 工具函數 =====
+// ===== 工具函數 =====｜ツール関数
 function getCollisionBoxParams(obj) {
-    // 玩家
+    // 玩家｜プレイヤー
     if (obj === player) {
         return {
             box: playerCollisionBox,
@@ -2330,7 +2330,7 @@ function getCollisionBoxParams(obj) {
             circle: playerCollisionBoxCircle
         };
     }
-    // Boss
+    // Boss｜ボス
     if (obj === boss) {
         return {
             box: bossCollisionBox,
@@ -2339,7 +2339,7 @@ function getCollisionBoxParams(obj) {
             circle: bossCollisionBoxCircle
         };
     }
-    // 敵人
+    // 敵人｜敵
     if (obj.behavior === ENEMY_TYPES.FLY_RED.behavior) {
         return { box: FLY_RED_CollisionBox, nx: FLY_RED_CollisionBoxNX, ny: FLY_RED_CollisionBoxNY, circle: FLY_RED_CollisionBoxCircle };
     }
@@ -2364,37 +2364,37 @@ function checkCollision(a, b) {
     const bBox = getCollisionBoxParams(b);
 
     if (aBox && bBox) {
-        // 算出中心
+        // 算出中心｜中心を計算
         const aCenterX = a.x + a.width * (aBox.nx / 100);
         const aCenterY = a.y + a.height * (aBox.ny / 100);
         const bCenterX = b.x + b.width * (bBox.nx / 100);
         const bCenterY = b.y + b.height * (bBox.ny / 100);
-        // 橢圓碰撞
+        // 橢圓碰撞｜楕円の衝突
         const dx = aCenterX - bCenterX;
         const dy = aCenterY - bCenterY;
         const ellipseHit = ((dx * dx) / Math.pow((aBox.box[0] + bBox.box[0]) / 2 / 2, 2) +
                             (dy * dy) / Math.pow((aBox.box[1] + bBox.box[1]) / 2 / 2, 2)) <= 1;
-        // 矩形碰撞
+        // 矩形碰撞｜矩形の衝突
         const aX1 = aCenterX - aBox.box[0] / 2, aX2 = aCenterX + aBox.box[0] / 2;
         const aY1 = aCenterY - aBox.box[1] / 2, aY2 = aCenterY + aBox.box[1] / 2;
         const bX1 = bCenterX - bBox.box[0] / 2, bX2 = bCenterX + bBox.box[0] / 2;
         const bY1 = bCenterY - bBox.box[1] / 2, bY2 = bCenterY + bBox.box[1] / 2;
         const rectHit = !(aX2 < bX1 || aX1 > bX2 || aY2 < bY1 || aY1 > bY2);
-        // 混合
+        // 混合｜混合
         const mix = Math.max(aBox.circle, bBox.circle);
         if (mix <= 0) return ellipseHit;
         if (mix >= 1) return rectHit;
         return (ellipseHit && Math.random() > mix) || (rectHit && Math.random() < mix);
     }
 
-    // 只要有一方沒自訂碰撞箱，維持原本矩形碰撞
+    // 只要有一方沒自訂碰撞箱，維持原本矩形碰撞｜自訂の衝突箱がない場合は元の矩形の衝突を維持
     return a.x < b.x + b.width &&
             a.x + a.width > b.x &&
             a.y < b.y + b.height &&
             a.y + a.height > b.y;
 }
 
-//更新玩家血條顯示
+//更新玩家血條顯示｜プレイヤーのヒールステータスバーを更新
 //無參數，無回傳值
 function updateHealthBar() {
     const percent = (wa_player_to_Health_ki / playerMaxHealth) * 100;
@@ -2406,7 +2406,7 @@ function updateHealthBar() {
     }
 }
 
-//更新Boss血條顯示
+//更新Boss血條顯示｜ボスのヒールステータスバーを更新
 //無參數，無回傳值
 function updateBossHealthBar() {
     if (window.bossHpAnimating) return;
@@ -2414,7 +2414,7 @@ function updateBossHealthBar() {
     bossHealthFill.style.width = `${percent}%`;
 }
 
-//更新分數顯示
+//更新分數顯示｜スコアを更新
 //無參數，無回傳值
 function updateScore() {
     const scoreDiv = document.getElementById('score');
@@ -2424,23 +2424,23 @@ function updateScore() {
     }
 }
 
-//處理遊戲結束（Game Over）畫面與音效
+//處理遊戲結束（Game Over）畫面與音效｜ゲームオーバーの画面と音效を処理
 //無參數，無回傳值
 function gameOver() {
     gameRunning = false;
     playerDeadX = player.x; // 記錄死亡時位置
     playerDeadY = player.y;
     playerDead = true; // 設為死亡狀態
-    // 歸零 hp 並更新血條
+    // 歸零 hp 並更新血條｜HPをゼロにし、ヒールステータスバーを更新
     wa_player_to_Health_ki = 0;
     updateHealthBar();
-    // 延遲顯示 game over 畫面
+    // 延遲顯示 game over 畫面｜ゲームオーバーの画面を遅らせて表示
     setTimeout(function() {
         finalScoreElement.textContent = `score: ${score}`;
         gameOverScreen.style.display = 'flex';
         langToggle.style.display = 'block';
         langSelect.style.display = 'none';
-        // 停止BGM並播放Game Over音效
+        // 停止BGM並播放Game Over音效｜BGMを停止し、Game Over音效を再生
         if (bgm) {
             bgm.pause();
             bgm.currentTime = 0;
@@ -2455,14 +2455,14 @@ function gameOver() {
             gameOverAudio.volume = VOLUME_GAMEOVER;
             if (isSfxOn) { gameOverAudio.pause(); gameOverAudio.currentTime = 0; gameOverAudio.play().catch(()=>{}); }
         }
-    }, 100); // 0.1秒後才顯示 game over 畫面
+    }, 100); // 0.1秒後才顯示 game over 畫面｜0.1秒後にゲームオーバーの画面を表示
 }
 
-//處理勝利畫面與音效
+//處理勝利畫面與音效｜勝利の画面と音效を処理
 //無參數，無回傳值
 function winGame() {
     bossActive = false;
-    // 將玩家移出畫面
+    // 將玩家移出畫面｜プレイヤーを画面外に移動
     player.x = -1;
     player.y = -1;
     gameRunning = false;
@@ -2477,18 +2477,18 @@ function winGame() {
     winScreen.style.display = 'flex';
     langToggle.style.display = 'block';
     langSelect.style.display = 'none';
-    // 停止 boss 區 BGM
+    // 停止 boss 區 BGM｜ボスの区間のBGMを停止
     if (bgm2) {
         bgm2.pause();
         bgm2.currentTime = 0;
     }
-    // 播放勝利音樂
+    // 播放勝利音樂｜勝利の音楽を再生
     const outroAudio = document.getElementById('outro-audio');
     if (outroAudio) {
         outroAudio.currentTime = 0;
         outroAudio.volume = VOLUME_OUTRO;
         if (isBgmOn) { outroAudio.pause(); outroAudio.currentTime = 0; outroAudio.play().catch(()=>{}); }
-        // 確保onended事件設置
+        // 確保onended事件設置｜onendedイベントを確保
         outroAudio.onended = function() {
             setTimeout(() => {
                 outroAudio.currentTime = 0;
@@ -2500,7 +2500,7 @@ function winGame() {
     playAgainButton.textContent = LANGUAGES[currentLang].playagain;
 }
 
-// ===== 語言資料 =====
+// ===== 語言資料 =====｜言語資料
 const LANGUAGES = {
     zh: {
         title    : '歐骷先漫',
@@ -2633,7 +2633,7 @@ const LANGUAGES = {
         }
     }
 };
-let currentLang = FirstLanguage; // 預設語言
+let currentLang = FirstLanguage; // 預設語言｜デフォルトの言語
 function setLang(lang) {
     currentLang = lang;
     localStorage.setItem('lang', lang);
@@ -2649,7 +2649,7 @@ function setLang(lang) {
     winScoreElement.innerHTML = L.winScore;
     playAgainButton.textContent = L.playagain;
 }
-// ===== 語言選擇UI =====
+// ===== 語言選擇UI =====｜言語選択UI
 const langSelect = document.getElementById('language-select');
 const langToggle = document.getElementById('lang-toggle');
 langToggle.onclick = () => {
@@ -2658,7 +2658,7 @@ langToggle.onclick = () => {
 document.getElementById('lang-zh').onclick = () => { setLang('zh'); langSelect.style.display = 'none'; updateSettingsPanelLang(); };
 document.getElementById('lang-ja').onclick = () => { setLang('ja'); langSelect.style.display = 'none'; updateSettingsPanelLang(); };
 document.getElementById('lang-en').onclick = () => { setLang('en'); langSelect.style.display = 'none'; updateSettingsPanelLang(); };
-// 預設語言
+// 預設語言｜デフォルトの言語
 window.addEventListener('DOMContentLoaded', () => {
     setLang(currentLang);
     langSelect.style.display = 'none';
@@ -2666,7 +2666,7 @@ window.addEventListener('DOMContentLoaded', () => {
     updateSettingsPanelLang();
 });
 
-// ===== 觸控操作模擬鍵盤 =====
+// ===== 觸控操作模擬鍵盤 =====｜タッチ操作シミュレートキーボード
 /**
  * 觸控按鈕事件，模擬對應鍵盤事件
  * @param {string} btnId - 按鈕的DOM id
