@@ -73,17 +73,50 @@ let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量｜ボス死亡効果音�
 let VOLUME_BOSS     = 0.85;  // Boss出場音效音量｜ボス登場効果音音量
 let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量｜勝利BGM音量
 
-// areacolor
-// let normal_area_color = 'rgba(68,68,68,1)';
-// let boss_area_color = 'rgba(136,0,0,1)';
+// 背景色變化時間
+let enter_boss_area_color_change_time = 400; //Fps
+let enter_normal_area_color_change_time = 1000; //Fps
 
-// 
+
+// 一般區隕石
+let normal_area_rock_color = 'rgba(68,68,68,1)'; // 一般區域隕石顏色
+let normal_area_rock_size = [4,4]; // 一般區域隕石大小 px
+let normal_area_rock_speed = 1; // 一般區域隕石速度 px
+let normal_area_rock_delay_time = 10; // 一般區域隕石更新速度 fps
+let normal_area_rock_rate = 0.9; // 一般區域隕石出現機率
+let normal_area_rock_stay_time = [20,120]; // 
+let normal_area_rock_descent_angle = [0,70]; //一般區域隕石
+
+
+
+// 一般區域顏色
+let normal_area_color1 = 'rgba(68,68,68,1)';
+let normal_area_color2 = 'rgba(68,68,68,1)';
+let normal_area_color3 = 'rgba(68,68,68,1)';
+let normal_area_color4 = 'rgba(68,68,68,1)';
+let normal_area_color5 = 'rgba(68,68,68,1)';
+let normal_area_color6 = 'rgb(129, 119, 119)';
+let normal_area_color7 = 'rgba(68,68,68,1)';
+let normal_area_color8 = 'rgba(68,68,68,1)';
+let normal_area_color9 = 'rgba(68,68,68,1)';
+let normal_area_color10 = 'rgba(68,68,68,1)';
+// Boss區域顏色
+let boss_area_color1 = 'rgba(136,0,0,1)';
+let boss_area_color2 = 'rgba(136,0,0,1)';
+let boss_area_color3 = 'rgba(136,0,0,1)';
+let boss_area_color4 = 'rgba(136,0,0,1)';
+let boss_area_color5 = 'rgba(136,0,0,1)';
+let boss_area_color6 = 'rgb(138, 123, 123)';
+let boss_area_color7 = 'rgba(136,0,0,1)';
+let boss_area_color8 = 'rgba(136,0,0,1)';
+let boss_area_color9 = 'rgba(136,0,0,1)';
+let boss_area_color10 = 'rgba(136,0,0,1)';
+
+// 地板顏色 過去設定 請無視～ // 床の色の過去の設定です。無視してください〜
 const COLOR_PLATFORM_NORMAL = 'rgba(68,68,68,1)';      // 一般平台顏色
 const COLOR_PLATFORM_BOSS   = 'rgba(136,0,0,1)';      // Boss區域平台顏色
 
-
-
-// 地板顏色 過去設定 請無視～ // 床の色の過去の設定です。無視してください〜
+// 地板區域
 const platformGrid = [
     // 第一區（0~2700）｜第一区（0~2700）
     { x: 0, y: 1, color: COLOR_PLATFORM_NORMAL },
@@ -877,6 +910,54 @@ const bosses = [boss];
 // ===== 平台陣列 =====
 const platforms = basePlatforms.slice();
 
+
+// ===== 背景漸層顏色漸變機制 =====
+let current_area_colors = [
+    normal_area_color1, normal_area_color2, normal_area_color3, normal_area_color4, normal_area_color5,
+    normal_area_color6, normal_area_color7, normal_area_color8, normal_area_color9, normal_area_color10
+];
+let target_area_colors = [...current_area_colors];
+let area_color_transition_frame = 0;
+let area_color_transition_total = 0;
+let is_in_boss_area = false;
+
+function parseColor(str) {
+    // 支援 rgb/rgba 格式
+    let m = str.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+    if (!m) return [0,0,0,1];
+    return [parseInt(m[1]), parseInt(m[2]), parseInt(m[3]), m[4] !== undefined ? parseFloat(m[4]) : 1];
+}
+function colorToStr(arr) {
+    return `rgba(${arr[0]},${arr[1]},${arr[2]},${arr[3]})`;
+}
+function lerpColor(a, b, t) {
+    return [
+        Math.round(a[0] + (b[0] - a[0]) * t),
+        Math.round(a[1] + (b[1] - a[1]) * t),
+        Math.round(a[2] + (b[2] - a[2]) * t),
+        a[3] + (b[3] - a[3]) * t
+    ];
+}
+function updateAreaColors() {
+    if (area_color_transition_total > 0 && area_color_transition_frame < area_color_transition_total) {
+        area_color_transition_frame++;
+        let t = area_color_transition_frame / area_color_transition_total;
+        for (let i = 0; i < 10; i++) {
+            let c0 = parseColor(current_area_colors[i]);
+            let c1 = parseColor(target_area_colors[i]);
+            let lerped = lerpColor(c0, c1, t);
+            current_area_colors[i] = colorToStr(lerped);
+        }
+        if (area_color_transition_frame >= area_color_transition_total) {
+            // 完成漸變
+            for (let i = 0; i < 10; i++) current_area_colors[i] = target_area_colors[i];
+            area_color_transition_total = 0;
+        }
+    }
+}
+
+
+
 // ===== 控制系統 =====
 const keys = {
     ArrowLeft: false,
@@ -1528,6 +1609,29 @@ function update() {
         }
     }
 
+    
+    // ===== 新增背景顏色漸變判斷 =====
+    let now_in_boss_area = (player.x >= BOSS_AREA_X);
+    if (now_in_boss_area !== is_in_boss_area) {
+        is_in_boss_area = now_in_boss_area;
+        if (is_in_boss_area) {
+            // 進入boss區
+            target_area_colors = [
+                boss_area_color1, boss_area_color2, boss_area_color3, boss_area_color4, boss_area_color5,
+                boss_area_color6, boss_area_color7, boss_area_color8, boss_area_color9, boss_area_color10
+            ];
+            area_color_transition_total = enter_boss_area_color_change_time;
+        } else {
+            // 回到一般區
+            target_area_colors = [
+                normal_area_color1, normal_area_color2, normal_area_color3, normal_area_color4, normal_area_color5,
+                normal_area_color6, normal_area_color7, normal_area_color8, normal_area_color9, normal_area_color10
+            ];
+            area_color_transition_total = enter_normal_area_color_change_time;
+        }
+        area_color_transition_frame = 0;
+    }
+    updateAreaColors();
 }
 
 // ===== 渲染遊戲 =====
@@ -1544,9 +1648,26 @@ function render() {
     // 應用鏡頭變換
     ctx.translate(-camera.x, -camera.y);
     
-    // === 只繪製全黑背景 ===
-    ctx.fillStyle = '#000';
+    // // === 只繪製全黑背景 ===
+    // ctx.fillStyle = '#000';
+    
+    // === 漸層背景 ===
+    let grad = ctx.createLinearGradient(0, 0, 0, WORLD_HEIGHT);
+    for (let i = 0; i < 10; i++) {
+        grad.addColorStop(i / 9, current_area_colors[i]);
+    }
+    ctx.fillStyle = grad;
     ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+    
+    // 繪製星星
+    ctx.fillStyle = '#fff';
+    for (let i = 0; i < 100; i++) {
+        const x = (i * 24 + (camera.x / 2)) % WORLD_WIDTH;
+        const y = (i * 19 + (camera.y / 2)) % WORLD_HEIGHT;
+        const size = 1 + (i % 3);
+        ctx.fillRect(x, y, size, size);
+    }
+    
     
     
     // 繪製平台
