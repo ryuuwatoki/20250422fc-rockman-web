@@ -12,11 +12,12 @@ let playerStartX = 5200;   // 玩家初始座標 x 預設200｜プレイヤー�
 let playerStartY = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100; // 玩家血量 預設100｜プレイヤー体力 デフォルト100
 let JUMP_POWER      = 15; // 跳躍速度
+let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';;
 let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';;
 let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';;
 
 
-// = 玩家飛行無敵模式 =｜プレイヤー飛行無敵モード
+// **玩家飛行無敵模式 =｜プレイヤー飛行無敵モード**
 let isFlyingMode = 0; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
 
 let enemyMaxCount = 12; // 敵人最大數量 預設12｜敵最大数 デフォルト12
@@ -53,9 +54,9 @@ let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ�
 
 let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
 
-// ===== 設定選單狀態顯示全開/全關 =====
-checkBoxShowHideAll(1);
-// checkBoxShowHideAll(0); // 測試用
+// ===== 設定選單狀態顯示全開/全關 1=全開 0=全關 2=pass =====
+checkBoxShowHideAll(2);
+// checkBoxShowHideAll(0); // 測試用 1=全開 0=全關 2=pass
 
 
 // 音量設定｜音量設定
@@ -580,7 +581,7 @@ let player = {
                 width: 10,
                 height: 6,
                 speed: 10 * 1.1 * this.direction, // 1.1倍
-                color: '#b3f0ff',
+                color: PLAYER_Attack_shoot_color,
                 isCharge: false
             });
             this.shootCooldown = this.shootDelay;
@@ -982,7 +983,7 @@ document.addEventListener('keyup', (e) => {
                     width: 10,
                     height: 6,
                     speed: 10 * 1.1 * player.direction, // 1.1倍
-                    color: '#b3f0ff',
+                    color: PLAYER_Attack_shoot_color,
                     isCharge: false
                 });
                 player.shootAnimFrame = 1;
@@ -2921,7 +2922,7 @@ function simulateKey(key, pressed) {
                     width: 10,
                     height: 6,
                     speed: 10 * 1.1 * player.direction, // 1.1倍
-                    color: '#b3f0ff',
+                    color: PLAYER_Attack_shoot_color,
                     isCharge: false
                 });
                 player.shootAnimFrame = 1;
