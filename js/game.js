@@ -319,8 +319,8 @@ function checkBoxShowHideAll(mode) {
 };
 
 // ===== 物件面積 ===== //
-let PLAYER_size = [50,60]; //玩家尺寸 寬度,高度
-let PLAYER_SHOOT_size = [55,60];
+let PLAYER_size = [38,50]; //玩家尺寸 寬度,高度
+let PLAYER_SHOOT_size = [40,50];
 let PLAYER_Charge_Attack_size = [60,60];
 let FLY_RED_size = [30,30];
 let FLY_ORANGE_size = [60,70];
@@ -330,7 +330,7 @@ let GROUND_PINK_size = [40,40];
 let BOSS_size = [190,190];
 
 // ===== 碰撞箱 =====
-let playerCollisionBox = [40, 60]; // [寬度, 高度]
+let playerCollisionBox = [35, 48]; // [寬度, 高度]
 let playerCollisionBoxNX = 50; //碰撞箱中心移動x
 let playerCollisionBoxNY = 50; //碰撞箱中心移動y
 let playerCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
@@ -353,7 +353,7 @@ let GROUND_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越�
 let GROUND_PINK_CollisionBox = [40, 40];
 let GROUND_PINK_CollisionBoxNX = 50; //碰撞箱中心移動x
 let GROUND_PINK_CollisionBoxNY = 50; //碰撞箱中心移動y
-let GROUND_PINK_CollisionBoxCircle = 1; // 0=圓形，1=矩形，越小越圓
+let GROUND_PINK_CollisionBoxCircle = 0.9; // 0=圓形，1=矩形，越小越圓
 let bossCollisionBox = [160, 150];
 let bossCollisionBoxNX = 50; //碰撞箱中心移動x
 let bossCollisionBoxNY = 40; //碰撞箱中心移動y
@@ -368,8 +368,9 @@ const COLOR_FLY_RED         = 'rgba(255,0,0,1)';      // 飛行紅色顏色
 const COLOR_FLY_ORANGE      = 'rgba(255,165,0,1)';      // 飛行橙色顏色
 const COLOR_GROUND_RED      = 'rgba(255,0,0,1)';      // 地面紅色顏色
 const COLOR_GROUND_ORANGE   = 'rgba(255,165,0,1)';      // 地面橙色顏色
-const COLOR_GROUND_PINK     = 'rgba(255,105,180,1)';      // 地面粉色顏色   
+const COLOR_GROUND_PINK     = 'rgba(255, 105, 180, 0.98)';      // 地面粉色顏色   
 const COLOR_BOSS            = 'rgba(243, 240, 33, 0.95)';   // Boss主體顏色
+
 const COLOR_BULLET_ENEMY    = 'rgba(255,136,255,1)';      // 敵人子彈顏色
 const COLOR_BULLET_BOSS     = 'rgba(255,68,170,1)';      // Boss子彈顏色
 
@@ -2114,14 +2115,25 @@ function render() {
             const boxX1 = centerX - boxX / 2;
             const boxY1 = centerY - boxY / 2;
             // 依敵人類型決定碰撞箱顏色
-            // const collisionBoxColor = COLOR_BOSS.replace(')', ',0.7)').replace('rgb(', 'rgba(');
-            // 改為正確解析 rgba 並設 alpha=0.7
             function toRgbaWithAlpha(color, alpha) {
                 let m = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
                 if (!m) return color;
                 return `rgba(${m[1]},${m[2]},${m[3]},${alpha})`;
             }
-            const collisionBoxColor = toRgbaWithAlpha(COLOR_BOSS, 0.7);
+            let collisionBoxColor;
+            if (enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
+                collisionBoxColor = toRgbaWithAlpha(COLOR_FLY_RED, 0.7);
+            } else if (enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
+                collisionBoxColor = toRgbaWithAlpha(COLOR_FLY_ORANGE, 0.7);
+            } else if (enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
+                collisionBoxColor = toRgbaWithAlpha(COLOR_GROUND_RED, 0.7);
+            } else if (enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
+                collisionBoxColor = toRgbaWithAlpha(COLOR_GROUND_ORANGE, 0.7);
+            } else if (enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
+                collisionBoxColor = toRgbaWithAlpha(COLOR_GROUND_PINK, 0.7);
+            } else {
+                collisionBoxColor = toRgbaWithAlpha(COLOR_BOSS, 0.7); // 預設
+            }
             // 畫橢圓
             if (boxCircle < 1) {
                 ctx.save();
