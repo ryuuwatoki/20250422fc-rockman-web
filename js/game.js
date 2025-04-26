@@ -58,7 +58,6 @@ let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏
 checkBoxShowHideAll(2);
 // checkBoxShowHideAll(0); // 測試用 1=全開 0=全關 2=pass
 
-
 // 音量設定｜音量設定
 let isBgmOn = 0;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
 let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉｜効果音オンオフ 1=オン 0=オフ
@@ -76,6 +75,32 @@ let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量｜勝利BGM音量
 // 背景色變化時間
 let enter_boss_area_color_change_time = 400; //Fps
 let enter_normal_area_color_change_time = 1000; //Fps
+let enter_boss_area_meteor_change_time = 400; //Fps
+let enter_normal_area_meteor_change_time = 1000; //Fps
+
+// 一般區域流星雨參數
+const normal_meteor_params = {
+    color: 'rgb(255, 250, 250)', // 流星顏色
+    size: [10, 10], // 流星大小
+    speed: 10, // 流星速度
+    update_random: 1, // 流星生成機率
+    update_interval: 1, // 幾幀產生一次流星
+    stay_time: [20, 40], // 流星停留時間
+    descent_angle: [-45, 70], // 流星下落角度
+    position: [0, 800, 0, 50] // 流星生成位置範圍
+};
+// Boss區域流星雨參數
+const boss_meteor_params = {
+    color: 'rgb(12, 27, 95)', // 流星顏色
+    size: [100, 100], // 流星大小
+    speed: 100, // 流星速度
+    update_random: 0.2, // 流星生成機率
+    update_interval: 10, // 幾幀產生一次流星
+    stay_time: [200, 400], // 流星停留時間
+    descent_angle: [-4, 7], // 流星下落角度
+    position: [1, 801, 1, 51] // 流星生成位置範圍
+};
+
 
 
 // 一般區域顏色
@@ -270,15 +295,19 @@ let fakeBossFlashFrame = 0;
 checkBoxShowHideAll(1); // 測試用 1=全開 0=全關 2=pass
 
 // ===== 流星雨（隕石）相關設定 =====
+let meteor_params = {...normal_meteor_params};
+let meteor_params_target = {...normal_meteor_params};
+let meteor_params_transition_frame = 0;
+let meteor_params_transition_total = 0;
 
-let meteor_color = 'rgb(255, 250, 250)'; // 流星顏色
-let meteor_size = [10, 10]; // 流星大小
-let meteor_speed = 10; // 流星速度（每秒像素，預設1000）
-let meteor_update_random = 1; // 出現率
-let meteor_update_interval = 1; // 幾幀產生一次流星（例如180=3秒，依照MAX_FPS）
-let meteor_stay_time = [20, 40]; // 流星停留時間
-let meteor_descent_angle = [-45, 70]; // 流星下落角度（度數）
-let meteor_position = [0, 800, 0, 50]; // 流星生成位置範圍
+let meteor_color = meteor_params.color; // 流星顏色
+let meteor_size = meteor_params.size.slice(); // 流星大小
+let meteor_speed = meteor_params.speed; // 流星速度（每秒像素，預設1000）
+let meteor_update_random = meteor_params.update_random; // 出現率
+let meteor_update_interval = meteor_params.update_interval; // 幾幀產生一次流星（例如180=3秒，依照MAX_FPS）
+let meteor_stay_time = meteor_params.stay_time.slice(); // 流星停留時間
+let meteor_descent_angle = meteor_params.descent_angle.slice(); // 流星下落角度（度數）
+let meteor_position = meteor_params.position.slice(); // 流星生成位置範圍
 let meteor_update_counter = 0;    // 計數器
 let meteors = []; // 流星陣列
 
@@ -296,8 +325,6 @@ function checkBoxShowHideAll(mode) {
     showEntityCounts = mode;
     showMobileTouch = mode;
 };
-
-
 
 // ===== 物件面積 ===== //
 let PLAYER_size = [50,60]; //玩家尺寸 寬度,高度
@@ -1625,6 +1652,9 @@ function update() {
                 boss_area_color6, boss_area_color7, boss_area_color8, boss_area_color9, boss_area_color10
             ];
             area_color_transition_total = enter_boss_area_color_change_time;
+            // 流星雨參數目標設為boss
+            meteor_params_target = {...boss_meteor_params};
+            meteor_params_transition_total = enter_boss_area_meteor_change_time; // 這裡改用 meteor 變數
         } else {
             // 回到一般區
             target_area_colors = [
@@ -1632,10 +1662,65 @@ function update() {
                 normal_area_color6, normal_area_color7, normal_area_color8, normal_area_color9, normal_area_color10
             ];
             area_color_transition_total = enter_normal_area_color_change_time;
+            // 流星雨參數目標設為normal
+            meteor_params_target = {...normal_meteor_params};
+            meteor_params_transition_total = enter_normal_area_meteor_change_time; // 這裡改用 meteor 變數
         }
         area_color_transition_frame = 0;
+        meteor_params_transition_frame = 0;
     }
     updateAreaColors();
+    // ===== 流星雨參數漸變 =====
+    if (meteor_params_transition_total > 0 && meteor_params_transition_frame < meteor_params_transition_total) {
+        meteor_params_transition_frame++;
+        let t = meteor_params_transition_frame / meteor_params_transition_total;
+        // 只對數值型做lerp，陣列型分別lerp
+        meteor_params.speed = meteor_params.speed + (meteor_params_target.speed - meteor_params.speed) * t;
+        meteor_params.update_random = meteor_params.update_random + (meteor_params_target.update_random - meteor_params.update_random) * t;
+        meteor_params.update_interval = meteor_params.update_interval + (meteor_params_target.update_interval - meteor_params.update_interval) * t;
+        meteor_params.size = [
+            meteor_params.size[0] + (meteor_params_target.size[0] - meteor_params.size[0]) * t,
+            meteor_params.size[1] + (meteor_params_target.size[1] - meteor_params.size[1]) * t
+        ];
+        meteor_params.stay_time = [
+            meteor_params.stay_time[0] + (meteor_params_target.stay_time[0] - meteor_params.stay_time[0]) * t,
+            meteor_params.stay_time[1] + (meteor_params_target.stay_time[1] - meteor_params.stay_time[1]) * t
+        ];
+        meteor_params.descent_angle = [
+            meteor_params.descent_angle[0] + (meteor_params_target.descent_angle[0] - meteor_params.descent_angle[0]) * t,
+            meteor_params.descent_angle[1] + (meteor_params_target.descent_angle[1] - meteor_params.descent_angle[1]) * t
+        ];
+        meteor_params.position = [
+            meteor_params.position[0] + (meteor_params_target.position[0] - meteor_params.position[0]) * t,
+            meteor_params.position[1] + (meteor_params_target.position[1] - meteor_params.position[1]) * t,
+            meteor_params.position[2] + (meteor_params_target.position[2] - meteor_params.position[2]) * t,
+            meteor_params.position[3] + (meteor_params_target.position[3] - meteor_params.position[3]) * t
+        ];
+        // 顏色只在最後切換
+        if (meteor_params_transition_frame >= meteor_params_transition_total) {
+            meteor_params.color = meteor_params_target.color;
+        }
+        // 實際參數同步
+        meteor_color = meteor_params.color;
+        meteor_size = meteor_params.size.slice();
+        meteor_speed = meteor_params.speed;
+        meteor_update_random = meteor_params.update_random;
+        meteor_update_interval = Math.round(meteor_params.update_interval);
+        meteor_stay_time = [
+            Math.round(meteor_params.stay_time[0]),
+            Math.round(meteor_params.stay_time[1])
+        ];
+        meteor_descent_angle = [
+            meteor_params.descent_angle[0],
+            meteor_params.descent_angle[1]
+        ];
+        meteor_position = [
+            meteor_params.position[0],
+            meteor_params.position[1],
+            meteor_params.position[2],
+            meteor_params.position[3]
+        ];
+    }
 
     // ===== 流星雨生成與更新 =====
     meteor_update_counter++;
