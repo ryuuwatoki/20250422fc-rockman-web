@@ -2658,7 +2658,7 @@ settingsPanel.innerHTML = `
         <button id="settings-close-btn" style="padding:6px 24px;font-size:16px;background:#4af;color:#fff;border:none;border-radius:6px;">OK</button>
     </div>
 
-    <div style="height:20px;"></div>
+    <div style="height:40px;"></div>
 
 `;
 document.body.appendChild(settingsPanel);
