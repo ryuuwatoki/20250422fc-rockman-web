@@ -320,6 +320,9 @@ function checkBoxShowHideAll(mode) {
     AutoFlipPlayer = mode;
     showEntityCounts = mode;
     showMobileTouch = mode;
+    showStar = mode;
+    showMeteor = mode;
+
 };
 
 // ===== 物件面積 =====｜オブジェクトサイズ
@@ -375,9 +378,6 @@ let bossCollisionBox       = [160, 150];  // [寬度, 高度]｜[幅, 高さ]
 let bossCollisionBoxNX     = 50;          //碰撞箱中心移動x｜当たり判定中心移動x
 let bossCollisionBoxNY     = 40;          //碰撞箱中心移動y｜当たり判定中心移動y
 let bossCollisionBoxCircle = 0.3;         // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
-
-
-checkBoxShowHideAll(1);
 
 // 碰撞箱顏色設定｜当たり判定色設定
 const COLOR_PLAYER        = 'rgba(68, 255, 121,1)';       // 玩家顏色｜プレイヤー色
@@ -2918,6 +2918,8 @@ settingsBtn.onclick = function() {
     var startYInput = document.getElementById('setting-start-y');
     var AutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
     var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
+    var showStarInput = document.getElementById('setting-show-star');
+    var showMeteorInput = document.getElementById('setting-show-meteor');
     // 同步 UI｜UIを同期
     if (bgmOnInput) bgmOnInput.checked = !!isBgmOn;
     if (sfxOnInput) sfxOnInput.checked = !!isSfxOn;
@@ -2940,6 +2942,8 @@ settingsBtn.onclick = function() {
     if (showMobileTouchInput) showMobileTouchInput.checked = !!showMobileTouch;
     if (AutoFlipPlayerInput) AutoFlipPlayerInput.checked = !!AutoFlipPlayer;
     if (showCollisionBoxInput) showCollisionBoxInput.checked = !!ShowCollisionBox;
+    if (showStarInput) showStarInput.checked = !!showStar;
+    if (showMeteorInput) showMeteorInput.checked = !!showMeteor;
     settingsPanel.style.display = 'block';
     isPaused = true;
     if (startXInput) startXInput.value = playerStartX;
@@ -2971,6 +2975,8 @@ if (settingsCloseBtn) {
         var startYInput = document.getElementById('setting-start-y');
         var AutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
         var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
+        var showStarInput = document.getElementById('setting-show-star');
+        var showMeteorInput = document.getElementById('setting-show-meteor');
         // 儲存（同步變數）｜保存（変数を同期）
         if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
         if (sfxOnInput) isSfxOn = sfxOnInput.checked ? 1 : 0;
@@ -2993,6 +2999,8 @@ if (settingsCloseBtn) {
         if (showMobileTouchInput) showMobileTouch = showMobileTouchInput.checked ? 1 : 0;
         if (AutoFlipPlayerInput) AutoFlipPlayer = AutoFlipPlayerInput.checked ? 1 : 0;
         if (showCollisionBoxInput) ShowCollisionBox = showCollisionBoxInput.checked ? 1 : 0;
+        if (showStarInput) showStar = showStarInput.checked ? 1 : 0;
+        if (showMeteorInput) showMeteor = showMeteorInput.checked ? 1 : 0;
         settingsPanel.style.display = 'none';
         isPaused = false; // 關閉設定時恢復
         if (startXInput) startXInput.value = playerStartX;
