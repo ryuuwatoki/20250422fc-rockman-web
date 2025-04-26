@@ -2663,9 +2663,11 @@ settingsPanel.innerHTML = `
 `;
 document.body.appendChild(settingsPanel);
 
+checkBoxShowHideAll(0); // 測試用
+
 // 3. 設定按鈕事件
 settingsBtn.onclick = function() {
-    // 先取得所有 input
+    // 只負責開啟設定面板與同步 UI，不做儲存、不做關閉
     var bgmOnInput = document.getElementById('setting-bgm-on');
     var sfxOnInput = document.getElementById('setting-sfx-on');
     var moveSpeedInput = document.getElementById('setting-move-speed');
@@ -2689,59 +2691,32 @@ settingsBtn.onclick = function() {
     var startYInput = document.getElementById('setting-start-y');
     var AutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
     var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
-    if (settingsPanel.style.display === 'block') {
-        if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
-        if (sfxOnInput) isSfxOn = sfxOnInput.checked ? 1 : 0;
-        if (moveSpeedInput) playerMoveSpeed = parseInt(moveSpeedInput.value) || 1;
-        if (weaponPowerInput) weaponPower = parseInt(weaponPowerInput.value) || 1;
-        if (maxFpsInput) MAX_FPS = parseInt(maxFpsInput.value) || 10;
-        if (gravityInput) GRAVITY = parseFloat(gravityInput.value) || 1;
-        if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || 11.5*1.3;
-        if (enemyMaxCountInput) enemyMaxCount = parseInt(enemyMaxCountInput.value) || 1;
-        if (bossBulletSpeedInput) bossBulletSpeed = parseInt(bossBulletSpeedInput.value) || 1;
-        if (bossPattern1 && bossPattern1.checked) bossBulletPatternMode = 1;
-        if (bossPattern2 && bossPattern2.checked) bossBulletPatternMode = 2;
-        if (bossPattern3 && bossPattern3.checked) bossBulletPatternMode = 3;
-        if (showScoreInput) showScore = showScoreInput.checked ? 1 : 0;
-        if (showMovedInput) showMoved = showMovedInput.checked ? 1 : 0;
-        if (showFpsInput) showFPS = showFpsInput.checked ? 1 : 0;
-        if (showXYInput) showXY = showXYInput.checked ? 1 : 0;
-        if (showNXYInput) showNXY = showNXYInput.checked ? 1 : 0;
-        if (showEntityCountsInput) showEntityCounts = showEntityCountsInput.checked ? 1 : 0;
-        if (showMobileTouchInput) showMobileTouch = showMobileTouchInput.checked ? 1 : 0;
-        if (AutoFlipPlayerInput) AutoFlipPlayer = AutoFlipPlayerInput.checked ? 1 : 0;
-        if (showCollisionBoxInput) ShowCollisionBox = showCollisionBoxInput.checked ? 1 : 0;
-        settingsPanel.style.display = 'none';
-        isPaused = false;
-        if (startXInput) startXInput.value = playerStartX;
-        if (startYInput) startYInput.value = playerStartY;
-    } else {
-        if (bgmOnInput) bgmOnInput.checked = !!isBgmOn;
-        if (sfxOnInput) sfxOnInput.checked = !!isSfxOn;
-        if (moveSpeedInput) moveSpeedInput.value = playerMoveSpeed;
-        if (weaponPowerInput) weaponPowerInput.value = weaponPower;
-        if (maxFpsInput) maxFpsInput.value = MAX_FPS;
-        if (gravityInput) gravityInput.value = GRAVITY;
-        if (jumpPowerInput) jumpPowerInput.value = JUMP_POWER;
-        if (enemyMaxCountInput) enemyMaxCountInput.value = enemyMaxCount;
-        if (bossBulletSpeedInput) bossBulletSpeedInput.value = bossBulletSpeed;
-        if (bossPattern1) bossPattern1.checked = bossBulletPatternMode === 1;
-        if (bossPattern2) bossPattern2.checked = bossBulletPatternMode === 2;
-        if (bossPattern3) bossPattern3.checked = bossBulletPatternMode === 3;
-        if (showScoreInput) showScoreInput.checked = !!showScore;
-        if (showMovedInput) showMovedInput.checked = !!showMoved;
-        if (showFpsInput) showFpsInput.checked = !!showFPS;
-        if (showXYInput) showXYInput.checked = !!showXY;
-        if (showNXYInput) showNXYInput.checked = !!showNXY;
-        if (showEntityCountsInput) showEntityCountsInput.checked = !!showEntityCounts;
-        if (showMobileTouchInput) showMobileTouchInput.checked = !!showMobileTouch;
-        if (AutoFlipPlayerInput) AutoFlipPlayerInput.checked = !!AutoFlipPlayer;
-        if (showCollisionBoxInput) showCollisionBoxInput.checked = !!ShowCollisionBox;
-        settingsPanel.style.display = 'block';
-        isPaused = true;
-        if (startXInput) startXInput.value = playerStartX;
-        if (startYInput) startYInput.value = playerStartY;
-    }
+    // 同步 UI
+    if (bgmOnInput) bgmOnInput.checked = !!isBgmOn;
+    if (sfxOnInput) sfxOnInput.checked = !!isSfxOn;
+    if (moveSpeedInput) moveSpeedInput.value = playerMoveSpeed;
+    if (weaponPowerInput) weaponPowerInput.value = weaponPower;
+    if (maxFpsInput) maxFpsInput.value = MAX_FPS;
+    if (gravityInput) gravityInput.value = GRAVITY;
+    if (jumpPowerInput) jumpPowerInput.value = JUMP_POWER;
+    if (enemyMaxCountInput) enemyMaxCountInput.value = enemyMaxCount;
+    if (bossBulletSpeedInput) bossBulletSpeedInput.value = bossBulletSpeed;
+    if (bossPattern1) bossPattern1.checked = bossBulletPatternMode === 1;
+    if (bossPattern2) bossPattern2.checked = bossBulletPatternMode === 2;
+    if (bossPattern3) bossPattern3.checked = bossBulletPatternMode === 3;
+    if (showScoreInput) showScoreInput.checked = !!showScore;
+    if (showMovedInput) showMovedInput.checked = !!showMoved;
+    if (showFpsInput) showFpsInput.checked = !!showFPS;
+    if (showXYInput) showXYInput.checked = !!showXY;
+    if (showNXYInput) showNXYInput.checked = !!showNXY;
+    if (showEntityCountsInput) showEntityCountsInput.checked = !!showEntityCounts;
+    if (showMobileTouchInput) showMobileTouchInput.checked = !!showMobileTouch;
+    if (AutoFlipPlayerInput) AutoFlipPlayerInput.checked = !!AutoFlipPlayer;
+    if (showCollisionBoxInput) showCollisionBoxInput.checked = !!ShowCollisionBox;
+    settingsPanel.style.display = 'block';
+    isPaused = true;
+    if (startXInput) startXInput.value = playerStartX;
+    if (startYInput) startYInput.value = playerStartY;
 };
 var settingsCloseBtn = document.getElementById('settings-close-btn');
 if (settingsCloseBtn) {
@@ -2769,6 +2744,7 @@ if (settingsCloseBtn) {
         var startYInput = document.getElementById('setting-start-y');
         var AutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
         var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
+        // 儲存（同步變數）
         if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
         if (sfxOnInput) isSfxOn = sfxOnInput.checked ? 1 : 0;
         if (moveSpeedInput) playerMoveSpeed = parseInt(moveSpeedInput.value) || 1;
@@ -2783,7 +2759,7 @@ if (settingsCloseBtn) {
         if (bossPattern3 && bossPattern3.checked) bossBulletPatternMode = 3;
         if (showScoreInput) showScore = showScoreInput.checked ? 1 : 0;
         if (showMovedInput) showMoved = showMovedInput.checked ? 1 : 0;
-        if (showFpsInput) showFpsInput.checked = !!showFPS;
+        if (showFpsInput) showFPS = showFpsInput.checked ? 1 : 0;
         if (showXYInput) showXY = showXYInput.checked ? 1 : 0;
         if (showNXYInput) showNXY = showNXYInput.checked ? 1 : 0;
         if (showEntityCountsInput) showEntityCounts = showEntityCountsInput.checked ? 1 : 0;
