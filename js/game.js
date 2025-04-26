@@ -49,7 +49,7 @@ let showFPS                  = 1;  //showfps｜FPS表示
 let showXY                   = 0;  //show xy｜XY座標表示
 let showNXY                  = 0;  //show new xy｜グリッド座標表示
 let ShowCollisionBox         = 0;  //是否顯示遮圖顯示目前碰撞箱 ｜当たり判定表示
-let show_PLAYER_ground_check = 1;  //是否顯示地面偵測
+let showPlayGroundCheck = 1;  //是否顯示地面偵測
 let AutoFlipPlayer           = 1;  // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1｜自動左右反転 1=キーで反転 0=常に右 デフォルト1
 let showEntityCounts         = 0;  //show 人物怪物子彈數量｜エンティティ数表示
 let showMobileTouch          = 1;  // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
@@ -1979,7 +1979,7 @@ function render() {
             ctx.restore();
         }
         // ===== 玩家地面檢查區顯示 =====
-        if (show_PLAYER_ground_check == 1) {
+        if (showPlayGroundCheck == 1) {
             ctx.save();
             // 以玩家圖片中心為原點，支援 NX/NY 百分比移動
             const checkCenterX = player.x + PLAYER_size[0] * (PLAYER_ground_check_NX / 100);
@@ -3108,18 +3108,13 @@ if (settingsCloseBtn) {
                 case 'setting-show-collision-box': ShowCollisionBox = this.checked ? 1 : 0; break;
                 case 'setting-show-star': showStar = this.checked ? 1 : 0; break;
                 case 'setting-show-meteor': showMeteor = this.checked ? 1 : 0; break;
-                case 'setting-show-player-ground-check': show_PLAYER_ground_check = this.checked ? 1 : 0; break;
+                case 'setting-show-player-ground-check': showPlayGroundCheck = this.checked ? 1 : 0; break;
             }
         });
     }
 });
-// 設定面板開啟時同步 checkbox 狀態
-function openSettingsPanel() {
-    // ...原本的同步程式碼...
-    var showPlayerGroundCheckInput = document.getElementById('setting-show-player-ground-check');
-    if (showPlayerGroundCheckInput) showPlayerGroundCheckInput.checked = !!show_PLAYER_ground_check;
-    // ...原本的同步程式碼...
-}
+
+
 // 音樂/效果音即時同步｜音楽/エフェクト音即時同期
 var bgmOnInput2 = document.getElementById('setting-bgm-on');
 if (bgmOnInput2) {
