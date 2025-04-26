@@ -1,7 +1,7 @@
 // ===== 遊戲設定（集中整理） =====｜ゲーム設定（集中管理）
-let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文｜デフォルト言語：日本語
-// let FirstLanguage = localStorage.getItem('lang') || 'zh'; //預設語言中文｜デフォルト言語：中国語
-// let FirstLanguage = localStorage.getItem('lang') || 'en'; //預設語言英文｜デフォルト言語：英語
+let FirstLanguage = localStorage.getItem('lang') || 'ja';  //預設語言日文｜デフォルト言語：日本語
+// let FirstLanguage = localStorage.getItem('lang') || 'zh';  //預設語言中文｜デフォルト言語：中国語
+// let FirstLanguage = localStorage.getItem('lang') || 'en';  //預設語言英文｜デフォルト言語：英語
 
 // ===== 遊戲狀態 =====｜ゲーム状態
 let MAX_FPS = 60;            // 最大FPS設定 預設60｜最大FPS設定 デフォルト60
@@ -11,12 +11,12 @@ let weaponPower     = 1;     // 武器攻擊力設定，方便統一調整玩家
 let playerStartX    = 5150;  // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
 let playerStartY    = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100;   // 玩家血量 預設100｜プレイヤー体力 デフォルト100
-let GRAVITY         = 1.6;   // 重力
-let JUMP_POWER      = 21;    // 跳躍力量
+let GRAVITY         = 1.6;   // 重力｜重力
+let JUMP_POWER      = 21;    // 跳躍力量｜ジャンプ力
 
-let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';  // 玩家攻擊子彈顏色   
-let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';  // 玩家集氣攻擊子彈顏色
-let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';  // 玩家集氣攻擊子彈顏色
+let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';  // 玩家攻擊子彈顏色｜プレイヤー攻撃弾の色
+let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';  // 玩家集氣攻擊子彈顏色｜プレイヤー溜め攻撃弾の色
+let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';  // 玩家集氣攻擊子彈顏色｜プレイヤー溜め攻撃弾の色
 
 let Fly_RED_HP       = 1;   // 飛行紅色敵人血量｜飛行赤色敵体の体力
 let Fly_ORANGE_HP    = 3;   // 飛行橘色敵人血量｜飛行オレンジ敵体の体力
@@ -34,12 +34,12 @@ let GROUND_PINK_spawn     = 1;         // 敵人Ｅ是否生成，1=是，0=否�
 let bossHealth            = 100;       // Boss血量 預設100｜ボス体力 デフォルト100
 let bossSetX              = 5000;      // boss 座標 x 預設5000｜ボス座標 x デフォルト5000
 let bossSetY              = 230;       // boss 座標 y 預設230｜ボス座標 y デフォルト230
-let bossBulletDamage      = 4;         // boss 子彈攻擊力 預設5
-let bossImpactDamage      = 8;         // boss 撞擊攻擊力 預設10
+let bossBulletDamage      = 4;         // boss 子彈攻擊力 預設5｜ボス弾攻撃力 デフォルト5
+let bossImpactDamage      = 8;         // boss 撞擊攻擊力 預設10｜ボス体当たり攻撃力 デフォルト10
 let bossBulletSpeed       = 4;         // boss 子彈速度（預設4，數值越大越快）｜ボス弾スピード（デフォルト4、数値が大きいほど速い）
-let bossStopTime          = 60;        // boss被蓄氣攻擊後暫停時間(幾偵)
+let bossStopTime          = 60;        // boss被蓄氣攻擊後暫停時間(幾偵)｜ボスが溜め攻撃を受けた後の停止時間（フレーム数）
 let bossBulletPatternMode = 2;         // boss發射子彈的模式 1:固定3發 2:隨機3/4/5發 3:隨機3/4/5/7發｜ボス弾パターン 1:固定3発 2:ランダム3/4/5発 3:ランダム3/4/5/7発
-let bossBulletDelay       = [40, 90];  // boss 子彈延遲時間(每幾偵～幾偵發射一次)
+let bossBulletDelay       = [40, 90];  // boss 子彈延遲時間(每幾偵～幾偵發射一次)｜ボス弾発射ディレイ（何フレームごとに発射）
 let bossBulletEnable      = 1;         // boss 子彈是否射擊，1=是，0=否｜ボス弾発射するか 1=はい 0=いいえ
 let bossFixedPosition     = 0;         // boss 是否固定座標（取消移動），1=是，0=否｜ボス座標固定するか（移動しない）1=はい 0=いいえ
 
@@ -48,8 +48,8 @@ let showMoved        = 0;  // moved:(0) 顯示1 隱藏0｜移動量表示 1=表�
 let showFPS          = 1;  //showfps｜FPS表示
 let showXY           = 0;  //show xy｜XY座標表示
 let showNXY          = 0;  //show new xy｜グリッド座標表示
-let ShowCollisionBox = 0;  //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
-let AutoFlipPlayer   = 1;  // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1
+let ShowCollisionBox = 0;  //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60｜当たり判定表示 1=表示 0=非表示（中心0、上60、下-60）
+let AutoFlipPlayer   = 1;  // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1｜自動左右反転 1=キーで反転 0=常に右 デフォルト1
 let showEntityCounts = 0;  //show 人物怪物子彈數量｜エンティティ数表示
 let showMobileTouch  = 1;  // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
 let showStar         = 1;  // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
@@ -58,7 +58,7 @@ let showMeteor       = 1;  // 是否顯示隕石（1=顯示，0=隱藏）｜隕�
 // **玩家飛行無敵模式 =｜プレイヤー飛行無敵モード**
 let isFlyingMode = 0; // 預設關閉 請預設上面hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
 // ===== 設定選單狀態顯示全開/全關 1=全開 0=全關 2=pass =====
-checkBoxShowHideAll(2);
+checkBoxShowHideAll(2); // 設定選單狀態顯示全開/全關 1=全開 0=全關 2=不做任何事｜設定メニュー状態全開/全閉 1=全開 0=全閉 2=何もしない
 // checkBoxShowHideAll(0); // 測試用 1=全開 0=全關 2=pass
 
 // 音量設定｜音量設定
@@ -76,33 +76,33 @@ let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量｜ボス死亡効果音�
 let VOLUME_BOSS     = 0.85;  // Boss出場音效音量｜ボス登場効果音音量
 let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量｜勝利BGM音量
 
-// 背景色變化時間 參數有問題 請參考就好
+// 背景色變化時間 參數有問題 請參考就好｜背景色変化時間 パラメータに問題あり 参考用
 let enter_boss_area_color_change_time = 10000; //Fps
 let enter_normal_area_color_change_time = 10000; //Fps
 let enter_boss_area_meteor_change_time = 400; //Fps
 let enter_normal_area_meteor_change_time = 1000; //Fps
 
-// 一般區域流星雨參數
+// 一般區域流星雨參數｜通常エリア流星雨パラメータ
 const normal_meteor_params = {
-    color          : 'rgb(255, 250, 250)',   // 流星顏色
-    size           : [6, 6],                 // 流星大小
-    speed          : 1200,                   // 流星速度
-    update_random  : 0.1,                    // 流星生成機率
-    update_interval: 18,                     // 幾幀產生一次流星
-    stay_time      : [20, 40],               // 流星停留時間
-    descent_angle  : [-45, 70],              // 流星下落角度
-    position       : [0, 800, 0, 50]         // 流星生成位置範圍
+    color          : 'rgb(255, 250, 250)',   // 流星顏色｜流星の色
+    size           : [6, 6],                 // 流星大小｜流星の大きさ
+    speed          : 1200,                   // 流星速度｜流星の速度
+    update_random  : 0.1,                    // 流星生成機率｜流星生成確率
+    update_interval: 18,                     // 幾幀產生一次流星｜何フレームごとに流星生成
+    stay_time      : [20, 40],               // 流星停留時間｜流星の滞在時間
+    descent_angle  : [-45, 70],              // 流星下落角度｜流星落下角度
+    position       : [0, 800, 0, 50]         // 流星生成位置範圍｜流星生成位置範囲
 };
-// Boss區域流星雨參數
+// Boss區域流星雨參數｜ボスエリア流星雨パラメータ
 const boss_meteor_params = {
-    color          : 'rgba(153, 21, 76, 0.74)',   // 流星顏色
-    size           : [8, 8],                      // 流星大小
-    speed          : 600,                         // 流星速度
-    update_random  : 0.2,                         // 流星生成機率
-    update_interval: 3,                           // 幾幀產生一次流星
-    stay_time      : [10, 100],                   // 流星停留時間
-    descent_angle  : [0, 360],                    // 流星下落角度
-    position       : [0, 800, 0, 400]             // 流星生成位置範圍
+    color          : 'rgba(153, 21, 76, 0.74)',   // 流星顏色｜流星の色
+    size           : [8, 8],                      // 流星大小｜流星の大きさ
+    speed          : 600,                         // 流星速度｜流星の速度
+    update_random  : 0.2,                         // 流星生成機率｜流星生成確率
+    update_interval: 3,                           // 幾幀產生一次流星｜何フレームごとに流星生成
+    stay_time      : [10, 100],                   // 流星停留時間｜流星の滞在時間
+    descent_angle  : [0, 360],                    // 流星下落角度｜流星落下角度
+    position       : [0, 800, 0, 400]             // 流星生成位置範圍｜流星生成位置範囲
 };
 
 // 一般區域顏色
@@ -132,7 +132,7 @@ let boss_area_color10 = 'rgba(12, 0, 0, 1)';
 const COLOR_PLATFORM_NORMAL = 'rgba(68,68,68,1)';      // 一般平台顏色
 const COLOR_PLATFORM_BOSS   = 'rgba(136,0,0,1)';      // Boss區域平台顏色
 
-// 地板區域
+// 地板區域 / 地面
 const platformGrid = [
     // 第一區（0~2700）｜第一区（0~2700）
     { x: 0, y: 1, color: COLOR_PLATFORM_NORMAL },
@@ -256,61 +256,61 @@ const basePlatforms = platformGrid.map(p => ({
     color: p.color
 }));
 
-// 遊戲常數
-let   score               = 0;      // 玩家分數
-const WORLD_WIDTH         = 5400;   // 世界寬度
-const WORLD_HEIGHT        = 500;    // 世界高度
-const BOSS_AREA_X         = 4600;   // Boss區域起點X座標
-let   CHARGE_MIN_FRAME    = 42;     // 集氣彈最少需要的幀數
-let   CHARGE_CANCEL_FRAME = 12;     // 集氣取消的最短幀數
-let   bossBulletCount     = 3;      // boss子彈數量
-let   gameRunning         = false;  // 遊戲是否正在進行中
-let   bossActive          = false;  // Boss是否啟動
-let   bossTimer           = 0;      // Boss出場動畫計時器
-let   reachedBossArea     = false;  // 玩家是否已經抵達過boss區域
-let   charging            = false;  // 是否正在集氣
-let   chargeFrame         = 0;      // 集氣持續幀數
-let   chargeReady         = false;  // 是否集氣完成
-let   bossHitFlash        = 0;      // Boss被擊中閃爍計數
-let   upPressed           = false;  // 追蹤上鍵是否已經按下
-let   chargeAudioTimeout  = null;   // 集氣音效延遲計時器
-let   bossCanAttack       = false;  // Boss是否可以攻擊
-let   bossCanMove         = false;  // Boss是否可以移動
-let   bossHpAnimating     = false;  // Boss血條是否正在動畫
-let   canShoot            = true;   // 玩家是否可以射擊
-let   midEventTriggered   = false;  // 中途事件是否已觸發
-let   playerDead          = false;  // 玩家死亡狀態
-let   playerDeadX         = 0;      // 死亡時的X
-let   playerDeadY         = 0;      // 死亡時的Y
-let   JUMP_EXTRA          = 0.5;    // 長按跳躍時每幀額外加速度（正數，實際運算自動轉負）
-let   JUMP_EXTRA_FRAMES   = 12;     // 跳躍額外加速最大幀數
-let   isWinInvincible     = false;  // 勝利畫面無敵狀態
-let   isPaused            = false;  // 全域暫停旗標
-let   isWinScreen         = false;
-let   bossDefeated        = false;
-let   fakeBoss            = null;
-let   fakeBossFlashFrame  = 0;
+// 遊戲常數｜ゲーム定数
+let   score               = 0;      // 玩家分數｜プレイヤースコア
+const WORLD_WIDTH         = 5400;   // 世界寬度｜ワールド幅
+const WORLD_HEIGHT        = 500;    // 世界高度｜ワールド高さ
+const BOSS_AREA_X         = 4600;   // Boss區域起點X座標｜ボスエリア開始X座標
+let   CHARGE_MIN_FRAME    = 42;     // 集氣彈最少需要的幀數｜チャージ弾最小必要フレーム数
+let   CHARGE_CANCEL_FRAME = 12;     // 集氣取消的最短幀數｜チャージキャンセル最短フレーム数
+let   bossBulletCount     = 3;      // boss子彈數量｜ボス弾数
+let   gameRunning         = false;  // 遊戲是否正在進行中｜ゲーム進行中か
+let   bossActive          = false;  // Boss是否啟動｜ボスアクティブか
+let   bossTimer           = 0;      // Boss出場動畫計時器｜ボス登場アニメタイマー
+let   reachedBossArea     = false;  // 玩家是否已經抵達過boss區域｜プレイヤーがボスエリア到達済みか
+let   charging            = false;  // 是否正在集氣｜チャージ中か
+let   chargeFrame         = 0;      // 集氣持續幀數｜チャージ継続フレーム数
+let   chargeReady         = false;  // 是否集氣完成｜チャージ完了か
+let   bossHitFlash        = 0;      // Boss被擊中閃爍計數｜ボス被弾時フラッシュカウント
+let   upPressed           = false;  // 追蹤上鍵是否已經按下｜上キー押下追跡
+let   chargeAudioTimeout  = null;   // 集氣音效延遲計時器｜チャージ音エフェクト遅延タイマー
+let   bossCanAttack       = false;  // Boss是否可以攻擊｜ボス攻撃可能か
+let   bossCanMove         = false;  // Boss是否可以移動｜ボス移動可能か
+let   bossHpAnimating     = false;  // Boss血條是否正在動畫｜ボスHPバーアニメ中か
+let   canShoot            = true;   // 玩家是否可以射擊｜プレイヤー射撃可能か
+let   midEventTriggered   = false;  // 中途事件是否已觸發｜中間イベント発動済みか
+let   playerDead          = false;  // 玩家死亡狀態｜プレイヤー死亡状態
+let   playerDeadX         = 0;      // 死亡時的X｜死亡時X座標
+let   playerDeadY         = 0;      // 死亡時的Y｜死亡時Y座標
+let   JUMP_EXTRA          = 0.5;    // 長按跳躍時每幀額外加速度（正數，實際運算自動轉負）｜長押しジャンプ時フレーム毎追加加速度（正数、実際は自動で負に）
+let   JUMP_EXTRA_FRAMES   = 12;     // 跳躍額外加速最大幀數｜ジャンプ追加加速最大フレーム数
+let   isWinInvincible     = false;  // 勝利畫面無敵狀態｜勝利画面無敵状態
+let   isPaused            = false;  // 全域暫停旗標｜全体一時停止フラグ
+let   isWinScreen         = false;  // 勝利畫面狀態｜勝利画面状態
+let   bossDefeated        = false;  // Boss是否被擊敗｜ボス撃破済みか
+let   fakeBoss            = null;   // 假Boss物件｜フェイクボスオブジェクト
+let   fakeBossFlashFrame  = 0;      // 假Boss閃爍計數｜フェイクボスフラッシュカウント
 
-// ===== 流星雨（隕石）相關設定 =====
+// ===== 流星雨（隕石）相關設定 =====｜流星雨（隕石）関連設定
 let meteor_params = {...normal_meteor_params};
 let meteor_params_target = {...normal_meteor_params};
-let meteor_params_transition_frame = 0;
-let meteor_params_transition_total = 0;
-let meteor_color = meteor_params.color; // 流星顏色
-let meteor_size = meteor_params.size.slice(); // 流星大小
-let meteor_speed = meteor_params.speed; // 流星速度（每秒像素，預設1000）
-let meteor_update_random = meteor_params.update_random; // 出現率
-let meteor_update_interval = meteor_params.update_interval; // 幾幀產生一次流星（例如180=3秒，依照MAX_FPS）
-let meteor_stay_time = meteor_params.stay_time.slice(); // 流星停留時間
-let meteor_descent_angle = meteor_params.descent_angle.slice(); // 流星下落角度（度數）
-let meteor_position = meteor_params.position.slice(); // 流星生成位置範圍
-let meteor_update_counter = 0;    // 計數器
-let meteors = []; // 流星陣列
+let meteor_params_transition_frame = 0; // 流星參數漸變目前幀｜流星パラメータ遷移現在フレーム
+let meteor_params_transition_total = 0; // 流星參數漸變總幀｜流星パラメータ遷移合計フレーム
+let meteor_color = meteor_params.color; // 流星顏色｜流星の色
+let meteor_size = meteor_params.size.slice(); // 流星大小｜流星の大きさ
+let meteor_speed = meteor_params.speed; // 流星速度（每秒像素，預設1000）｜流星速度（1秒あたりピクセル、デフォルト1000）
+let meteor_update_random = meteor_params.update_random; // 出現率｜出現率
+let meteor_update_interval = meteor_params.update_interval; // 幾幀產生一次流星（例如180=3秒，依照MAX_FPS）｜何フレームごとに流星生成（例：180=3秒、MAX_FPS基準）
+let meteor_stay_time = meteor_params.stay_time.slice(); // 流星停留時間｜流星の滞在時間
+let meteor_descent_angle = meteor_params.descent_angle.slice(); // 流星下落角度（度數）｜流星落下角度（度）
+let meteor_position = meteor_params.position.slice(); // 流星生成位置範圍｜流星生成位置範囲
+let meteor_update_counter = 0;    // 計數器｜カウンター
+let meteors = []; // 流星陣列｜流星配列
 
-// ===== 設定選單狀態全開 全關 =====
+// ===== 設定選單狀態全開 全關 =====｜設定メニュー状態全開/全閉
 function checkBoxShowHideAll(mode) {
-    if (mode === 2) return; // 2 = 不做任何事
-    if (mode !== 0 && mode !== 1) return; // 非 0/1 的值也略過
+    if (mode === 2) return; // 2 = 不做任何事｜2 = 何もしない
+    if (mode !== 0 && mode !== 1) return; // 非 0/1 的值也略過｜0/1 以外はスキップ
     showScore = mode;
     showMoved = mode;
     showFPS = mode;
@@ -322,67 +322,82 @@ function checkBoxShowHideAll(mode) {
     showMobileTouch = mode;
 };
 
-// ===== 物件面積 ===== //
-let PLAYER_size = [38,50]; //玩家尺寸 寬度,高度
-let PLAYER_SHOOT_size = [40,50];
-let PLAYER_Charge_Attack_size = [60,60];
-let FLY_RED_size = [30,30];
-let FLY_ORANGE_size = [60,70];
-let GROUND_RED_size = [35,60];
-let GROUND_ORANGE_size = [50,70];
-let GROUND_PINK_size = [40,40];
-let BOSS_size = [190,190];
+// ===== 物件面積 =====｜オブジェクトサイズ
+let PLAYER_size               = [38,50];    //玩家尺寸 寬度,高度｜プレイヤーサイズ 幅,高さ
+let PLAYER_SHOOT_size         = [40,50];    //發射子彈時玩家尺寸｜射撃時プレイヤーサイズ
+let PLAYER_Charge_Attack_size = [60,60];    //蓄氣光圈尺寸｜チャージエフェクトサイズ
+let FLY_RED_size              = [30,30];    //飛行紅色敵人尺寸｜飛行赤色敵体サイズ
+let FLY_ORANGE_size           = [60,70];    //飛行橙色敵人尺寸｜飛行オレンジ敵体サイズ
+let GROUND_RED_size           = [35,60];    //地面紅掃敵人尺寸｜地上赤色敵体サイズ
+let GROUND_ORANGE_size        = [50,70];    //地面橙色敵人尺寸｜地上オレンジ敵体サイズ
+let GROUND_PINK_size          = [40,40];    // 地面粉色敵人尺寸｜地上ピンク敵体サイズ
+let BOSS_size                 = [190,190];  // boss尺寸｜ボスサイズ
 
-// ===== 碰撞箱 =====
-let playerCollisionBox = [35, 48]; // [寬度, 高度]
-let playerCollisionBoxNX = 50; //碰撞箱中心移動x
-let playerCollisionBoxNY = 50; //碰撞箱中心移動y
-let playerCollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let FLY_RED_CollisionBox = [30, 30];
-let FLY_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
-let FLY_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
-let FLY_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let FLY_ORANGE_CollisionBox = [60, 70];
-let FLY_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
-let FLY_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
-let FLY_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_RED_CollisionBox = [35, 60];
-let GROUND_RED_CollisionBoxNX = 50; //碰撞箱中心移動x
-let GROUND_RED_CollisionBoxNY = 50; //碰撞箱中心移動y
-let GROUND_RED_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_ORANGE_CollisionBox = [50, 70];
-let GROUND_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x
-let GROUND_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y
-let GROUND_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓
-let GROUND_PINK_CollisionBox = [40, 40];
-let GROUND_PINK_CollisionBoxNX = 50; //碰撞箱中心移動x
-let GROUND_PINK_CollisionBoxNY = 50; //碰撞箱中心移動y
-let GROUND_PINK_CollisionBoxCircle = 0.9; // 0=圓形，1=矩形，越小越圓
-let bossCollisionBox = [160, 150];
-let bossCollisionBoxNX = 50; //碰撞箱中心移動x
-let bossCollisionBoxNY = 40; //碰撞箱中心移動y
-let bossCollisionBoxCircle = 0.3; // 0=圓形，1=矩形，越小越圓
+// ===== 碰撞箱 =====｜当たり判定
+//玩家
+let playerCollisionBox       = [35, 48];  // 玩家[寬度, 高度]｜[幅, 高さ]
+let playerCollisionBoxNX     = 50;        //碰撞箱中心移動x｜当たり判定中心移動x
+let playerCollisionBoxNY     = 50;        //碰撞箱中心移動y｜当たり判定中心移動y
+let playerCollisionBoxCircle = 0.4;       // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
+
+//飛行紅色
+let FLY_RED_CollisionBox       = [30, 30];  // [寬度, 高度]｜[幅, 高さ]
+let FLY_RED_CollisionBoxNX     = 50;        //碰撞箱中心移動x｜当たり判定中心移動x
+let FLY_RED_CollisionBoxNY     = 50;        //碰撞箱中心移動y｜当たり判定中心移動y
+let FLY_RED_CollisionBoxCircle = 0.4;       // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
+
+//飛行橙色
+let FLY_ORANGE_CollisionBox       = [60, 70];  // [寬度, 高度]｜[幅, 高さ]
+let FLY_ORANGE_CollisionBoxNX     = 50;        //碰撞箱中心移動x｜当たり判定中心移動x
+let FLY_ORANGE_CollisionBoxNY     = 50;        //碰撞箱中心移動y｜当たり判定中心移動y
+let FLY_ORANGE_CollisionBoxCircle = 0.4;       // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
+
+//地面紅色
+let GROUND_RED_CollisionBox       = [35, 60];  // [寬度, 高度]｜[幅, 高さ]
+let GROUND_RED_CollisionBoxNX     = 50;        //碰撞箱中心移動x｜当たり判定中心移動x
+let GROUND_RED_CollisionBoxNY     = 50;        //碰撞箱中心移動y｜当たり判定中心移動y
+let GROUND_RED_CollisionBoxCircle = 0.4;       // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
+
+//地面橙色
+let GROUND_ORANGE_CollisionBox = [50, 70]; // [寬度, 高度]｜[幅, 高さ]
+let GROUND_ORANGE_CollisionBoxNX = 50; //碰撞箱中心移動x｜当たり判定中心移動x
+let GROUND_ORANGE_CollisionBoxNY = 50; //碰撞箱中心移動y｜当たり判定中心移動y
+let GROUND_ORANGE_CollisionBoxCircle = 0.4; // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
+
+//地面粉色
+let GROUND_PINK_CollisionBox       = [40, 40];  // [寬度, 高度]｜[幅, 高さ]
+let GROUND_PINK_CollisionBoxNX     = 50;        //碰撞箱中心移動x｜当たり判定中心移動x
+let GROUND_PINK_CollisionBoxNY     = 50;        //碰撞箱中心移動y｜当たり判定中心移動y
+let GROUND_PINK_CollisionBoxCircle = 0.9;       // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
+
+//魔王
+let bossCollisionBox       = [160, 150];  // [寬度, 高度]｜[幅, 高さ]
+let bossCollisionBoxNX     = 50;          //碰撞箱中心移動x｜当たり判定中心移動x
+let bossCollisionBoxNY     = 40;          //碰撞箱中心移動y｜当たり判定中心移動y
+let bossCollisionBoxCircle = 0.3;         // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
 
 
 checkBoxShowHideAll(1);
 
-// 碰撞顏色設定
-const COLOR_PLAYER        = 'rgba(68, 255, 121,1)';       // 玩家顏色
-const COLOR_FLY_RED       = 'rgba(255,0,0,1)';            // 飛行紅色顏色
-const COLOR_FLY_ORANGE    = 'rgba(255,165,0,1)';          // 飛行橙色顏色
-const COLOR_GROUND_RED    = 'rgba(255,0,0,1)';            // 地面紅色顏色
-const COLOR_GROUND_ORANGE = 'rgba(255,165,0,1)';          // 地面橙色顏色
-const COLOR_GROUND_PINK   = 'rgba(255, 105, 180, 0.98)';  // 地面粉色顏色   
-const COLOR_BOSS          = 'rgba(243, 240, 33, 0.95)';   // Boss主體顏色
+// 碰撞箱顏色設定｜当たり判定色設定
+const COLOR_PLAYER        = 'rgba(68, 255, 121,1)';       // 玩家顏色｜プレイヤー色
+const COLOR_FLY_RED       = 'rgba(255,0,0,1)';            // 飛行紅色顏色｜飛行赤色色
+const COLOR_FLY_ORANGE    = 'rgba(255,165,0,1)';          // 飛行橙色顏色｜飛行オレンジ色
+const COLOR_GROUND_RED    = 'rgba(255,0,0,1)';            // 地面紅色顏色｜地上赤色色
+const COLOR_GROUND_ORANGE = 'rgba(255,165,0,1)';          // 地面橙色顏色｜地上オレンジ色
+const COLOR_GROUND_PINK   = 'rgba(255, 105, 180, 0.98)';  // 地面粉色顏色｜地上ピンク色   
+const COLOR_BOSS          = 'rgba(243, 240, 33, 0.95)';   // Boss主體顏色｜ボス本体色
 
-const COLOR_BULLET_ENEMY    = 'rgba(255,136,255,1)';      // 敵人子彈顏色
-const COLOR_BULLET_BOSS     = 'rgba(255,68,170,1)';      // Boss子彈顏色
+const COLOR_BULLET_ENEMY    = 'rgba(255,136,255,1)';      // 敵人子彈顏色｜敵弾色
+const COLOR_BULLET_BOSS     = 'rgba(255,68,170,1)';      // Boss子彈顏色｜ボス弾色
 
 // 新增floor圖片物件
+// フロア画像オブジェクトを新規追加
 const floorImg = new Image(); floorImg.src = 'img/01floor.png';
 const floorBossImg = new Image(); floorBossImg.src = 'img/02floor.png';
 
 // FLY_RED 兩張動畫圖
+// FLY_RED 2枚のアニメ画像
 const flyRedImgs = [
     new Image(),
     new Image()
@@ -391,6 +406,7 @@ flyRedImgs[0].src = 'img/e01-1.png';
 flyRedImgs[1].src = 'img/e01-2.png';
 
 // FLY_ORANGE 兩張動畫圖
+// FLY_ORANGE 3枚のアニメ画像
 const flyOrangeImgs = [
     new Image(),
     new Image(),
@@ -401,6 +417,7 @@ flyOrangeImgs[1].src = 'img/e02-2.png';
 flyOrangeImgs[2].src = 'img/e02-3.png';
 
 // GROUND_RED 兩張動畫圖
+// GROUND_RED 2枚のアニメ画像
 const groundRedImgs = [
     new Image(),
     new Image()
@@ -409,6 +426,7 @@ groundRedImgs[0].src = 'img/e03-1.png';
 groundRedImgs[1].src = 'img/e03-2.png';
 
 // GROUND_ORANGE 兩張動畫圖
+// GROUND_ORANGE 4枚のアニメ画像
 const groundOrangeImgs = [
     new Image(),
     new Image(),
@@ -421,6 +439,7 @@ groundOrangeImgs[2].src = 'img/e04-3.png';
 groundOrangeImgs[3].src = 'img/e04-4.png';
 
 // GROUND_PINK 兩張動畫圖（同 GROUND_ORANGE）
+// GROUND_PINK 2枚のアニメ画像（GROUND_ORANGEと同じ）
 const groundPinkImgs = [
     new Image(),
     new Image()
@@ -429,16 +448,18 @@ groundPinkImgs[0].src = 'img/e05-1.png';
 groundPinkImgs[1].src = 'img/e05-2.png';
 
 // ===== 玩家圖片載入 =====
+// ===== プレイヤー画像の読み込み =====
 const playerImgs = [
-    new Image(), // 0: 靜止
-    new Image(), // 1: 移動動畫
-    new Image(), // 2: 發射
+    new Image(), // 0: 靜止 // 0: 静止
+    new Image(), // 1: 移動動畫 // 1: 移動アニメ
+    new Image(), // 2: 發射 // 2: 発射
 ];
 playerImgs[0].src = 'img/p1.png';
 playerImgs[1].src = 'img/p2.png';
 playerImgs[2].src = 'img/p3.png';
 
 // ===== Boss圖片載入 =====
+// ===== ボス画像の読み込み =====
 const bossImgs = [];
 for (let i = 0; i <= 8; i++) {
     bossImgs[i] = new Image();
@@ -446,6 +467,7 @@ for (let i = 0; i <= 8; i++) {
 };
 
 // 動態建立 tornado-img 圖片
+// トルネード画像を動的に生成
 const tornadoImg = new Image();
 tornadoImg.id = 'tornado-img';
 tornadoImg.src = 'img/tornadoes.png';
@@ -453,6 +475,7 @@ tornadoImg.style.display = 'none';
 document.getElementById('game-wrapper').appendChild(tornadoImg);
 
 // ===== DOM 元素選取 =====
+// ===== DOM要素の取得 =====
 const canvas              = document.getElementById('game-canvas');
 const ctx                 = canvas.getContext('2d');
 
@@ -474,29 +497,35 @@ const winScoreElement     = document.getElementById('win-score');
 const cameraDebugElement  = document.getElementById('camera-debug');
 
 // ===== 鏡頭系統 =====
+// ===== カメラシステム =====
 const camera = {
     x: 0,
     y: 0,
     width: canvas.width,
     height: canvas.height,
     // 平滑跟隨玩家
+    // プレイヤーをスムーズに追従
     follow: function(target) {
         const centerX = target.x + target.width/2;
         const centerY = target.y + target.height/2;
         
         // 水平跟隨
+        // 水平方向の追従
         this.x = centerX - this.width/2;
         
         // 當玩家抵達boss區域後，鏡頭左邊界鎖定在BOSS_AREA_X
+        // プレイヤーがボスエリアに到達したら、カメラの左端をBOSS_AREA_Xに固定
         if (target.x >= BOSS_AREA_X) {
             this.x = Math.max(BOSS_AREA_X, this.x);
         }
         
         // 垂直跟隨 (但限制不讓玩家看到地圖外)
+        // 垂直方向の追従（ただしマップ外は見せない）
         const maxY = WORLD_HEIGHT - this.height;
         this.y = Math.min(maxY, Math.max(0, centerY - this.height/2));
         
         // 限制不超出世界邊界
+        // ワールドの端を超えないように制限
         this.x = Math.max(0, Math.min(WORLD_WIDTH - this.width, this.x));
         this.y = Math.max(0, Math.min(WORLD_HEIGHT - this.height, this.y));
     }
