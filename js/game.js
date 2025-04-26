@@ -270,16 +270,16 @@ let fakeBossFlashFrame = 0;
 checkBoxShowHideAll(1); // 測試用 1=全開 0=全關 2=pass
 
 // ===== 流星雨（隕石）相關設定 =====
+
 let meteor_color = 'rgb(255, 250, 250)'; // 流星顏色
 let meteor_size = [10, 10]; // 流星大小
-let meteor_speed = 10; // 流星速度（每秒像素，建議200左右）
+let meteor_speed = 10; // 流星速度（每秒像素，預設1000）
 let meteor_update_random = 1; // 出現率
 let meteor_update_interval = 1; // 幾幀產生一次流星（例如180=3秒，依照MAX_FPS）
-
-let meteor_update_counter = 0;    // 計數器
 let meteor_stay_time = [20, 40]; // 流星停留時間
 let meteor_descent_angle = [-45, 70]; // 流星下落角度（度數）
-let meteor_position = [0, 800, 0, 40]; // 流星生成位置範圍
+let meteor_position = [0, 800, 0, 50]; // 流星生成位置範圍
+let meteor_update_counter = 0;    // 計數器
 let meteors = []; // 流星陣列
 
 // ===== 設定選單狀態全開 全關 =====
