@@ -101,15 +101,15 @@ const boss_meteor_params = {
 };
 
 // 一般區域顏色
-let normal_area_color1 = 'rgba(0, 0, 0, 1)';
-let normal_area_color2 = 'rgb(0, 0, 0, 1)';
-let normal_area_color3 = 'rgba(0, 0, 0, 1)';
-let normal_area_color4 = 'rgba(0, 0, 0, 1)';
+let normal_area_color1 = 'rgb(29, 29, 29)';
+let normal_area_color2 = 'rgb(20, 20, 20)';
+let normal_area_color3 = 'rgb(15, 15, 15)';
+let normal_area_color4 = 'rgb(12, 12, 12)';
 let normal_area_color5 = 'rgba(0,0,0,0)';
 let normal_area_color6 = 'rgba(0, 0, 0, 1)';
 let normal_area_color7 = 'rgba(0, 0, 0, 1)';
-let normal_area_color8 = 'rgba(48, 47, 47, 0.95)';
-let normal_area_color9 = 'rgba(0,0,0,0)';
+let normal_area_color8 = 'rgb(19, 19, 19)';
+let normal_area_color9 = 'rgba(39, 39, 39, 0.95)';
 let normal_area_color10 = 'rgba(0, 0, 0, 1)';
 // Boss區域顏色
 let boss_area_color1 = 'rgba(12, 0, 0, 1)';
