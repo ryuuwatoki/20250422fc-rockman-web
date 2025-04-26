@@ -64,10 +64,11 @@ checkBoxShowHideAll(2);
 // checkBoxShowHideAll(0); // 測試用 1=全開 0=全關 2=pass
 
 // 音量設定｜音量設定
-let isBgmOn = 0;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
+let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
 let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉｜効果音オンオフ 1=オン 0=オフ
 
-let VOLUME_BGM      = 0.55;  // 背景音樂音量｜BGM音量
+let VOLUME_BGM      = 0.40;  // 背景音樂音量｜BGM音量
+let VOLUME_BGM2     = 0.55;  // Boss區域背景音樂音量｜BGM2音量
 let VOLUME_SHOOT    = 0.55;  // 射擊音效音量｜射撃効果音音量
 let VOLUME_CHARGE   = 0.55;  // 集氣音效音量｜チャージ効果音音量
 let VOLUME_BOOM     = 0.45;  // 爆炸音效音量｜爆発効果音音量
@@ -955,6 +956,7 @@ let target_area_colors = [...current_area_colors];
 let area_color_transition_frame = 0;
 let area_color_transition_total = 0;
 let is_in_boss_area = false;
+let last_boss_area_state = false; // 新增：記錄上次狀態
 
 function parseColor(str) {
     // 支援 rgb/rgba 格式
@@ -1107,6 +1109,7 @@ document.addEventListener('keyup', (e) => {
 
 // ===== 遊戲初始化 =====
 const bgm = document.getElementById('bgm');
+const bgm2 = document.getElementById('bgm2'); // 新增 boss 區 BGM
 
 //遊戲初始化，重設所有狀態並開始遊戲主循環
 function startGame() {
@@ -1117,6 +1120,11 @@ function startGame() {
         outroAudio.currentTime = 0;
         outroAudio.volume = VOLUME_OUTRO;
         outroAudio.onended = null;
+    }
+    // 停止 boss 區 BGM
+    if (bgm2) {
+        bgm2.pause();
+        bgm2.currentTime = 0;
     }
     // 音樂播放控制
     if (bgm) {
@@ -1659,6 +1667,11 @@ function update() {
             // 流星雨參數目標設為boss
             meteor_params_target = {...boss_meteor_params};
             meteor_params_transition_total = enter_boss_area_meteor_change_time; // 這裡改用 meteor 變數
+            // ===== 進入 boss 區切換 BGM =====
+            if (isBgmOn) {
+                if (bgm) { bgm.pause(); }
+                if (bgm2) { bgm2.currentTime = 0; bgm2.volume = VOLUME_BGM2; bgm2.play(); }
+            }
         } else {
             // 回到一般區
             target_area_colors = [
@@ -1669,6 +1682,11 @@ function update() {
             // 流星雨參數目標設為normal
             meteor_params_target = {...normal_meteor_params};
             meteor_params_transition_total = enter_normal_area_meteor_change_time; // 這裡改用 meteor 變數
+            // ===== 離開 boss 區切回 BGM =====
+            if (isBgmOn) {
+                if (bgm2) { bgm2.pause(); }
+                if (bgm) { bgm.currentTime = 0; bgm.volume = VOLUME_BGM; bgm.play(); }
+            }
         }
         area_color_transition_frame = 0;
         meteor_params_transition_frame = 0;
@@ -2378,6 +2396,10 @@ function gameOver() {
             bgm.pause();
             bgm.currentTime = 0;
         }
+        if (bgm2) {
+            bgm2.pause();
+            bgm2.currentTime = 0;
+        }
         const gameOverAudio = document.getElementById('game-over-audio');
         if (gameOverAudio) {
             gameOverAudio.currentTime = 0;
@@ -2406,6 +2428,11 @@ function winGame() {
     winScreen.style.display = 'flex';
     langToggle.style.display = 'block';
     langSelect.style.display = 'none';
+    // 停止 boss 區 BGM
+    if (bgm2) {
+        bgm2.pause();
+        bgm2.currentTime = 0;
+    }
     // 播放勝利音樂
     const outroAudio = document.getElementById('outro-audio');
     if (outroAudio) {
