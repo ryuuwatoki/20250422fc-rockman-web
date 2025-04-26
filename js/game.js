@@ -78,17 +78,6 @@ let enter_boss_area_color_change_time = 400; //Fps
 let enter_normal_area_color_change_time = 1000; //Fps
 
 
-// 一般區隕石
-let normal_area_rock_color = 'rgba(68,68,68,1)'; // 一般區域隕石顏色
-let normal_area_rock_size = [4,4]; // 一般區域隕石大小 px
-let normal_area_rock_speed = 1; // 一般區域隕石速度 px
-let normal_area_rock_delay_time = 10; // 一般區域隕石更新速度 fps
-let normal_area_rock_rate = 0.9; // 一般區域隕石出現機率
-let normal_area_rock_stay_time = [20,120]; // 
-let normal_area_rock_descent_angle = [0,70]; //一般區域隕石
-
-
-
 // 一般區域顏色
 let normal_area_color1 = 'rgba(68,68,68,1)';
 let normal_area_color2 = 'rgba(68,68,68,1)';
@@ -277,6 +266,21 @@ let isWinScreen = false;
 let bossDefeated = false;
 let fakeBoss = null;
 let fakeBossFlashFrame = 0;
+
+checkBoxShowHideAll(1); // 測試用 1=全開 0=全關 2=pass
+
+// ===== 流星雨（隕石）相關設定 =====
+let meteor_color = 'rgb(255, 250, 250)'; // 流星顏色
+let meteor_size = [10, 10]; // 流星大小
+let meteor_speed = 10; // 流星速度（每秒像素，建議200左右）
+let meteor_update_random = 1; // 出現率
+let meteor_update_interval = 1; // 幾幀產生一次流星（例如180=3秒，依照MAX_FPS）
+
+let meteor_update_counter = 0;    // 計數器
+let meteor_stay_time = [20, 40]; // 流星停留時間
+let meteor_descent_angle = [-45, 70]; // 流星下落角度（度數）
+let meteor_position = [0, 800, 0, 40]; // 流星生成位置範圍
+let meteors = []; // 流星陣列
 
 // ===== 設定選單狀態全開 全關 =====
 function checkBoxShowHideAll(mode) {
@@ -1632,6 +1636,50 @@ function update() {
         area_color_transition_frame = 0;
     }
     updateAreaColors();
+
+    // ===== 流星雨生成與更新 =====
+    meteor_update_counter++;
+    if (meteor_update_counter >= meteor_update_interval) {
+        meteor_update_counter = 0;
+        // 新增：用 meteor_update_random 決定是否產生流星
+        if (Math.random() < meteor_update_random) {
+            let angle = (meteor_descent_angle[0] + Math.random() * (meteor_descent_angle[1] - meteor_descent_angle[0])) * Math.PI / 180;
+            let x = camera.x + meteor_position[0] + Math.random() * (meteor_position[1] - meteor_position[0]);
+            let y = meteor_position[2] + Math.random() * (meteor_position[3] - meteor_position[2]);
+            let stay = meteor_stay_time[0] + Math.random() * (meteor_stay_time[1] - meteor_stay_time[0]);
+            meteors.push({
+                x, y,
+                angle,
+                speed: meteor_speed / MAX_FPS, // 每幀移動量
+                size: meteor_size,
+                color: meteor_color,
+                stay,
+                alpha: 0,         // 新增：初始透明度
+                fadeIn: true      // 新增：淡入階段
+            });
+        }
+    }
+    for (let i = meteors.length - 1; i >= 0; i--) {
+        let m = meteors[i];
+        m.x += Math.cos(m.angle) * m.speed;
+        m.y += Math.sin(m.angle) * m.speed;
+        m.stay--;
+        // ====== 流星淡入淡出效果 ======
+        if (m.fadeIn) {
+            m.alpha += 0.08;
+            if (m.alpha >= 0.85) {
+                m.alpha = 0.85;
+                m.fadeIn = false;
+            }
+        }
+        if (m.stay < 10) {
+            m.alpha -= 0.09;
+            if (m.alpha < 0) m.alpha = 0;
+        }
+        if (m.x < camera.x - 100 || m.x > camera.x + camera.width + 100 || m.y > WORLD_HEIGHT + 100 || m.stay <= 0) {
+            meteors.splice(i, 1);
+        }
+    }
 }
 
 // ===== 渲染遊戲 =====
@@ -1682,6 +1730,18 @@ function render() {
         }
     });
 
+    // ===== 繪製流星雨（在背景和人物之間）=====
+    meteors.forEach(m => {
+        ctx.save();
+        ctx.globalAlpha = m.alpha !== undefined ? m.alpha : 0.85;
+        ctx.fillStyle = m.color;
+        ctx.translate(m.x, m.y);
+        // 畫圓形流星
+        ctx.beginPath();
+        ctx.arc(0, 0, Math.max(m.size[0], m.size[1]) / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    });
     
     // 繪製玩家 (無敵時閃爍)
     if (!playerDead) { // 死亡時不繪製
