@@ -532,49 +532,50 @@ const camera = {
 };
 
 // ===== 玩家物件 =====
-let wa_player_to_Health_ki = playerMaxHealth; // 玩家目前血量 byLiuWatoki
+// ===== プレイヤーオブジェクト =====
+let wa_player_to_Health_ki = playerMaxHealth; // 玩家目前血量 // プレイヤー現在の体力 byLiuWatoki
 let player = {
-    x: playerStartX,                // 玩家X座標（連動 playerStartX）
-    y: playerStartY,                // 玩家Y座標（連動 playerStartY）
-    get width() { return PLAYER_size[0]; }, // 玩家寬度永遠固定
-    get height() { return PLAYER_size[1]; }, // 玩家高度永遠固定
-    get speed() { return playerMoveSpeed; }, // 玩家移動速度（取自全域變數）
-    vy: 0,                 // 垂直速度
-    onGround: false,       // 是否在地面上
-    color: 'rgba(68,170,255,1)',         // 玩家顏色
-    isShooting: false,     // 是否正在射擊（已廢棄，保留相容）
-    shootAnimFrame: 0,     // 發射動畫剩餘幀數
-    shootCooldown: 0,      // 射擊冷卻計時器
-    shootDelay: Math.round(15 / 1.1), // 射擊間隔
-    direction: 1,          // 玩家面向方向（1=右，-1=左）
-    invincible: 0,         // 無敵剩餘幀數
+    x: playerStartX,                // 玩家X座標（連動 playerStartX） // プレイヤーX座標（playerStartXと連動）
+    y: playerStartY,                // 玩家Y座標（連動 playerStartY） // プレイヤーY座標（playerStartYと連動）
+    get width() { return PLAYER_size[0]; }, // 玩家寬度永遠固定 // プレイヤー幅は常に固定
+    get height() { return PLAYER_size[1]; }, // 玩家高度永遠固定 // プレイヤー高さは常に固定
+    get speed() { return playerMoveSpeed; }, // 玩家移動速度（取自全域變數） // プレイヤー移動速度（グローバル変数から取得）
+    vy: 0,                 // 垂直速度 // 垂直速度
+    onGround: false,       // 是否在地面上 // 地面にいるかどうか
+    color: 'rgba(68,170,255,1)',         // 玩家顏色 // プレイヤー色
+    isShooting: false,     // 是否正在射擊（已廢棄，保留相容） // 射撃中か（廃止、互換性のため残す）
+    shootAnimFrame: 0,     // 發射動畫剩餘幀數 // 発射アニメ残りフレーム数
+    shootCooldown: 0,      // 射擊冷卻計時器 // 射撃クールダウンタイマー
+    shootDelay: Math.round(15 / 1.1), // 射擊間隔 // 射撃間隔
+    direction: 1,          // 玩家面向方向（1=右，-1=左） // プレイヤー向き（1=右、-1=左）
+    invincible: 0,         // 無敵剩餘幀數 // 無敵残りフレーム数
 
-    // 更新玩家位置
+    // 更新玩家位置 // プレイヤー位置の更新
     update: function() {
         if (playerDead) {
             this.x = playerDeadX;
             this.y = playerDeadY;
-            return; // 死亡時不能動作且維持在死亡位置
+            return; // 死亡時不能動作且維持在死亡位置 // 死亡時は動作不可、死亡位置を維持
         }
-        // ===== 飛行模式 =====
+        // ===== 飛行模式 ===== // ===== 飛行モード =====
         if (isFlyingMode === 1) {
-            // 左右移動
+            // 左右移動 // 左右移動
             if (keys.ArrowLeft)  { this.x -= this.speed; this.direction = -1; }
             if (keys.ArrowRight) { this.x += this.speed; this.direction =  1; }
-            // 上下移動
+            // 上下移動 // 上下移動
             if (keys.ArrowUp)    { this.y -= this.speed; }
             if (keys.ArrowDown)  { this.y += this.speed; }
-            // 邊界限制
+            // 邊界限制 // 境界制限
             this.x = Math.max(0, Math.min(WORLD_WIDTH - this.width, this.x));
             this.y = Math.max(0, Math.min(WORLD_HEIGHT - this.height, this.y));
             this.onGround = false;
             return;
         }
-        // 是否抵達過boss區域
+        // 是否抵達過boss區域 // ボスエリア到達済みか
         if (this.x >= BOSS_AREA_X) {
             reachedBossArea = true;
         }
-        // 水平移動
+        // 水平移動 // 水平移動
         if (keys.ArrowLeft)  {
             if (reachedBossArea) {
                 this.x -= this.speed;
@@ -587,9 +588,9 @@ let player = {
         }
         if (keys.ArrowRight) { this.x += this.speed; this.direction =  1; }
         
-        // 跳躍
+        // 跳躍 // ジャンプ
         if (keys.ArrowUp && this.onGround && !upPressed) {
-            this.vy = -JUMP_POWER; // 這裡加負號
+            this.vy = -JUMP_POWER; // 這裡加負號 // ここでマイナス
             this.onGround = false;
             upPressed = true;
             isJumping = true;
@@ -597,11 +598,11 @@ let player = {
         }
         if (!keys.ArrowUp) upPressed = false;
         
-        // 重力與新 y 位置
+        // 重力與新 y 位置 // 重力と新しいy位置
         this.vy += GRAVITY;
         let newY = this.y + this.vy;
         
-        // 平台碰撞檢測
+        // 平台碰撞檢測 // プラットフォーム衝突判定
         this.onGround = false;
         for (let p of platforms) {
             const overlapX = this.x + this.width > p.x && this.x < p.x + p.width;
@@ -612,47 +613,47 @@ let player = {
             }
         }
         
-        // 更新位置
+        // 更新位置 // 位置の更新
         this.y = newY;
         
-        // 邊界限制
+        // 邊界限制 // 境界制限
         this.x = Math.max(0, Math.min(WORLD_WIDTH - this.width, this.x));
         
-        // 掉落死亡
+        // 掉落死亡 // 落下死亡
         if (this.y >= WORLD_HEIGHT) {
             gameOver();
             return;
         }
         
-        // 無敵時間更新
+        // 無敵時間更新 // 無敵時間の更新
         if (this.invincible > 0) {
             this.invincible--;
         }
-        // 跳躍增力（可變高度）
+        // 跳躍增力（可變高度） // ジャンプ追加力（可変高度）
         if (isJumping && !this.onGround && this.vy < 0 && jumpHoldFrames < JUMP_EXTRA_FRAMES) {
-            this.vy += -JUMP_EXTRA; // 這裡加負號
+            this.vy += -JUMP_EXTRA; // 這裡加負號 // ここでマイナス
             jumpHoldFrames++;
         } else if (jumpHoldFrames >= JUMP_EXTRA_FRAMES) {
             isJumping = false;
         }
-        // 限制最高上升250像素
+        // 限制最高上升250像素 // 最大上昇250ピクセルに制限
         if (isJumping && jumpStartY - this.y >= 250) {
             isJumping = false;
-            if (this.vy < 0) this.vy = 0; // 立即停止上升
+            if (this.vy < 0) this.vy = 0; // 立即停止上升 // 即座に上昇停止
         }
     },
     
-    // 玩家射擊
+    // 玩家射擊 // プレイヤー射撃
     shoot: function() {
-        if (playerDead) return; // 死亡時不能射擊
+        if (playerDead) return; // 死亡時不能射擊 // 死亡時は射撃不可
         if (!canShoot) return;
         if (this.shootCooldown > 0) {
             this.shootCooldown--;
             return;
         }
-        // 如果集氣彈即將發射，不發射普通子彈
+        // 如果集氣彈即將發射，不發射普通子彈 // チャージ弾が発射される場合、通常弾は発射しない
         if (chargeReady) return;
-        // 集氣狀態下，只有集氣超過0.7秒才不發射普通子彈
+        // 集氣狀態下，只有集氣超過0.7秒才不發射普通子彈 // チャージ状態で0.7秒以上のみ通常弾を発射しない
         if (charging && chargeFrame >= CHARGE_CANCEL_FRAME) return;
         if (this.isShooting && this.shootCooldown === 0) {
             bullets.push({
@@ -660,7 +661,7 @@ let player = {
                 y: this.y + this.height / 2 - 3,
                 width: 10,
                 height: 6,
-                speed: 10 * 1.1 * this.direction, // 1.1倍
+                speed: 10 * 1.1 * this.direction, // 1.1倍 // 1.1倍
                 color: PLAYER_Attack_shoot_color,
                 isCharge: false
             });
@@ -668,11 +669,11 @@ let player = {
         }
     },
     
-    // 受傷處理
+    // 受傷處理 // ダメージ処理
     takeDamage: function(amount) {
         if (isWinInvincible) return;
         if (this.invincible > 0) return;
-        // 播放受傷音效
+        // 播放受傷音效 // ダメージ効果音再生
         const hurtAudio = document.getElementById('hurt-audio');
         if (hurtAudio) {
             hurtAudio.currentTime = 0;
@@ -681,7 +682,7 @@ let player = {
         }
         wa_player_to_Health_ki -= amount;
         updateHealthBar();
-        this.invincible = 30; // 30幀無敵時間
+        this.invincible = 30; // 30幀無敵時間 // 30フレーム無敵
         if (wa_player_to_Health_ki <= 0) {
             gameOver();
         }
@@ -689,66 +690,66 @@ let player = {
 };
 const players = [player];
 
-// ===== 子彈系統 =====
+// ===== 子彈系統 ===== // ===== 弾システム =====
 const bullets = [];
 const enemyBullets = [];
 
-// ===== 敵人類型 =====
-// 除錯：定義所有小兵的屬性與行為，方便統一管理與擴充
+// ===== 敵人類型 ===== // ===== 敵タイプ =====
+// 除錯：定義所有小兵的屬性與行為，方便統一管理與擴充 // デバッグ：全ての雑魚の属性と挙動を定義し、統一管理・拡張を容易に
 const ENEMY_TYPES = {
-    // 飛行系列（圓形）
+    // 飛行系列 // 飛行系
     FLY_RED: {
-        color: 'rgba(255,68,68,1)', // 顏色
-        speed: 1.5 * 1.1, // 移動速度
-        health: 1, // 血量
-        score: 60, // 擊殺得分
-        behavior: function(enemy) { // 行為函數
+        color: 'rgba(255,68,68,1)', // 顏色 // 色
+        speed: 1.5 * 1.1, // 移動速度 // 移動速度
+        health: 1, // 血量 // 体力
+        score: 60, // 擊殺得分 // 撃破スコア
+        behavior: function(enemy) { // 行為函數 // 挙動関数
             enemy.x -= enemy.speed;
-            // 小幅度上下
+            // 小幅度上下 // 小幅な上下移動
             if (!enemy.floatBaseY) enemy.floatBaseY = enemy.y;
             enemy.y = enemy.floatBaseY + Math.sin(Date.now() / 600 + enemy._id) * 18;
-            // === 動畫計數 ===
+            // === 動畫計數 === // === アニメカウント ===
             if (enemy._animFrame === undefined) enemy._animFrame = 0;
             if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
             enemy._animFrame++;
-            // 幾幀切換動畫（這裡是6幀切換一次）//byLiuWatoki
+            // 幾幀切換動畫（這裡是6幀切換一次）//byLiuWatoki // 何フレームごとにアニメ切替（ここは6フレームごと）
             if (enemy._animFrame % 20 === 0) {
                 enemy._imgIndex = 1 - enemy._imgIndex;
             }
         },
-        isFlying: true, // 是否為飛行敵人
-        eye: { color: 'rgba(34,34,34,1)', type: 'circle' } // 眼睛樣式
+        isFlying: true, // 是否為飛行敵人 // 飛行敵か
+        eye: { color: 'rgba(34,34,34,1)', type: 'circle' } // 眼睛樣式 // 目のスタイル
     },
     FLY_ORANGE: {
-        color: 'rgba(255,136,68,1)', // 顏色 //bywatoki byLiuWatoki from_wa_to_ki
-        speed: 2.25 * 1.1, // 移動速度
-        health: 1, // 血量
-        score: 80, // 擊殺得分 //bywatoki from_wa_to_ki 
-        behavior: function(enemy) { // 行為函數
+        color: 'rgba(255,136,68,1)', // 顏色 // 色
+        speed: 2.25 * 1.1, // 移動速度 // 移動速度
+        health: 1, // 血量 // 体力
+        score: 80, // 擊殺得分 // 撃破スコア
+        behavior: function(enemy) { // 行為函數 // 挙動関数
             enemy.x -= enemy.speed;
-            // 大幅度上下
+            // 大幅度上下 // 大きな上下移動
             if (!enemy.floatBaseY) enemy.floatBaseY = enemy.y;
             enemy.y = enemy.floatBaseY + Math.sin(Date.now() / 300 + enemy._id) * 48;
-            // 動畫
+            // 動畫 // アニメ
             if (enemy._animFrame === undefined) enemy._animFrame = 0;
             if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
             enemy._animFrame++;
             if (enemy._animFrame % 20 === 0) {
-                enemy._imgIndex = (enemy._imgIndex + 1) % 3; // 0,1,2循環
+                enemy._imgIndex = (enemy._imgIndex + 1) % 3; // 0,1,2循環 // 0,1,2ループ
             }
         },
-        isFlying: true, // 是否為飛行敵人
-        eye: { color: 'rgba(34,34,34,1)', type: 'circle' } // 眼睛樣式
+        isFlying: true, // 是否為飛行敵人 // 飛行敵か
+        eye: { color: 'rgba(34,34,34,1)', type: 'circle' } // 眼睛樣式 // 目のスタイル
     },
-    // 地上系列（半圓形）
+    // 地上系列 // 地上系
     GROUND_RED: {
-        color: 'rgba(255,68,68,1)', // 顏色
-        speed: 0.75 * 1.1, // 移動速度
-        health: 1, // 血量
-        score: 50, // 擊殺得分
-        behavior: function(enemy) { // 行為函數
+        color: 'rgba(255,68,68,1)', // 顏色 // 色
+        speed: 0.75 * 1.1, // 移動速度 // 移動速度
+        health: 1, // 血量 // 体力
+        score: 50, // 擊殺得分 // 撃破スコア
+        behavior: function(enemy) { // 行為函數 // 挙動関数
             enemy.x -= enemy.speed;
-            // 動畫
+            // 動畫 // アニメ
             if (enemy._animFrame === undefined) enemy._animFrame = 0;
             if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
             enemy._animFrame++;
@@ -756,39 +757,39 @@ const ENEMY_TYPES = {
                 enemy._imgIndex = 1 - enemy._imgIndex;
             }
         },
-        isFlying: false, // 是否為飛行敵人
-        eye: { color: 'rgba(34,34,34,1)', type: 'semi' } // 眼睛樣式
+        isFlying: false, // 是否為飛行敵人 // 飛行敵か
+        eye: { color: 'rgba(34,34,34,1)', type: 'semi' } // 眼睛樣式 // 目のスタイル
     },
     GROUND_ORANGE: {
-        color: 'rgba(255,136,68,1)', // 顏色
-        speed: 0.75 * 1.1, // 移動速度
-        health: 1, // 血量
-        score: 70, // 擊殺得分
-        behavior: function(enemy) { // 行為函數
+        color: 'rgba(255,136,68,1)', // 顏色 // 色
+        speed: 0.75 * 1.1, // 移動速度 // 移動速度
+        health: 1, // 血量 // 体力
+        score: 70, // 擊殺得分 // 撃破スコア
+        behavior: function(enemy) { // 行為函數 // 挙動関数
             enemy.x -= enemy.speed;
             if (enemy.onGround && Math.random() < 0.02) {
                 enemy.vy = -12;
                 enemy.onGround = false;
             }
-            // 動畫
+            // 動畫 // アニメ
             if (enemy._animFrame === undefined) enemy._animFrame = 0;
             if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
             enemy._animFrame++;
             if (enemy._animFrame % 10 === 0) {
-                enemy._imgIndex = (enemy._imgIndex + 1) % 4; // 0,1,2,3循環
+                enemy._imgIndex = (enemy._imgIndex + 1) % 4; // 0,1,2,3循環 // 0,1,2,3ループ
             }
         },
-        isFlying: false, // 是否為飛行敵人
-        eye: { color: 'rgba(34,34,34,1)', type: 'semi' } // 眼睛樣式
+        isFlying: false, // 是否為飛行敵人 // 飛行敵か
+        eye: { color: 'rgba(34,34,34,1)', type: 'semi' } // 眼睛樣式 // 目のスタイル
     },
     GROUND_PINK: {
-        color: 'rgba(255,136,204,1)', // 顏色
-        speed: 0, // 移動速度
-        health: 1, // 血量
-        score: 100, // 擊殺得分
-        shootDelay: Math.round(120), // 射擊間隔 數字越小射擊越快
-        behavior: function(enemy) { // 行為函數
-            // 固定點射擊
+        color: 'rgba(255,136,204,1)', // 顏色 // 色
+        speed: 0, // 移動速度 // 移動速度
+        health: 1, // 血量 // 体力
+        score: 100, // 擊殺得分 // 撃破スコア
+        shootDelay: Math.round(120), // 射擊間隔 數字越小射擊越快 // 射撃間隔 数値が小さいほど速い
+        behavior: function(enemy) { // 行為函數 // 挙動関数
+            // 固定點射擊 // 固定位置射撃
             if (enemy.shootCooldown > 0) {
                 enemy.shootCooldown--;
             } else {
@@ -796,7 +797,7 @@ const ENEMY_TYPES = {
                     player.y + player.height/2 - (enemy.y + enemy.height/2),
                     player.x + player.width/2 - (enemy.x + enemy.width/2)
                 );
-                // 射擊次數減半，原本1發，現在每2次才射1發
+                // 射擊次數減半，原本1發，現在每2次才射1發 // 射撃回数半減、元は1発、今は2回に1発
                 if (!enemy._shootToggle) enemy._shootToggle = false;
                 enemy._shootToggle = !enemy._shootToggle;
                 if (enemy._shootToggle) {
@@ -812,7 +813,7 @@ const ENEMY_TYPES = {
                 }
                 enemy.shootCooldown = enemy.shootDelay;
             }
-            // 動畫
+            // 動畫 // アニメ
             if (enemy._animFrame === undefined) enemy._animFrame = 0;
             if (enemy._imgIndex === undefined) enemy._imgIndex = 0;
             enemy._animFrame++;
@@ -820,43 +821,43 @@ const ENEMY_TYPES = {
                 enemy._imgIndex = 1 - enemy._imgIndex;
             }
         },
-        isFlying: false, // 是否為飛行敵人
-        eye: { color: 'rgba(255,255,255,1)', type: 'semi' } // 眼睛樣式
+        isFlying: false, // 是否為飛行敵人 // 飛行敵か
+        eye: { color: 'rgba(255,255,255,1)', type: 'semi' } // 眼睛樣式 // 目のスタイル
     }
 };
 
-// ===== 敵人陣列 =====
+// ===== 敵人陣列 ===== // ===== 敵配列 =====
 const enemies = [];
-// ===== 敵人閃爍狀態 =====
-const enemyHitFlash = new WeakMap(); // Map<enemy, frame>
+// ===== 敵人閃爍狀態 ===== // ===== 敵フラッシュ状態 =====
+const enemyHitFlash = new WeakMap(); // Map<enemy, frame> // Map<enemy, frame>
 
-// ===== Boss 物件 =====
+// ===== Boss 物件 ===== // ===== ボスオブジェクト =====
 const boss = {
     x: 5200,
-    y: 350, // 固定初始座標
-    get width() { return BOSS_size[0]; }, // Boss寬度
-    get height() { return BOSS_size[1]; }, // Boss高度
-    speed: 2 * 1.1, // 1.1倍
-    vy: 0, // 不再需要重力
-    color: 'rgba(33,150,243,1)', // 主體藍色（Airman主色）
+    y: 350, // 固定初始座標 // 固定初期座標
+    get width() { return BOSS_size[0]; }, // Boss寬度 // ボス幅
+    get height() { return BOSS_size[1]; }, // Boss高度 // ボス高さ
+    speed: 2 * 1.1, // 1.1倍 // 1.1倍
+    vy: 0, // 不再需要重力 // 重力不要
+    color: 'rgba(33,150,243,1)', // 主體藍色（Airman主色） // 本体青色（Airman主色）
     shootCooldown: 0,
-    shootDelay: Math.round(200 / 1.1), // 間隔縮短
+    shootDelay: Math.round(200 / 1.1), // 間隔縮短 // 間隔短縮
     pattern: 0,
     patternTimer: 0,
     health: 300,
     maxHealth: 300,
-    onGround: false, // 不再需要onGround
-    pauseTimer: 0, // 暫停計時器
-    imgIndex: 0, // 當前圖片
-    animFrame: 0, // 動畫計數
+    onGround: false, // 不再需要onGround // onGround不要
+    pauseTimer: 0, // 暫停計時器 // 一時停止タイマー
+    imgIndex: 0, // 當前圖片 // 現在の画像
+    animFrame: 0, // 動畫計數 // アニメカウント
     
-    // Boss 行為模式
+    // Boss 行為模式 // ボス挙動パターン
     update: function() {
-        // ===== 新增 Boss 固定座標功能 =====
+        // ===== 新增 Boss 固定座標功能 ===== // ===== ボス固定座標機能追加 =====
         if (bossFixedPosition) {
             this.x = bossSetX;
             this.y = bossSetY;
-            // 仍然要處理動畫切換
+            // 仍然要處理動畫切換 // アニメ切替も必要
             if (!bossCanMove) {
                 this.imgIndex = 0;
             } else {
@@ -866,10 +867,10 @@ const boss = {
                     if (this.imgIndex > 8) this.imgIndex = 1;
                 }
             }
-            // 固定時不移動也不射擊
+            // 固定時不移動也不射擊 // 固定時は移動も射撃もしない
             return;
         }
-        // 動畫切換
+        // 動畫切換 // アニメ切替
         if (!bossCanMove) {
             this.imgIndex = 0;
         } else {
@@ -879,47 +880,47 @@ const boss = {
                 if (this.imgIndex > 8) this.imgIndex = 1;
             }
         }
-        // 暫停狀態
+        // 暫停狀態 // 一時停止状態
         if (this.pauseTimer > 0) {
             this.pauseTimer--;
             return;
         }
-        // 模式計時器
+        // 模式計時器 // パターンタイマー
         this.patternTimer++;
         if (this.patternTimer > 180) {
             this.pattern = (this.pattern + 1) % 4;
             this.patternTimer = 0;
         }
-        // boss 動作行為
-        if (!bossCanMove) return; // 0.7秒內不能移動
-        // 不受重力影響，直接根據行為模式調整y座標
+        // boss 動作行為 // ボス挙動
+        if (!bossCanMove) return; // 0.7秒內不能移動 // 0.7秒間は移動不可
+        // 不受重力影響，直接根據行為模式調整y座標 // 重力無視、パターンでy座標調整
         const bossDisplayHeight = 190;
         switch (this.pattern) {
-            case 0: // 上下移動
+            case 0: // 上下移動 // 上下移動
                 this.y += this.speed;
                 if (this.y < 0 || this.y > 252) {
                     this.speed *= -1;
                 }
                 break;
-            case 1: // 追蹤玩家
+            case 1: // 追蹤玩家 // プレイヤー追従
                 if (this.y < player.y) {
                     this.y += this.speed;
                 } else if (this.y > player.y) {
                     this.y -= this.speed;
                 }
-                // 限制範圍
+                // 限制範圍 // 範囲制限
                 this.y = Math.max(0, Math.min(252, this.y));
                 break;
-            case 2: // 快速上下移動
+            case 2: // 快速上下移動 // 高速上下移動
                 if (this.patternTimer % 60 < 30) {
-                    this.y -= 8; // 向上飄
+                    this.y -= 8; // 向上飄 // 上に浮く
                 } else {
-                    this.y += 8; // 向下飄
+                    this.y += 8; // 向下飄 // 下に浮く
                 }
-                // 限制範圍
+                // 限制範圍 // 範囲制限
                 this.y = Math.max(0, Math.min(252, this.y));
                 break;
-            case 3: // 衝刺攻擊
+            case 3: // 衝刺攻擊 // ダッシュ攻撃
                 if (this.patternTimer < 60) {
                     this.x -= 5;
                 } else if (this.patternTimer < 120) {
@@ -927,11 +928,11 @@ const boss = {
                 }
                 break;
         }
-        // Boss 射擊
+        // Boss 射擊 // ボス射撃
         if (this.shootCooldown > 0) {
             this.shootCooldown--;
         } else if (bossCanAttack && bossBulletEnable) {
-            // 根據 bossBulletPatternMode 決定 bossBulletCount
+            // 根據 bossBulletPatternMode 決定 bossBulletCount // bossBulletPatternModeでbossBulletCount決定
             if (bossBulletPatternMode === 1) {
                 bossBulletCount = 3;
             } else if (bossBulletPatternMode === 2) {
@@ -939,10 +940,10 @@ const boss = {
             } else if (bossBulletPatternMode === 3) {
                 bossBulletCount = [3, 5, 7, 9][Math.floor(Math.random() * 4)];
             }
-            // 多方向射擊，使用 bossBulletCount
+            // 多方向射擊，使用 bossBulletCount // 多方向射撃、bossBulletCount使用
             let mid = Math.floor(bossBulletCount / 2);
             for (let i = -mid; i <= mid; i++) {
-                if (bossBulletCount % 2 === 0 && i === 0) continue; // 偶數時跳過0，保持對稱
+                if (bossBulletCount % 2 === 0 && i === 0) continue; // 偶數時跳過0，保持對稱 // 偶数時は0スキップ、対称維持
                 const angle = Math.atan2(
                     player.y + player.height/2 - (this.y + this.height/2),
                     player.x + player.width/2 - (this.x + this.width/2)
@@ -957,9 +958,9 @@ const boss = {
                     color: 'rgba(255,68,170,1)'
                 });
             }
-            this.shootCooldown = bossBulletDelay[0] + Math.floor(Math.random() * (bossBulletDelay[1] - bossBulletDelay[0] + 1)); // 每次發射後隨機冷卻
+            this.shootCooldown = bossBulletDelay[0] + Math.floor(Math.random() * (bossBulletDelay[1] - bossBulletDelay[0] + 1)); // 每次發射後隨機冷卻 // 発射ごとにランダムクールダウン
         }
-        // === 加入邊界限制 ===
+        // === 加入邊界限制 === // === 境界制限追加 ===
         const bossDisplayWidth = 190;
         this.x = Math.max(4550, Math.min(5150, this.x));
         this.y = Math.max(0, Math.min(252, this.y));
@@ -967,11 +968,10 @@ const boss = {
 };
 const bosses = [boss];
 
-// ===== 平台陣列 =====
+// ===== 平台陣列 ===== // ===== プラットフォーム配列 =====
 const platforms = basePlatforms.slice();
 
-
-// ===== 背景漸層顏色漸變機制 =====
+// ===== 背景漸層顏色漸變機制 ===== // ===== 背景グラデーション色遷移機構 =====
 let current_area_colors = [
     normal_area_color1, normal_area_color2, normal_area_color3, normal_area_color4, normal_area_color5,
     normal_area_color6, normal_area_color7, normal_area_color8, normal_area_color9, normal_area_color10
@@ -980,10 +980,10 @@ let target_area_colors = [...current_area_colors];
 let area_color_transition_frame = 0;
 let area_color_transition_total = 0;
 let is_in_boss_area = false;
-let last_boss_area_state = false; // 新增：記錄上次狀態
+let last_boss_area_state = false; // 新增：記錄上次狀態 // 追加：前回状態記録
 
 function parseColor(str) {
-    // 支援 rgb/rgba 格式
+    // 支援 rgb/rgba 格式 // rgb/rgba形式対応
     let m = str.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
     if (!m) return [0,0,0,1];
     return [parseInt(m[1]), parseInt(m[2]), parseInt(m[3]), m[4] !== undefined ? parseFloat(m[4]) : 1];
@@ -1010,7 +1010,6 @@ function updateAreaColors() {
             current_area_colors[i] = colorToStr(lerped);
         }
         if (area_color_transition_frame >= area_color_transition_total) {
-            // 完成漸變
             for (let i = 0; i < 10; i++) current_area_colors[i] = target_area_colors[i];
             area_color_transition_total = 0;
         }
@@ -1796,8 +1795,8 @@ function update() {
                 size: meteor_size,
                 color: meteor_color,
                 stay,
-                alpha: 0,         // 新增：初始透明度
-                fadeIn: true      // 新增：淡入階段
+                alpha: 0,
+                fadeIn: true
             });
         }
     }
