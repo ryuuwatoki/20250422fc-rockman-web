@@ -1691,7 +1691,7 @@ function update() {
     }
 
     
-    // ===== 新增背景顏色漸變判斷 =====
+    // ===== 新增背景顏色漸變判斷 =====｜背景グラデーション色遷移判定追加
     let now_in_boss_area = (player.x >= BOSS_AREA_X);
     if (now_in_boss_area !== is_in_boss_area) {
         is_in_boss_area = now_in_boss_area;
@@ -1702,36 +1702,36 @@ function update() {
                 boss_area_color6, boss_area_color7, boss_area_color8, boss_area_color9, boss_area_color10
             ];
             area_color_transition_total = enter_boss_area_color_change_time;
-            // 流星雨參數目標設為boss
+            // 流星雨參數目標設為boss｜流星雨パラメータのターゲットをボス用に設定
             meteor_params_target = {...boss_meteor_params};
-            meteor_params_transition_total = enter_boss_area_meteor_change_time; // 這裡改用 meteor 變數
-            // ===== 進入 boss 區切換 BGM =====
+            meteor_params_transition_total = enter_boss_area_meteor_change_time; // 這裡改用 meteor 變數｜ここはmeteor変数を使用
+            // ===== 進入 boss 區切換 BGM =====｜ボスエリア突入時にBGM切替
             if (isBgmOn) {
                 if (bgm) { bgm.pause(); }
                 if (bgm2) { bgm2.currentTime = 0; bgm2.volume = VOLUME_BGM2; bgm2.play().catch(()=>{}); }
             }
         } else {
-            // 回到一般區
+            // 回到一般區｜通常エリアに戻る
             target_area_colors = [
                 normal_area_color1, normal_area_color2, normal_area_color3, normal_area_color4, normal_area_color5,
                 normal_area_color6, normal_area_color7, normal_area_color8, normal_area_color9, normal_area_color10
             ];
             area_color_transition_total = enter_normal_area_color_change_time;
-            // 流星雨參數目標設為normal
+            // 流星雨參數目標設為normal｜流星雨パラメータのターゲットを通常用に設定
             meteor_params_target = {...normal_meteor_params};
-            meteor_params_transition_total = enter_normal_area_meteor_change_time; // 這裡改用 meteor 變數
-            // ===== 離開 boss 區切回 BGM =====
-            // 這裡移除BGM切換，不做任何事
+            meteor_params_transition_total = enter_normal_area_meteor_change_time; // 這裡改用 meteor 變數｜ここはmeteor変数を使用
+            // ===== 離開 boss 區切回 BGM =====｜ボスエリア離脱時のBGM切替（何もしない）
+            // 這裡移除BGM切換，不做任何事｜ここはBGM切替を削除、何もしない
         }
         area_color_transition_frame = 0;
         meteor_params_transition_frame = 0;
     }
     updateAreaColors();
-    // ===== 流星雨參數漸變 =====
+    // ===== 流星雨參數漸變 =====｜流星雨パラメータ遷移
     if (meteor_params_transition_total > 0 && meteor_params_transition_frame < meteor_params_transition_total) {
         meteor_params_transition_frame++;
         let t = meteor_params_transition_frame / meteor_params_transition_total;
-        // 只對數值型做lerp，陣列型分別lerp
+        // 只對數值型做lerp，陣列型分別lerp｜数値型はlerp、配列型は個別にlerp
         meteor_params.speed = meteor_params.speed + (meteor_params_target.speed - meteor_params.speed) * t;
         meteor_params.update_random = meteor_params.update_random + (meteor_params_target.update_random - meteor_params.update_random) * t;
         meteor_params.update_interval = meteor_params.update_interval + (meteor_params_target.update_interval - meteor_params.update_interval) * t;
@@ -1753,11 +1753,11 @@ function update() {
             meteor_params.position[2] + (meteor_params_target.position[2] - meteor_params.position[2]) * t,
             meteor_params.position[3] + (meteor_params_target.position[3] - meteor_params.position[3]) * t
         ];
-        // 顏色只在最後切換
+        // 顏色只在最後切換｜色は最後に切り替え
         if (meteor_params_transition_frame >= meteor_params_transition_total) {
             meteor_params.color = meteor_params_target.color;
         }
-        // 實際參數同步
+        // 實際參數同步｜実際のパラメータを同期
         meteor_color = meteor_params.color;
         meteor_size = meteor_params.size.slice();
         meteor_speed = meteor_params.speed;
@@ -1779,11 +1779,11 @@ function update() {
         ];
     }
 
-    // ===== 流星雨生成與更新 =====
+    // ===== 流星雨生成與更新 =====｜流星雨生成と更新
     meteor_update_counter++;
     if (meteor_update_counter >= meteor_update_interval) {
         meteor_update_counter = 0;
-        // 新增：用 meteor_update_random 決定是否產生流星
+        // 新增：用 meteor_update_random 決定是否產生流星｜追加：meteor_update_randomで流星生成を決定
         if (Math.random() < meteor_update_random) {
             let angle = (meteor_descent_angle[0] + Math.random() * (meteor_descent_angle[1] - meteor_descent_angle[0])) * Math.PI / 180;
             let x = camera.x + meteor_position[0] + Math.random() * (meteor_position[1] - meteor_position[0]);
@@ -1792,7 +1792,7 @@ function update() {
             meteors.push({
                 x, y,
                 angle,
-                speed: meteor_speed / MAX_FPS, // 每幀移動量
+                speed: meteor_speed / MAX_FPS, // 每幀移動量｜1フレームごとの移動量
                 size: meteor_size,
                 color: meteor_color,
                 stay,
@@ -1806,7 +1806,7 @@ function update() {
         m.x += Math.cos(m.angle) * m.speed;
         m.y += Math.sin(m.angle) * m.speed;
         m.stay--;
-        // ====== 流星淡入淡出效果 ======
+        // ====== 流星淡入淡出效果 ======｜流星フェードイン・フェードアウト効果
         if (m.fadeIn) {
             m.alpha += 0.08;
             if (m.alpha >= 0.85) {
