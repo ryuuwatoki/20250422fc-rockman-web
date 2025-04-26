@@ -8,7 +8,7 @@ let MAX_FPS = 60; // 最大FPS設定 預設60｜最大FPS設定 デフォルト6
 
 let playerMoveSpeed = 100; // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
 let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
-let playerStartX = 200;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
+let playerStartX = 5200;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
 let playerStartY = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100; // 玩家血量 預設100｜プレイヤー体力 デフォルト100
 let JUMP_POWER      = 15; // 跳躍速度
@@ -55,8 +55,8 @@ let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ�
 let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
 
 //繪製星星 繪製隕石
-let showStar = 0; // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
-let showMeteor = 0; // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
+let showStar = 1; // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
+let showMeteor = 1; // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
 
 
 // ===== 設定選單狀態顯示全開/全關 1=全開 0=全關 2=pass =====
@@ -79,57 +79,57 @@ let VOLUME_BOSS     = 0.85;  // Boss出場音效音量｜ボス登場効果音�
 let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量｜勝利BGM音量
 
 // 背景色變化時間
-let enter_boss_area_color_change_time = 400; //Fps
-let enter_normal_area_color_change_time = 1000; //Fps
+let enter_boss_area_color_change_time = 10000; //Fps
+let enter_normal_area_color_change_time = 2000; //Fps
 let enter_boss_area_meteor_change_time = 400; //Fps
 let enter_normal_area_meteor_change_time = 1000; //Fps
 
 // 一般區域流星雨參數
 const normal_meteor_params = {
     color: 'rgb(255, 250, 250)', // 流星顏色
-    size: [10, 10], // 流星大小
-    speed: 10, // 流星速度
-    update_random: 1, // 流星生成機率
-    update_interval: 1, // 幾幀產生一次流星
+    size: [6, 6], // 流星大小
+    speed: 1200, // 流星速度
+    update_random: 0.1, // 流星生成機率
+    update_interval: 18, // 幾幀產生一次流星
     stay_time: [20, 40], // 流星停留時間
     descent_angle: [-45, 70], // 流星下落角度
     position: [0, 800, 0, 50] // 流星生成位置範圍
 };
 // Boss區域流星雨參數
 const boss_meteor_params = {
-    color: 'rgb(12, 27, 95)', // 流星顏色
-    size: [100, 100], // 流星大小
-    speed: 100, // 流星速度
+    color: 'rgba(153, 21, 76, 0.74)', // 流星顏色
+    size: [11, 11], // 流星大小
+    speed: 600, // 流星速度
     update_random: 0.2, // 流星生成機率
-    update_interval: 10, // 幾幀產生一次流星
-    stay_time: [200, 400], // 流星停留時間
-    descent_angle: [-4, 7], // 流星下落角度
-    position: [1, 801, 1, 51] // 流星生成位置範圍
+    update_interval: 3, // 幾幀產生一次流星
+    stay_time: [10, 100], // 流星停留時間
+    descent_angle: [0, 360], // 流星下落角度
+    position: [0, 800, 0, 400] // 流星生成位置範圍
 };
 
 
 // 一般區域顏色
-let normal_area_color1 = 'rgba(68,68,68,1)';
-let normal_area_color2 = 'rgba(68,68,68,1)';
-let normal_area_color3 = 'rgba(68,68,68,1)';
-let normal_area_color4 = 'rgba(68,68,68,1)';
-let normal_area_color5 = 'rgba(68,68,68,1)';
-let normal_area_color6 = 'rgb(129, 119, 119)';
-let normal_area_color7 = 'rgba(68,68,68,1)';
-let normal_area_color8 = 'rgba(68,68,68,1)';
-let normal_area_color9 = 'rgba(68,68,68,1)';
-let normal_area_color10 = 'rgba(68,68,68,1)';
+let normal_area_color1 = 'rgba(0, 0, 0, 1)';
+let normal_area_color2 = 'rgb(33, 33, 33)';
+let normal_area_color3 = 'rgba(0, 0, 0, 1)';
+let normal_area_color4 = 'rgba(0, 0, 0, 1)';
+let normal_area_color5 = 'rgb(35, 35, 35)';
+let normal_area_color6 = 'rgba(0, 0, 0, 1)';
+let normal_area_color7 = 'rgba(0, 0, 0, 1)';
+let normal_area_color8 = 'rgba(0, 0, 0, 1)';
+let normal_area_color9 = 'rgb(33, 33, 33)';
+let normal_area_color10 = 'rgba(0, 0, 0, 1)';
 // Boss區域顏色
-let boss_area_color1 = 'rgba(136,0,0,1)';
-let boss_area_color2 = 'rgba(136,0,0,1)';
-let boss_area_color3 = 'rgba(136,0,0,1)';
-let boss_area_color4 = 'rgba(136,0,0,1)';
-let boss_area_color5 = 'rgba(136,0,0,1)';
-let boss_area_color6 = 'rgb(138, 123, 123)';
-let boss_area_color7 = 'rgba(136,0,0,1)';
-let boss_area_color8 = 'rgba(136,0,0,1)';
-let boss_area_color9 = 'rgba(136,0,0,1)';
-let boss_area_color10 = 'rgba(136,0,0,1)';
+let boss_area_color1 = 'rgba(12, 0, 0, 1)';
+let boss_area_color2 = 'rgba(12, 0, 0, 1)';
+let boss_area_color3 = 'rgba(12, 0, 0, 1)';
+let boss_area_color4 = 'rgba(12, 0, 0, 1)';
+let boss_area_color5 = 'rgba(12, 0, 0, 1)';
+let boss_area_color6 = 'rgba(12, 0, 0, 1)';
+let boss_area_color7 = 'rgba(12, 0, 0, 1)';
+let boss_area_color8 = 'rgba(12, 0, 0, 1)';
+let boss_area_color9 = 'rgb(110, 0, 0)';
+let boss_area_color10 = 'rgba(12, 0, 0, 1)';
 
 // 地板顏色 過去設定 請無視～ // 床の色の過去の設定です。無視してください〜
 const COLOR_PLATFORM_NORMAL = 'rgba(68,68,68,1)';      // 一般平台顏色
