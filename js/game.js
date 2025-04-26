@@ -16,7 +16,7 @@ let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';;
 let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';;
 
 
-// ===== 玩家飛行無敵模式 =====｜プレイヤー飛行無敵モード
+// = 玩家飛行無敵模式 =｜プレイヤー飛行無敵モード
 let isFlyingMode = 0; // 預設關閉 請預設hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
 
 let enemyMaxCount = 12; // 敵人最大數量 預設12｜敵最大数 デフォルト12
@@ -55,6 +55,8 @@ let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏
 
 // ===== 設定選單狀態顯示全開/全關 =====
 checkBoxShowHideAll(1);
+// checkBoxShowHideAll(0); // 測試用
+
 
 // 音量設定｜音量設定
 let isBgmOn = 0;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
@@ -268,7 +270,6 @@ let outBossAreaDelayTimer = 0; // 離開Boss區延遲計時器（幀）
 let isInBossAreaMeteor = false; // 目前隕石是否為Boss區型態
 
 
-checkBoxShowHideAll(1);
 // ===== 物件面積 ===== //
 let PLAYER_size = [50,60]; //玩家尺寸 寬度,高度
 let PLAYER_SHOOT_size = [55,60];
@@ -2663,7 +2664,6 @@ settingsPanel.innerHTML = `
 `;
 document.body.appendChild(settingsPanel);
 
-checkBoxShowHideAll(0); // 測試用
 
 // 3. 設定按鈕事件
 settingsBtn.onclick = function() {
