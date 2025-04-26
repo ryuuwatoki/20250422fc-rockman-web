@@ -645,7 +645,7 @@ let player = {
         if (hurtAudio) {
             hurtAudio.currentTime = 0;
             hurtAudio.volume = VOLUME_HURT;
-            if (isSfxOn) hurtAudio.play();
+            if (isSfxOn) { hurtAudio.pause(); hurtAudio.currentTime = 0; hurtAudio.play().catch(()=>{}); }
         }
         wa_player_to_Health_ki -= amount;
         updateHealthBar();
@@ -1031,7 +1031,7 @@ document.addEventListener('keydown', (e) => {
                 if (shootAudio) {
                     shootAudio.currentTime = 0;
                     shootAudio.volume = VOLUME_SHOOT;
-                    if (isSfxOn) shootAudio.play();
+                    if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
                 }
                 // 延遲0.5秒後才播放集氣音效
                 if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
@@ -1041,7 +1041,7 @@ document.addEventListener('keydown', (e) => {
                         if (chargeAudio) {
                             chargeAudio.currentTime = 0;
                             chargeAudio.volume = VOLUME_CHARGE;
-                            if (isSfxOn) chargeAudio.play();
+                            if (isSfxOn) { chargeAudio.pause(); chargeAudio.currentTime = 0; chargeAudio.play().catch(()=>{}); }
                         }
                     }
                 }, 500);
@@ -1121,7 +1121,7 @@ function startGame() {
     if (bgm) {
         bgm.currentTime = 0;
         bgm.volume = VOLUME_BGM;
-        if (isBgmOn) bgm.play();
+        if (isBgmOn) { bgm.pause(); bgm.currentTime = 0; bgm.play().catch(()=>{}); }
     }
     // 重置遊戲狀態
     gameRunning = true;
@@ -1175,6 +1175,11 @@ function startGame() {
     playerDeadY = 0;
     bossDefeated = false;
     isWinInvincible = false;
+    // 修正：如果玩家起始位置就在 boss 區，直接切換 bgm2
+    if (playerStartX >= BOSS_AREA_X) {
+        if (bgm) { bgm.pause(); }
+        if (bgm2) { bgm2.currentTime = 0; bgm2.volume = VOLUME_BGM2; if (isBgmOn) bgm2.play().catch(()=>{}); }
+    }
 }
 
 // ===== 遊戲主循環 =====
@@ -1220,7 +1225,7 @@ function update() {
         if (shootAudio) {
             shootAudio.currentTime = 0;
             shootAudio.volume = VOLUME_SHOOT;
-            if (isSfxOn) shootAudio.play();
+            if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
         }
         player.shootAnimFrame = 14; // 集氣彈顯示0.2秒
         chargeReady = false;
@@ -1291,7 +1296,7 @@ function update() {
             if (bossAudio) {
                 bossAudio.currentTime = 0;
                 bossAudio.volume = VOLUME_BOSS;
-                if (isSfxOn) bossAudio.play();
+                if (isSfxOn) { bossAudio.pause(); bossAudio.currentTime = 0; bossAudio.play().catch(()=>{}); }
             }
             // 延遲0.4秒後才讓boss出現
             setTimeout(() => {
@@ -1487,7 +1492,7 @@ function update() {
                 if (boomAudio) {
                     const clone = boomAudio.cloneNode();
                     clone.volume = VOLUME_BOOM;
-                    if (isSfxOn) clone.play();
+                    if (isSfxOn) { clone.pause(); clone.currentTime = 0; clone.play().catch(()=>{}); }
                 }
                 if (enemy.health <= 0 && !enemy.dying) {
                     enemy.dying = true;
@@ -1515,7 +1520,7 @@ function update() {
                 if (boomAudio) {
                     boomAudio.currentTime = 0;
                     boomAudio.volume = VOLUME_BOOM;
-                    if (isSfxOn) boomAudio.play();
+                    if (isSfxOn) { boomAudio.pause(); boomAudio.currentTime = 0; boomAudio.play().catch(()=>{}); }
                 }
             }
             bullets.splice(i, 1);
@@ -1542,7 +1547,7 @@ function update() {
                 if (bossdieAudio) {
                     bossdieAudio.currentTime = 0;
                     bossdieAudio.volume = VOLUME_BOSSDIE;
-                    if (isSfxOn) bossdieAudio.play();
+                    if (isSfxOn) { bossdieAudio.pause(); bossdieAudio.currentTime = 0; bossdieAudio.play().catch(()=>{}); }
                 }
                 // 1. 黃白閃爍2秒
                 const flashDiv = document.getElementById('flash-effect');
@@ -1587,7 +1592,7 @@ function update() {
                                     if (outroAudio) {
                                         outroAudio.currentTime = 0;
                                         outroAudio.volume = VOLUME_OUTRO;
-                                        if (isBgmOn) outroAudio.play();
+                                        if (isBgmOn) { outroAudio.pause(); outroAudio.currentTime = 0; outroAudio.play().catch(()=>{}); }
                                     }
                                     // 4. 2秒內白色遮罩淡出、勝利畫面同步淡入
                                     let outOpacity = 1;
@@ -1670,7 +1675,7 @@ function update() {
             // ===== 進入 boss 區切換 BGM =====
             if (isBgmOn) {
                 if (bgm) { bgm.pause(); }
-                if (bgm2) { bgm2.currentTime = 0; bgm2.volume = VOLUME_BGM2; bgm2.play(); }
+                if (bgm2) { bgm2.currentTime = 0; bgm2.volume = VOLUME_BGM2; bgm2.play().catch(()=>{}); }
             }
         } else {
             // 回到一般區
@@ -2415,7 +2420,7 @@ function gameOver() {
         if (gameOverAudio) {
             gameOverAudio.currentTime = 0;
             gameOverAudio.volume = VOLUME_GAMEOVER;
-            if (isSfxOn) gameOverAudio.play();
+            if (isSfxOn) { gameOverAudio.pause(); gameOverAudio.currentTime = 0; gameOverAudio.play().catch(()=>{}); }
         }
     }, 100); // 0.1秒後才顯示 game over 畫面
 }
@@ -2449,12 +2454,12 @@ function winGame() {
     if (outroAudio) {
         outroAudio.currentTime = 0;
         outroAudio.volume = VOLUME_OUTRO;
-        if (isBgmOn) outroAudio.play();
+        if (isBgmOn) { outroAudio.pause(); outroAudio.currentTime = 0; outroAudio.play().catch(()=>{}); }
         // 確保onended事件設置
         outroAudio.onended = function() {
             setTimeout(() => {
                 outroAudio.currentTime = 0;
-                if (isBgmOn) outroAudio.play();
+                if (isBgmOn) { outroAudio.pause(); outroAudio.currentTime = 0; outroAudio.play().catch(()=>{}); }
             }, 1000);
         };
     }
@@ -2991,7 +2996,7 @@ if (bgmOnInput2) {
         const bgm = document.getElementById('bgm');
         const outroAudio = document.getElementById('outro-audio');
         if (isBgmOn) {
-            if (bgm && gameRunning) { bgm.currentTime = 0; bgm.volume = VOLUME_BGM; bgm.play(); }
+            if (bgm && gameRunning) { bgm.currentTime = 0; bgm.volume = VOLUME_BGM; bgm.play().catch(()=>{}); }
         } else {
             if (bgm) { bgm.pause(); }
             if (outroAudio) { outroAudio.pause(); }
@@ -3087,7 +3092,7 @@ function simulateKey(key, pressed) {
                 if (shootAudio) {
                     shootAudio.currentTime = 0;
                     shootAudio.volume = VOLUME_SHOOT;
-                    if (isSfxOn) shootAudio.play();
+                    if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
                 }
                 if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
                 chargeAudioTimeout = setTimeout(() => {
@@ -3096,7 +3101,7 @@ function simulateKey(key, pressed) {
                         if (chargeAudio) {
                             chargeAudio.currentTime = 0;
                             chargeAudio.volume = VOLUME_CHARGE;
-                            if (isSfxOn) chargeAudio.play();
+                            if (isSfxOn) { chargeAudio.pause(); chargeAudio.currentTime = 0; chargeAudio.play().catch(()=>{}); }
                         }
                     }
                 }, 500);
