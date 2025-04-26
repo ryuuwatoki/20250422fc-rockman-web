@@ -2668,9 +2668,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // ===== 觸控操作模擬鍵盤 =====｜タッチ操作シミュレートキーボード
 /**
- * 觸控按鈕事件，模擬對應鍵盤事件
- * @param {string} btnId - 按鈕的DOM id
- * @param {string} key - 對應的鍵盤key值
+ * 觸控按鈕事件，模擬對應鍵盤事件 タッチボタンのイベントで、対応するキーボードイベントをシミュレートする
+ * @param {string} btnId - 按鈕的DOM id ボタンのDOM ID
+ * @param {string} key - 對應的鍵盤key值 対応するキーボードのkey値
  */
 function addTouchBtnEvent(btnId, key) {
     const btn = document.getElementById(btnId);
@@ -2689,8 +2689,8 @@ addTouchBtnEvent('btn-jump',  'ArrowUp');
 addTouchBtnEvent('btn-shoot', ' ');
 
 /**
- * 根據視窗大小自動縮放遊戲畫面
- * 無參數，無回傳值
+ * 根據視窗大小自動縮放遊戲畫面 ゲーム画面を自動的に縮小する
+ * 無參數，無回傳值 パラメーターなし、戻り値なし
  */
 function resizeGame() {
     const baseWidth = 800;
@@ -2711,13 +2711,13 @@ function resizeGame() {
 window.addEventListener('resize', resizeGame);
 window.addEventListener('DOMContentLoaded', resizeGame);
 
-// ===== FPS 計算與顯示 =====
+// ===== FPS 計算與顯示 =====｜FPS計算與顯示
 let lastFPSTime = performance.now();
 let frameCount = 0;
 let fps = 0;
 /**
- * FPS計算與顯示，每秒更新一次
- * 無參數，無回傳值
+ * FPS計算與顯示，每秒更新一次 フレームレートを計算し、1秒ごとに更新する
+ * 無參數，無回傳值 パラメーターなし、戻り値なし
  */
 function updateFPS() {
     frameCount++;
@@ -2732,13 +2732,13 @@ function updateFPS() {
             fpsDiv.style.display = showFPS == 1 ? 'block' : 'none';
         }
     }
-    // 每幀更新玩家座標
+    // 每幀更新玩家座標｜プレイヤーの座標を毎フレーム更新
     const xy = document.getElementById('xy-display');
     if (xy) {
         xy.textContent = `X: ${Math.round(player.x)}, Y: ${Math.round(player.y)}`;
         xy.style.display = showXY == 1 ? 'block' : 'none';
     }
-    // 每幀更新玩家格數座標
+    // 每幀更新玩家格數座標｜プレイヤーの座標を毎フレーム更新
     const nxy = document.getElementById('nxy-display');
     if (nxy) {
         const nx = Math.floor(player.x / 50);
@@ -2746,7 +2746,7 @@ function updateFPS() {
         nxy.textContent = `NX: ${nx}, NY: ${ny}`;
         nxy.style.display = showNXY == 1 ? 'block' : 'none';
     }
-    // 每幀更新數量資訊
+    // 每幀更新數量資訊｜数量情報を毎フレーム更新
     const entityCounts = document.getElementById('entity-counts');
     if (entityCounts) {
         const bossCount = bosses.filter(b => b && bossActive).length;
@@ -2755,13 +2755,13 @@ function updateFPS() {
     }
 }
 
-// ====== 設定面板 ======
+// ====== 設定面板 ======｜設定パネル
 // 1. 設定按鈕
 const settingsBtn = document.createElement('div');
 settingsBtn.id = 'settings-btn';
 settingsBtn.style.position = 'absolute';
 settingsBtn.style.right = '10px';
-settingsBtn.style.bottom = '6px'; // 設定按鈕高度
+settingsBtn.style.bottom = '6px'; // 設定按鈕高度｜設定ボタンの高さ
 settingsBtn.style.width = '45px';
 settingsBtn.style.height = '45px';
 settingsBtn.style.borderRadius = '50%';
@@ -2778,7 +2778,7 @@ settingsBtn.style.fontSize = '22px';
 settingsBtn.innerHTML = '<img src="img/setting.png" alt="settings" style="width:70%;height:70%;object-fit:contain;display:block;margin:auto;">';
 document.getElementById('game-wrapper').appendChild(settingsBtn);
 
-// 2. 設定面板
+// 2. 設定面板｜設定パネル
 const settingsPanel = document.createElement('div');
 //write Liu_Watoki
 settingsPanel.id = 'settings-panel';
@@ -2892,9 +2892,9 @@ settingsPanel.innerHTML = `
 document.body.appendChild(settingsPanel);
 
 
-// 3. 設定按鈕事件
+// 3. 設定按鈕事件｜設定ボタンのイベント
 settingsBtn.onclick = function() {
-    // 只負責開啟設定面板與同步 UI，不做儲存、不做關閉
+    // 只負責開啟設定面板與同步 UI，不做儲存、不做關閉// 設定パネルのオープン＆UI同期のみ。保存・クローズはしない。
     var bgmOnInput = document.getElementById('setting-bgm-on');
     var sfxOnInput = document.getElementById('setting-sfx-on');
     var moveSpeedInput = document.getElementById('setting-move-speed');
@@ -2918,7 +2918,7 @@ settingsBtn.onclick = function() {
     var startYInput = document.getElementById('setting-start-y');
     var AutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
     var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
-    // 同步 UI
+    // 同步 UI｜UIを同期
     if (bgmOnInput) bgmOnInput.checked = !!isBgmOn;
     if (sfxOnInput) sfxOnInput.checked = !!isSfxOn;
     if (moveSpeedInput) moveSpeedInput.value = playerMoveSpeed;
@@ -2971,7 +2971,7 @@ if (settingsCloseBtn) {
         var startYInput = document.getElementById('setting-start-y');
         var AutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
         var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
-        // 儲存（同步變數）
+        // 儲存（同步變數）｜保存（変数を同期）
         if (bgmOnInput) isBgmOn = bgmOnInput.checked ? 1 : 0;
         if (sfxOnInput) isSfxOn = sfxOnInput.checked ? 1 : 0;
         if (moveSpeedInput) playerMoveSpeed = parseInt(moveSpeedInput.value) || 1;
@@ -2999,7 +2999,7 @@ if (settingsCloseBtn) {
         if (startYInput) startYInput.value = playerStartY;
     };
 }
-// checkbox 變動即時同步ikotaw
+// checkbox 變動即時同步｜checkbox変更時即時同期
 ['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch','setting-auto-flip-player','setting-show-collision-box','setting-show-star','setting-show-meteor'].forEach(id => {
     var el = document.getElementById(id);
     if (el) {
@@ -3020,7 +3020,7 @@ if (settingsCloseBtn) {
         });
     }
 });
-// 音樂/效果音即時同步
+// 音樂/效果音即時同步｜音楽/エフェクト音即時同期
 var bgmOnInput2 = document.getElementById('setting-bgm-on');
 if (bgmOnInput2) {
     bgmOnInput2.addEventListener('change', function() {
@@ -3042,7 +3042,7 @@ if (sfxOnInput2) {
         isSfxOn = this.checked ? 1 : 0;
     });
 }
-// 4. 參數 input 綁定（移除即時套用）
+// 4. 參數 input 綁定（移除即時套用）｜パラメーターinputをバインド（即時適用）
 var moveSpeedInput2 = document.getElementById('setting-move-speed');
 if (moveSpeedInput2) moveSpeedInput2.addEventListener('input', function() {
     playerMoveSpeed = parseInt(this.value) || 1;
@@ -3071,7 +3071,7 @@ var jumpExtraFramesInput2 = document.getElementById('setting-jump-extra-frames')
 if (jumpExtraFramesInput2) jumpExtraFramesInput2.addEventListener('input', function() {
     JUMP_EXTRA_FRAMES = parseInt(this.value) || 12;
 });
-// 新增即時同步
+// 新增即時同步｜新規即時同期
 var enemyMaxCountInput2 = document.getElementById('setting-enemy-max-count');
 if (enemyMaxCountInput2) enemyMaxCountInput2.addEventListener('input', function() {
     enemyMaxCount = parseInt(this.value) || 1;
@@ -3087,12 +3087,12 @@ if (bossPattern1) bossPattern1.addEventListener('change', function() { if (this.
 if (bossPattern2) bossPattern2.addEventListener('change', function() { if (this.checked) bossBulletPatternMode = 2; });
 if (bossPattern3) bossPattern3.addEventListener('change', function() { if (this.checked) bossBulletPatternMode = 3; });
 
-// 補上 simulateKey 實作
+// 補上 simulateKey 實作｜simulateKeyの実装
 function simulateKey(key, pressed) {
     if (keys.hasOwnProperty(key)) {
         keys[key] = pressed;
     }
-    // 若需要觸發跳躍的特殊行為
+    // 若需要觸發跳躍的特殊行為 // ジャンプの特殊な挙動をトリガーする必要がある場合
     if (key === 'ArrowUp') {
         if (pressed) {
             if (!jumpKeyPressed) {
@@ -3113,7 +3113,7 @@ function simulateKey(key, pressed) {
             }
         }
     }
-    // 射擊鍵特殊處理
+    // 射擊鍵特殊處理｜射撃キーの特殊な処理
     if (key === ' ') {
         if (pressed) {
             if (!charging && gameRunning) {
@@ -3143,7 +3143,7 @@ function simulateKey(key, pressed) {
             if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
                 chargeReady = true;
             } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
-                // 只有 chargeReady 為 false 才補發普通彈，且不受冷卻限制
+                // 只有 chargeReady 為 false 才補發普通彈，且不受冷卻限制 // chargeReadyがfalseの場合のみ普通の弾を補充し、冷却制限を受けない
                 bullets.push({
                     x: player.x + (player.direction === 1 ? player.width : -10),
                     y: player.y + player.height / 2 - 3,
@@ -3174,7 +3174,7 @@ function updateMobileTouchDisplay() {
         touchControls.style.display = showMobileTouch ? 'flex' : 'none';
     }
 }
-// 預設載入時也要呼叫一次
+// 預設載入時也要呼叫一次｜デフォルトの読み込み時にも呼び出す
 updateMobileTouchDisplay();
 
 document.getElementById('setting-start-x').addEventListener('input', function() {
@@ -3186,7 +3186,7 @@ document.getElementById('setting-start-y').addEventListener('input', function() 
 
 let writeName = 'LiuWatoki';
 
-// 根據語言切換設定面板所有文字
+// 根據語言切換設定面板所有文字｜言語切り替えに応じて設定パネルのすべてのテキストを更新
 function updateSettingsPanelLang() {
     const L = LANGUAGES[currentLang].settings;
     document.querySelector('#settings-panel h2').textContent = L.title;
@@ -3257,7 +3257,7 @@ function updateSettingsPanelLang() {
     document.getElementById('label-boss-pattern-hard').textContent = L.bossPatternHard || '困難';
 }
 
-// 自訂語言選單邏輯
+// 自訂語言選單邏輯｜カスタム言語選択メニューのロジック
 const customLangBtn = document.getElementById('custom-lang-select-btn');
 const customLangList = document.getElementById('custom-lang-select-list');
 const customLangItems = customLangList.querySelectorAll('li');
