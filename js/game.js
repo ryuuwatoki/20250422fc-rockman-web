@@ -1852,10 +1852,10 @@ function render() {
         }
         if (enemy.isFlying) {
             // FLY_RED 用圖片動畫
-            if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
+            if (enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(flyRedImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
-            } else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
+            } else if (enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(flyOrangeImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             } else {
@@ -1874,17 +1874,17 @@ function render() {
             }
         } else {
             // GROUND_RED
-            if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
+            if (enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(groundRedImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             }
             // GROUND_ORANGE
-            else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
+            else if (enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(groundOrangeImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             }
             // GROUND_PINK
-            else if (enemy.color === 'rgba(255,136,204,1)' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
+            else if (enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(groundPinkImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             }
@@ -1918,31 +1918,31 @@ function render() {
         // ====== 新增碰撞箱顯示 ======
         // 依據敵人類型選擇對應參數
         let boxX = 0, boxY = 0, boxNX = 50, boxNY = 50, boxCircle = 0.4;
-        if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
+        if (enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
             boxX = FLY_RED_CollisionBox[0];
             boxY = FLY_RED_CollisionBox[1];
             boxNX = FLY_RED_CollisionBoxNX;
             boxNY = FLY_RED_CollisionBoxNY;
             boxCircle = FLY_RED_CollisionBoxCircle;
-        } else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
+        } else if (enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
             boxX = FLY_ORANGE_CollisionBox[0];
             boxY = FLY_ORANGE_CollisionBox[1];
             boxNX = FLY_ORANGE_CollisionBoxNX;
             boxNY = FLY_ORANGE_CollisionBoxNY;
             boxCircle = FLY_ORANGE_CollisionBoxCircle;
-        } else if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
+        } else if (enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
             boxX = GROUND_RED_CollisionBox[0];
             boxY = GROUND_RED_CollisionBox[1];
             boxNX = GROUND_RED_CollisionBoxNX;
             boxNY = GROUND_RED_CollisionBoxNY;
             boxCircle = GROUND_RED_CollisionBoxCircle;
-        } else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
+        } else if (enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
             boxX = GROUND_ORANGE_CollisionBox[0];
             boxY = GROUND_ORANGE_CollisionBox[1];
             boxNX = GROUND_ORANGE_CollisionBoxNX;
             boxNY = GROUND_ORANGE_CollisionBoxNY;
             boxCircle = GROUND_ORANGE_CollisionBoxCircle;
-        } else if (enemy.color === 'rgba(255,136,204,1)' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
+        } else if (enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
             boxX = GROUND_PINK_CollisionBox[0];
             boxY = GROUND_PINK_CollisionBox[1];
             boxNX = GROUND_PINK_CollisionBoxNX;
@@ -1959,15 +1959,15 @@ function render() {
             const boxY1 = centerY - boxY / 2;
             // 依敵人類型決定碰撞箱顏色
             let collisionBoxColor = 'rgba(0, 145, 255, 0.7)'; // 預設藍色
-            if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
+            if (enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
                 collisionBoxColor = 'rgba(255,0,0,0.7)'; // 紅色
-            } else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
+            } else if (enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
                 collisionBoxColor = 'rgba(255,128,0,0.7)'; // 橘色
-            } else if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
+            } else if (enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
                 collisionBoxColor = 'rgba(255,0,0,0.7)'; // 紅色
-            } else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
+            } else if (enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
                 collisionBoxColor = 'rgba(255,128,0,0.7)'; // 橘色
-            } else if (enemy.color === 'rgba(255,136,204,1)' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
+            } else if (enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
                 collisionBoxColor = 'rgba(255,182,193,0.7)'; // 粉紅色
             }
             // 畫橢圓
