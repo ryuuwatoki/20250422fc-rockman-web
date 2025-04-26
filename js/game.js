@@ -73,11 +73,17 @@ let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量｜ボス死亡効果音�
 let VOLUME_BOSS     = 0.85;  // Boss出場音效音量｜ボス登場効果音音量
 let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量｜勝利BGM音量
 
+// areacolor
+// let normal_area_color = 'rgba(68,68,68,1)';
+// let boss_area_color = 'rgba(136,0,0,1)';
 
+// 
 const COLOR_PLATFORM_NORMAL = 'rgba(68,68,68,1)';      // 一般平台顏色
 const COLOR_PLATFORM_BOSS   = 'rgba(136,0,0,1)';      // Boss區域平台顏色
 
-// 以格數設計的平台資料 地板｜グリッド設計のプラットフォームデータ（床）
+
+
+// 地板顏色 過去設定 請無視～ // 床の色の過去の設定です。無視してください〜
 const platformGrid = [
     // 第一區（0~2700）｜第一区（0~2700）
     { x: 0, y: 1, color: COLOR_PLATFORM_NORMAL },
@@ -254,21 +260,6 @@ function checkBoxShowHideAll(mode) {
     showMobileTouch = mode;
 };
 
-// ===== 隕石系統 =====
-let meteors = [];
-let meteorSpawnTimer = 0;
-let bossBgTransition = 0; // Boss區背景漸變進度 0~1
-let meteorSpawnFrequency = 180; // 每次生成隕石的間隔幀數
-let meteorSpawnRate = 0.2; // 隕石生成率
-let boosMeteorSpawnFrequency = 20; // 每次生成隕石的間隔幀數
-let bossMeteorSpawnRate = 1; // 隕石生成率
-let enterBossArea = 30; //進入boss區間變時間 (單位秒)
-let outBossArea = 1; //離開boss區間變時間 (單位秒)
-let boosMeteorDelay = 7; //進入boss區多久觸發隕石(單位秒)
-// ===== 隕石切換延遲控制 =====
-let inBossAreaDelayTimer = 0; // 進入Boss區延遲計時器（幀）
-let outBossAreaDelayTimer = 0; // 離開Boss區延遲計時器（幀）
-let isInBossAreaMeteor = false; // 目前隕石是否為Boss區型態
 
 
 // ===== 物件面積 ===== //
@@ -323,9 +314,6 @@ const COLOR_BULLET_NORMAL   = 'rgba(179,240,255,1)';   // 玩家普通子彈顏�
 const COLOR_BULLET_CHARGE   = 'rgba(255,255,0,1)';      // 玩家集氣彈顏色
 const COLOR_BULLET_ENEMY    = 'rgba(255,136,255,1)';      // 敵人子彈顏色
 const COLOR_BULLET_BOSS     = 'rgba(255,68,170,1)';      // Boss子彈顏色
-const BOSS_METEOR_COLOR     = 'rgba(255,152,0,1)';   // Boss隕石顏色
-
-const BOSS_METEOR_SIZE = 10; // Boss隕石尺寸
 
 // 新增floor圖片物件
 const floorImg = new Image(); floorImg.src = 'img/01floor.png';
@@ -1540,85 +1528,6 @@ function update() {
         }
     }
 
-    // ===== 隕石生成與更新 =====
-    meteorSpawnTimer++;
-    // 隕石切換延遲邏輯
-    if (player.x >= BOSS_AREA_X) {
-        if (!isInBossAreaMeteor && inBossAreaDelayTimer === 0) {
-            inBossAreaDelayTimer = Math.round(boosMeteorDelay * MAX_FPS); // 開始計時
-        }
-        if (inBossAreaDelayTimer > 0) {
-            inBossAreaDelayTimer--;
-            if (inBossAreaDelayTimer === 0) {
-                isInBossAreaMeteor = true;
-                outBossAreaDelayTimer = 0; // 清除離開計時
-            }
-        }
-    } else {
-        if (isInBossAreaMeteor && outBossAreaDelayTimer === 0) {
-            outBossAreaDelayTimer = Math.round(boosMeteorDelay * MAX_FPS); // 開始離開計時
-        }
-        if (outBossAreaDelayTimer > 0) {
-            outBossAreaDelayTimer--;
-            if (outBossAreaDelayTimer === 0) {
-                isInBossAreaMeteor = false;
-                inBossAreaDelayTimer = 0; // 清除進入計時
-            }
-        }
-    }
-    // 根據 isInBossAreaMeteor 來決定隕石生成規則
-    if (isInBossAreaMeteor) {
-        // Boss區
-        if (meteorSpawnTimer >= boosMeteorSpawnFrequency) {
-            meteorSpawnTimer = 0;
-            if (Math.random() < bossMeteorSpawnRate) {
-                let mx = camera.x + 500 + Math.random() * 2500;
-                let my = Math.random() * 150;
-                let speed = (2 + Math.random() * 2) * 2.5;
-                let angle = Math.PI + (Math.random() * 0.5 - 0.25);
-                let vx = Math.cos(angle) * speed;
-                let vy = Math.sin(angle) * speed;
-                let life = 20 + Math.floor(Math.random() * 41);
-                meteors.push({ x: mx, y: my, vx, vy, life, bossMeteor: true });
-            }
-        }
-        // Boss區背景漸變
-        if (bossBgTransition < 1) {
-            bossBgTransition += 1 / (enterBossArea * MAX_FPS);
-            if (bossBgTransition > 1) bossBgTransition = 1;
-        }
-    } else {
-        // 一般區
-        if (meteorSpawnTimer >= meteorSpawnFrequency) {
-            meteorSpawnTimer = 0;
-            if (Math.random() < meteorSpawnRate) {
-                let mx = camera.x + 500 + Math.random() * 500;
-                let my = Math.random() * 150;
-                let speed = (2 + Math.random() * 2) * 5;
-                let angle = Math.PI + (Math.random() * 0.5 - 0.25);
-                let vx = Math.cos(angle) * speed;
-                let vy = Math.sin(angle) * speed;
-                let life = 20 + Math.floor(Math.random() * 41);
-                meteors.push({ x: mx, y: my, vx, vy, life });
-            }
-        }
-        // 離開Boss區時背景漸變回去
-        let meteorSpawnTimerRWTK = 0;
-        if (bossBgTransition > 0) {
-            bossBgTransition -= 1 / (outBossArea * MAX_FPS);
-            if (bossBgTransition < 0) bossBgTransition = 0;
-        }
-    }
-    // 更新隕石
-    for (let i = meteors.length - 1; i >= 0; i--) {
-        let m = meteors[i];
-        m.x += m.vx;
-        m.y += m.vy;
-        m.life--;
-        if (m.life <= 0 || m.x < 0 || m.y > WORLD_HEIGHT) {
-            meteors.splice(i, 1);
-        }
-    }
 }
 
 // ===== 渲染遊戲 =====
@@ -1675,25 +1584,6 @@ function render() {
         }
     });
 
-    // ===== 繪製隕石（在玩家和敵人之間） =====
-    meteors.forEach(m => {
-        let alpha = 1;
-        if (m.life < 10) {
-            alpha = m.life / 10;
-        }
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        if (m.bossMeteor) {
-            ctx.fillStyle = BOSS_METEOR_COLOR;
-            ctx.beginPath();
-            ctx.arc(m.x + BOSS_METEOR_SIZE/2, m.y + BOSS_METEOR_SIZE/2, BOSS_METEOR_SIZE/2, 0, Math.PI * 2);
-            ctx.fill();
-        } else {
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(m.x, m.y, 3, 3);
-        }
-        ctx.restore();
-    });
     
     // 繪製玩家 (無敵時閃爍)
     if (!playerDead) { // 死亡時不繪製
