@@ -11,7 +11,7 @@ let weaponPower     = 1;     // 武器攻擊力設定，方便統一調整玩家
 let playerStartX    = 5150;  // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
 let playerStartY    = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100;   // 玩家血量 預設100｜プレイヤー体力 デフォルト100
-let GRAVITY         = 1.6;   // 重力加速度
+let GRAVITY         = 1.6;   // 重力
 let JUMP_POWER      = 21;    // 跳躍力量
 
 let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';  // 玩家攻擊子彈顏色   
