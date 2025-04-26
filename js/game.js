@@ -363,7 +363,7 @@ let bossCollisionBoxCircle = 0.3; // 0=圓形，1=矩形，越小越圓
 checkBoxShowHideAll(1);
 
 // 碰撞顏色設定
-const COLOR_PLAYER          = 'rgb(68, 255, 121)';      // 玩家顏色
+const COLOR_PLAYER          = 'rgba(68, 255, 121,1)';      // 玩家顏色
 const COLOR_FLY_RED         = 'rgba(255,0,0,1)';      // 飛行紅色顏色
 const COLOR_FLY_ORANGE      = 'rgba(255,165,0,1)';      // 飛行橙色顏色
 const COLOR_GROUND_RED      = 'rgba(255,0,0,1)';      // 地面紅色顏色
