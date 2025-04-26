@@ -71,8 +71,8 @@ let VOLUME_BOSS     = 0.85;  // Boss出場音效音量｜ボス登場効果音�
 let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量｜勝利BGM音量
 
 
-const COLOR_PLATFORM_NORMAL = '#444';      // 一般平台顏色｜通常プラットフォーム色
-const COLOR_PLATFORM_BOSS   = '#800';      // Boss區域平台顏色｜ボスエリアプラットフォーム色
+const COLOR_PLATFORM_NORMAL = 'rgba(68,68,68,1)';      // 一般平台顏色
+const COLOR_PLATFORM_BOSS   = 'rgba(136,0,0,1)';      // Boss區域平台顏色
 
 // 以格數設計的平台資料 地板｜グリッド設計のプラットフォームデータ（床）
 const platformGrid = [
@@ -313,15 +313,15 @@ let bossCollisionBoxNY = 40; //碰撞箱中心移動y
 let bossCollisionBoxCircle = 0.3; // 0=圓形，1=矩形，越小越圓
 
 // 顏色設定
-const COLOR_PLAYER          = '#4af';      // 玩家顏色
-const COLOR_BOSS            = '#2196f3';   // Boss主體顏色
-const COLOR_BOSS_FAN        = '#ffe082';   // Boss風扇顏色
-const COLOR_BOSS_FAN_CENTER = '#fff';      // Boss風扇中心顏色
-const COLOR_BULLET_NORMAL   = '#b3f0ff';   // 玩家普通子彈顏色
-const COLOR_BULLET_CHARGE   = '#ff0';      // 玩家集氣彈顏色
-const COLOR_BULLET_ENEMY    = '#f8f';      // 敵人子彈顏色
-const COLOR_BULLET_BOSS     = '#f4a';      // Boss子彈顏色
-const BOSS_METEOR_COLOR     = '#ff9800';   // Boss隕石顏色
+const COLOR_PLAYER          = 'rgba(68,170,255,1)';      // 玩家顏色
+const COLOR_BOSS            = 'rgba(33,150,243,1)';   // Boss主體顏色
+const COLOR_BOSS_FAN        = 'rgba(255,224,130,1)';   // Boss風扇顏色
+const COLOR_BOSS_FAN_CENTER = 'rgba(255,255,255,1)';      // Boss風扇中心顏色
+const COLOR_BULLET_NORMAL   = 'rgba(179,240,255,1)';   // 玩家普通子彈顏色
+const COLOR_BULLET_CHARGE   = 'rgba(255,255,0,1)';      // 玩家集氣彈顏色
+const COLOR_BULLET_ENEMY    = 'rgba(255,136,255,1)';      // 敵人子彈顏色
+const COLOR_BULLET_BOSS     = 'rgba(255,68,170,1)';      // Boss子彈顏色
+const BOSS_METEOR_COLOR     = 'rgba(255,152,0,1)';   // Boss隕石顏色
 
 const BOSS_METEOR_SIZE = 10; // Boss隕石尺寸
 
@@ -616,7 +616,7 @@ const enemyBullets = [];
 const ENEMY_TYPES = {
     // 飛行系列（圓形）
     FLY_RED: {
-        color: '#f44', // 顏色
+        color: 'rgba(255,68,68,1)', // 顏色
         speed: 1.5 * 1.1, // 移動速度
         health: 1, // 血量
         score: 60, // 擊殺得分
@@ -635,10 +635,10 @@ const ENEMY_TYPES = {
             }
         },
         isFlying: true, // 是否為飛行敵人
-        eye: { color: '#222', type: 'circle' } // 眼睛樣式
+        eye: { color: 'rgba(34,34,34,1)', type: 'circle' } // 眼睛樣式
     },
     FLY_ORANGE: {
-        color: '#f84', // 顏色 //bywatoki byLiuWatoki from_wa_to_ki
+        color: 'rgba(255,136,68,1)', // 顏色 //bywatoki byLiuWatoki from_wa_to_ki
         speed: 2.25 * 1.1, // 移動速度
         health: 1, // 血量
         score: 80, // 擊殺得分 //bywatoki from_wa_to_ki 
@@ -656,11 +656,11 @@ const ENEMY_TYPES = {
             }
         },
         isFlying: true, // 是否為飛行敵人
-        eye: { color: '#222', type: 'circle' } // 眼睛樣式
+        eye: { color: 'rgba(34,34,34,1)', type: 'circle' } // 眼睛樣式
     },
     // 地上系列（半圓形）
     GROUND_RED: {
-        color: '#f44', // 顏色
+        color: 'rgba(255,68,68,1)', // 顏色
         speed: 0.75 * 1.1, // 移動速度
         health: 1, // 血量
         score: 50, // 擊殺得分
@@ -675,10 +675,10 @@ const ENEMY_TYPES = {
             }
         },
         isFlying: false, // 是否為飛行敵人
-        eye: { color: '#222', type: 'semi' } // 眼睛樣式
+        eye: { color: 'rgba(34,34,34,1)', type: 'semi' } // 眼睛樣式
     },
     GROUND_ORANGE: {
-        color: '#f84', // 顏色
+        color: 'rgba(255,136,68,1)', // 顏色
         speed: 0.75 * 1.1, // 移動速度
         health: 1, // 血量
         score: 70, // 擊殺得分
@@ -697,10 +697,10 @@ const ENEMY_TYPES = {
             }
         },
         isFlying: false, // 是否為飛行敵人
-        eye: { color: '#222', type: 'semi' } // 眼睛樣式
+        eye: { color: 'rgba(34,34,34,1)', type: 'semi' } // 眼睛樣式
     },
     GROUND_PINK: {
-        color: '#f8c', // 顏色
+        color: 'rgba(255,136,204,1)', // 顏色
         speed: 0, // 移動速度
         health: 1, // 血量
         score: 100, // 擊殺得分
@@ -725,7 +725,7 @@ const ENEMY_TYPES = {
                         height: 6,
                         speedX: Math.cos(angle) * 1.3,
                         speedY: Math.sin(angle) * 1.3,
-                        color: '#f8c'
+                        color: 'rgba(255,136,204,1)'
                     });
                 }
                 enemy.shootCooldown = enemy.shootDelay;
@@ -739,7 +739,7 @@ const ENEMY_TYPES = {
             }
         },
         isFlying: false, // 是否為飛行敵人
-        eye: { color: '#fff', type: 'semi' } // 眼睛樣式
+        eye: { color: 'rgba(255,255,255,1)', type: 'semi' } // 眼睛樣式
     }
 };
 
@@ -756,7 +756,7 @@ const boss = {
     get height() { return BOSS_size[1]; }, // Boss高度
     speed: 2 * 1.1, // 1.1倍
     vy: 0, // 不再需要重力
-    color: '#2196f3', // 主體藍色（Airman主色）
+    color: 'rgba(33,150,243,1)', // 主體藍色（Airman主色）
     shootCooldown: 0,
     shootDelay: Math.round(200 / 1.1), // 間隔縮短
     pattern: 0,
@@ -871,7 +871,7 @@ const boss = {
                     height: 20,
                     speedX: Math.cos(angle) * bossBulletSpeed,
                     speedY: Math.sin(angle) * bossBulletSpeed,
-                    color: '#f4a'
+                    color: 'rgba(255,68,170,1)'
                 });
             }
             this.shootCooldown = this.shootDelay; // ← 每次發射後重設冷卻
@@ -1852,10 +1852,10 @@ function render() {
         }
         if (enemy.isFlying) {
             // FLY_RED 用圖片動畫
-            if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
+            if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(flyRedImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
-            } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
+            } else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(flyOrangeImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             } else {
@@ -1868,23 +1868,23 @@ function render() {
                 // 眼睛
                 ctx.beginPath();
                 ctx.arc(enemy.x + enemy.width*0.75, enemy.y + enemy.height/2, enemy.width/8, 0, Math.PI*2);
-                ctx.fillStyle = '#fff';
+                ctx.fillStyle = 'rgba(255,255,255,1)';
                 ctx.fill();
                 ctx.restore();
             }
         } else {
             // GROUND_RED
-            if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
+            if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(groundRedImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             }
             // GROUND_ORANGE
-            else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
+            else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(groundOrangeImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             }
             // GROUND_PINK
-            else if (enemy.color === '#f8c' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
+            else if (enemy.color === 'rgba(255,136,204,1)' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
                 const idx = enemy._imgIndex || 0;
                 ctx.drawImage(groundPinkImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             }
@@ -1901,7 +1901,7 @@ function render() {
                 // 眼睛（左前方）
                 ctx.beginPath();
                 ctx.arc(enemy.x + enemy.width*0.25, enemy.y + enemy.height*0.75, enemy.width/8, 0, Math.PI*2);
-                ctx.fillStyle = '#fff';
+                ctx.fillStyle = 'rgba(255,255,255,1)';
                 ctx.fill();
                 ctx.restore();
             }
@@ -1918,31 +1918,31 @@ function render() {
         // ====== 新增碰撞箱顯示 ======
         // 依據敵人類型選擇對應參數
         let boxX = 0, boxY = 0, boxNX = 50, boxNY = 50, boxCircle = 0.4;
-        if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
+        if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
             boxX = FLY_RED_CollisionBox[0];
             boxY = FLY_RED_CollisionBox[1];
             boxNX = FLY_RED_CollisionBoxNX;
             boxNY = FLY_RED_CollisionBoxNY;
             boxCircle = FLY_RED_CollisionBoxCircle;
-        } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
+        } else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
             boxX = FLY_ORANGE_CollisionBox[0];
             boxY = FLY_ORANGE_CollisionBox[1];
             boxNX = FLY_ORANGE_CollisionBoxNX;
             boxNY = FLY_ORANGE_CollisionBoxNY;
             boxCircle = FLY_ORANGE_CollisionBoxCircle;
-        } else if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
+        } else if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
             boxX = GROUND_RED_CollisionBox[0];
             boxY = GROUND_RED_CollisionBox[1];
             boxNX = GROUND_RED_CollisionBoxNX;
             boxNY = GROUND_RED_CollisionBoxNY;
             boxCircle = GROUND_RED_CollisionBoxCircle;
-        } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
+        } else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
             boxX = GROUND_ORANGE_CollisionBox[0];
             boxY = GROUND_ORANGE_CollisionBox[1];
             boxNX = GROUND_ORANGE_CollisionBoxNX;
             boxNY = GROUND_ORANGE_CollisionBoxNY;
             boxCircle = GROUND_ORANGE_CollisionBoxCircle;
-        } else if (enemy.color === '#f8c' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
+        } else if (enemy.color === 'rgba(255,136,204,1)' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
             boxX = GROUND_PINK_CollisionBox[0];
             boxY = GROUND_PINK_CollisionBox[1];
             boxNX = GROUND_PINK_CollisionBoxNX;
@@ -1959,15 +1959,15 @@ function render() {
             const boxY1 = centerY - boxY / 2;
             // 依敵人類型決定碰撞箱顏色
             let collisionBoxColor = 'rgba(0, 145, 255, 0.7)'; // 預設藍色
-            if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
+            if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
                 collisionBoxColor = 'rgba(255,0,0,0.7)'; // 紅色
-            } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
+            } else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
                 collisionBoxColor = 'rgba(255,128,0,0.7)'; // 橘色
-            } else if (enemy.color === '#f44' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
+            } else if (enemy.color === 'rgba(255,68,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_RED.behavior) {
                 collisionBoxColor = 'rgba(255,0,0,0.7)'; // 紅色
-            } else if (enemy.color === '#f84' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
+            } else if (enemy.color === 'rgba(255,136,68,1)' && enemy.behavior === ENEMY_TYPES.GROUND_ORANGE.behavior) {
                 collisionBoxColor = 'rgba(255,128,0,0.7)'; // 橘色
-            } else if (enemy.color === '#f8c' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
+            } else if (enemy.color === 'rgba(255,136,204,1)' && enemy.behavior === ENEMY_TYPES.GROUND_PINK.behavior) {
                 collisionBoxColor = 'rgba(255,182,193,0.7)'; // 粉紅色
             }
             // 畫橢圓
@@ -2076,7 +2076,7 @@ function render() {
     // 繪製敵方子彈
     enemyBullets.forEach(bullet => {
         // Boss子彈（tornado）
-        if (bullet.color === '#f4a') {
+        if (bullet.color === 'rgba(255,68,170,1)') {
             const tornadoImg = document.getElementById('tornado-img');
             if (tornadoImg && tornadoImg.complete) {
                 ctx.save();
@@ -2179,9 +2179,9 @@ function checkCollision(a, b) {
 
     // 只要有一方沒自訂碰撞箱，維持原本矩形碰撞
     return a.x < b.x + b.width &&
-           a.x + a.width > b.x &&
-           a.y < b.y + b.height &&
-           a.y + a.height > b.y;
+            a.x + a.width > b.x &&
+            a.y < b.y + b.height &&
+            a.y + a.height > b.y;
 }
 
 //更新玩家血條顯示
