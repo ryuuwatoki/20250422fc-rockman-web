@@ -107,7 +107,6 @@ const boss_meteor_params = {
 };
 
 
-
 // 一般區域顏色
 let normal_area_color1 = 'rgba(68,68,68,1)';
 let normal_area_color2 = 'rgba(68,68,68,1)';
@@ -2466,6 +2465,8 @@ const LANGUAGES = {
             showMobileTouch: '顯示手機觸控',
             autoFlipPlayer: '左右轉身',
             showCollisionBox: '碰撞箱',
+            showStar: '顯示星星',
+            showMeteor: '顯示流星',
             ok: '確定'
         }
     },
@@ -2507,6 +2508,8 @@ const LANGUAGES = {
             showMobileTouch: 'モバイルタッチ表示',
             autoFlipPlayer: '左右反転',
             showCollisionBox: '当たり判定',
+            showStar: '星を表示',
+            showMeteor: '流星を表示',
             ok: 'OK'
         }
     },
@@ -2548,6 +2551,8 @@ const LANGUAGES = {
             showMobileTouch: 'Show Mobile Touch',
             autoFlipPlayer: 'Flip LR',
             showCollisionBox: 'Collision',
+            showStar: 'Show Star',
+            showMeteor: 'Show Meteor',
             ok: 'OK'
         }
     }
@@ -2789,11 +2794,14 @@ settingsPanel.innerHTML = `
     <div style="margin-bottom:16px;">
         <label><input type="checkbox" id="setting-show-nxy"> Show NXY</label>
         <label style="margin-left:16px;"><input type="checkbox" id="setting-show-entity-counts"> Show Entity Counts</label>
-    </div>
+        <label style="margin-left:16px;"><input type="checkbox" id="setting-show-collision-box"> 顯示碰撞箱</label>
+
+        </div>
 
     <div style="margin-bottom:16px;">
-        <label><input type="checkbox" id="setting-show-collision-box"> 顯示碰撞箱</label>
-        <label style="margin-left:16px;"><input type="checkbox" id="setting-auto-flip-player"> 自動翻轉角色</label>
+        <label><input type="checkbox" id="setting-auto-flip-player"> 自動翻轉角色</label>
+        <label style="margin-left:16px;"><input type="checkbox" id="setting-show-star"> 顯示星星</label>
+        <label style="margin-left:16px;"><input type="checkbox" id="setting-show-meteor"> 顯示流星</label>
 
     </div>
 
@@ -2916,7 +2924,7 @@ if (settingsCloseBtn) {
     };
 }
 // checkbox 變動即時同步ikotaw
-['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch','setting-auto-flip-player','setting-show-collision-box'].forEach(id => {
+['setting-show-score','setting-show-moved','setting-show-fps','setting-show-xy','setting-show-nxy','setting-show-entity-counts','setting-show-mobile-touch','setting-auto-flip-player','setting-show-collision-box','setting-show-star','setting-show-meteor'].forEach(id => {
     var el = document.getElementById(id);
     if (el) {
         el.addEventListener('change', function() {
@@ -2930,6 +2938,8 @@ if (settingsCloseBtn) {
                 case 'setting-show-mobile-touch': showMobileTouch = this.checked ? 1 : 0; updateMobileTouchDisplay(); break;
                 case 'setting-auto-flip-player': AutoFlipPlayer = this.checked ? 1 : 0; break;
                 case 'setting-show-collision-box': ShowCollisionBox = this.checked ? 1 : 0; break;
+                case 'setting-show-star': showStar = this.checked ? 1 : 0; break;
+                case 'setting-show-meteor': showMeteor = this.checked ? 1 : 0; break;
             }
         });
     }
@@ -3159,6 +3169,8 @@ function updateSettingsPanelLang() {
     updateCheckboxLabel('setting-show-mobile-touch', L.showMobileTouch);
     updateCheckboxLabel('setting-auto-flip-player', L.autoFlipPlayer || '自動翻轉角色');
     updateCheckboxLabel('setting-show-collision-box', L.showCollisionBox || '顯示碰撞箱');
+    updateCheckboxLabel('setting-show-star', L.showStar || '顯示星星');
+    updateCheckboxLabel('setting-show-meteor', L.showMeteor || '顯示流星');
     document.getElementById('settings-close-btn').textContent = L.ok;
     // 新增多語言
     document.getElementById('label-enemy-max-count').childNodes[0].textContent = (L.enemyMaxCount || '敵人最大數量') + ' ';
