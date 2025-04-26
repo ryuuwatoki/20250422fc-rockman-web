@@ -7,52 +7,53 @@ let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文�
 let MAX_FPS = 60;            // 最大FPS設定 預設60｜最大FPS設定 デフォルト60
 
 let playerMoveSpeed = 8;     // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
-let weaponPower = 1;         // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
-let playerStartX = 5150;     // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
-let playerStartY = 150;      // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
+let weaponPower     = 1;     // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
+let playerStartX    = 5150;  // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
+let playerStartY    = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
 let playerMaxHealth = 100;   // 玩家血量 預設100｜プレイヤー体力 デフォルト100
 let GRAVITY         = 1.6;   // 重力加速度
 let JUMP_POWER      = 21;    // 跳躍力量
+
 let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';  // 玩家攻擊子彈顏色   
 let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';  // 玩家集氣攻擊子彈顏色
 let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';  // 玩家集氣攻擊子彈顏色
 
-let Fly_RED_HP = 1;        // 飛行紅色敵人血量｜飛行赤色敵体の体力
-let Fly_ORANGE_HP = 3;     // 飛行橘色敵人血量｜飛行オレンジ敵体の体力
-let GROUND_RED_HP = 3;     // 地面紅色敵人血量｜地上赤色敵体の体力
-let GROUND_ORANGE_HP = 3;  // 地面橘色敵人血量｜地上オレンジ敵体の体力
-let GROUND_PINK_HP = 5;    // 地面粉紅敵人血量｜地上ピンク敵体の体力
+let Fly_RED_HP       = 1;   // 飛行紅色敵人血量｜飛行赤色敵体の体力
+let Fly_ORANGE_HP    = 3;   // 飛行橘色敵人血量｜飛行オレンジ敵体の体力
+let GROUND_RED_HP    = 3;   // 地面紅色敵人血量｜地上赤色敵体の体力
+let GROUND_ORANGE_HP = 3;   // 地面橘色敵人血量｜地上オレンジ敵体の体力
+let GROUND_PINK_HP   = 5;   // 地面粉紅敵人血量｜地上ピンク敵体の体力
 
-let enemyMaxCount = 15;    // 敵人最大數量 預設15｜敵最大数 デフォルト15
+let enemyMaxCount    = 15;  // 敵人最大數量 預設15｜敵最大数 デフォルト15
 
-let FLY_RED_spawn = 1;         // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
-let FLY_ORANGE_spawn = 1;      // 敵人Ｂ是否生成，1=是，0=否｜敵B生成するか 1=はい 0=いいえ
-let GROUND_RED_spawn = 1;      // 敵人Ｃ是否生成，1=是，0=否｜敵C生成するか 1=はい 0=いいえ
-let GROUND_ORANGE_spawn = 1;   // 敵人Ｄ是否生成，1=是，0=否｜敵D生成するか 1=はい 0=いいえ
-let GROUND_PINK_spawn = 1;     // 敵人Ｅ是否生成，1=是，0=否｜敵E生成するか 1=はい 0=いいえ
-let bossHealth   = 100;        // Boss血量 預設100｜ボス体力 デフォルト100
-let bossSetX = 5000;           // boss 座標 x 預設5000｜ボス座標 x デフォルト5000
-let bossSetY = 230;            // boss 座標 y 預設230｜ボス座標 y デフォルト230
-let bossBulletDamage = 4;      // boss 子彈攻擊力 預設5
-let bossImpactDamage = 8;      // boss 撞擊攻擊力 預設10
-let bossBulletSpeed = 4;       // boss 子彈速度（預設4，數值越大越快）｜ボス弾スピード（デフォルト4、数値が大きいほど速い）
-let bossStopTime = 60;         // boss被蓄氣攻擊後暫停時間(幾偵)
-let bossBulletPatternMode = 2; // boss發射子彈的模式 1:固定3發 2:隨機3/4/5發 3:隨機3/4/5/7發｜ボス弾パターン 1:固定3発 2:ランダム3/4/5発 3:ランダム3/4/5/7発
-let bossBulletDelay = [40, 90]; // boss 子彈延遲時間(每幾偵～幾偵發射一次)
-let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否｜ボス弾発射するか 1=はい 0=いいえ
-let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否｜ボス座標固定するか（移動しない）1=はい 0=いいえ
+let FLY_RED_spawn         = 1;         // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
+let FLY_ORANGE_spawn      = 1;         // 敵人Ｂ是否生成，1=是，0=否｜敵B生成するか 1=はい 0=いいえ
+let GROUND_RED_spawn      = 1;         // 敵人Ｃ是否生成，1=是，0=否｜敵C生成するか 1=はい 0=いいえ
+let GROUND_ORANGE_spawn   = 1;         // 敵人Ｄ是否生成，1=是，0=否｜敵D生成するか 1=はい 0=いいえ
+let GROUND_PINK_spawn     = 1;         // 敵人Ｅ是否生成，1=是，0=否｜敵E生成するか 1=はい 0=いいえ
+let bossHealth            = 100;       // Boss血量 預設100｜ボス体力 デフォルト100
+let bossSetX              = 5000;      // boss 座標 x 預設5000｜ボス座標 x デフォルト5000
+let bossSetY              = 230;       // boss 座標 y 預設230｜ボス座標 y デフォルト230
+let bossBulletDamage      = 4;         // boss 子彈攻擊力 預設5
+let bossImpactDamage      = 8;         // boss 撞擊攻擊力 預設10
+let bossBulletSpeed       = 4;         // boss 子彈速度（預設4，數值越大越快）｜ボス弾スピード（デフォルト4、数値が大きいほど速い）
+let bossStopTime          = 60;        // boss被蓄氣攻擊後暫停時間(幾偵)
+let bossBulletPatternMode = 2;         // boss發射子彈的模式 1:固定3發 2:隨機3/4/5發 3:隨機3/4/5/7發｜ボス弾パターン 1:固定3発 2:ランダム3/4/5発 3:ランダム3/4/5/7発
+let bossBulletDelay       = [40, 90];  // boss 子彈延遲時間(每幾偵～幾偵發射一次)
+let bossBulletEnable      = 1;         // boss 子彈是否射擊，1=是，0=否｜ボス弾発射するか 1=はい 0=いいえ
+let bossFixedPosition     = 0;         // boss 是否固定座標（取消移動），1=是，0=否｜ボス座標固定するか（移動しない）1=はい 0=いいえ
 
-let showScore = 1; // score:0 顯示1 隱藏0｜スコア表示 1=表示 0=非表示
-let showMoved = 0; // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
-let showFPS = 1; //showfps｜FPS表示
-let showXY = 0; //show xy｜XY座標表示
-let showNXY = 0; //show new xy｜グリッド座標表示
-let ShowCollisionBox = 0; //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
-let AutoFlipPlayer = 1; // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1
-let showEntityCounts = 0; //show 人物怪物子彈數量｜エンティティ数表示
-let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
-let showStar = 1; // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
-let showMeteor = 1; // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
+let showScore        = 1;  // score:0 顯示1 隱藏0｜スコア表示 1=表示 0=非表示
+let showMoved        = 0;  // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
+let showFPS          = 1;  //showfps｜FPS表示
+let showXY           = 0;  //show xy｜XY座標表示
+let showNXY          = 0;  //show new xy｜グリッド座標表示
+let ShowCollisionBox = 0;  //是否顯示遮圖顯示目前碰撞箱 1顯示0隱藏// 以中心為0，上方60、下方-60
+let AutoFlipPlayer   = 1;  // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1
+let showEntityCounts = 0;  //show 人物怪物子彈數量｜エンティティ数表示
+let showMobileTouch  = 1;  // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
+let showStar         = 1;  // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
+let showMeteor       = 1;  // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
 
 // **玩家飛行無敵模式 =｜プレイヤー飛行無敵モード**
 let isFlyingMode = 0; // 預設關閉 請預設上面hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
@@ -83,25 +84,25 @@ let enter_normal_area_meteor_change_time = 1000; //Fps
 
 // 一般區域流星雨參數
 const normal_meteor_params = {
-    color: 'rgb(255, 250, 250)', // 流星顏色
-    size: [6, 6], // 流星大小
-    speed: 1200, // 流星速度
-    update_random: 0.1, // 流星生成機率
-    update_interval: 18, // 幾幀產生一次流星
-    stay_time: [20, 40], // 流星停留時間
-    descent_angle: [-45, 70], // 流星下落角度
-    position: [0, 800, 0, 50] // 流星生成位置範圍
+    color          : 'rgb(255, 250, 250)',   // 流星顏色
+    size           : [6, 6],                 // 流星大小
+    speed          : 1200,                   // 流星速度
+    update_random  : 0.1,                    // 流星生成機率
+    update_interval: 18,                     // 幾幀產生一次流星
+    stay_time      : [20, 40],               // 流星停留時間
+    descent_angle  : [-45, 70],              // 流星下落角度
+    position       : [0, 800, 0, 50]         // 流星生成位置範圍
 };
 // Boss區域流星雨參數
 const boss_meteor_params = {
-    color: 'rgba(153, 21, 76, 0.74)', // 流星顏色
-    size: [8, 8], // 流星大小
-    speed: 600, // 流星速度
-    update_random: 0.2, // 流星生成機率
-    update_interval: 3, // 幾幀產生一次流星
-    stay_time: [10, 100], // 流星停留時間
-    descent_angle: [0, 360], // 流星下落角度
-    position: [0, 800, 0, 400] // 流星生成位置範圍
+    color          : 'rgba(153, 21, 76, 0.74)',   // 流星顏色
+    size           : [8, 8],                      // 流星大小
+    speed          : 600,                         // 流星速度
+    update_random  : 0.2,                         // 流星生成機率
+    update_interval: 3,                           // 幾幀產生一次流星
+    stay_time      : [10, 100],                   // 流星停留時間
+    descent_angle  : [0, 360],                    // 流星下落角度
+    position       : [0, 800, 0, 400]             // 流星生成位置範圍
 };
 
 // 一般區域顏色
@@ -256,39 +257,39 @@ const basePlatforms = platformGrid.map(p => ({
 }));
 
 // 遊戲常數
-let score= 0;     // 玩家分數
-const WORLD_WIDTH     = 5400;    // 世界寬度
-const WORLD_HEIGHT    = 500;       // 世界高度
-const BOSS_AREA_X     = 4600;      // Boss區域起點X座標
-let CHARGE_MIN_FRAME = 42;       // 集氣彈最少需要的幀數
-let CHARGE_CANCEL_FRAME = 12;    // 集氣取消的最短幀數
-let bossBulletCount = 3; // boss子彈數量
-let gameRunning  = false; // 遊戲是否正在進行中
-let bossActive   = false; // Boss是否啟動
-let bossTimer    = 0;     // Boss出場動畫計時器
-let reachedBossArea = false; // 玩家是否已經抵達過boss區域
-let charging = false; // 是否正在集氣
-let chargeFrame = 0; // 集氣持續幀數
-let chargeReady = false; // 是否集氣完成
-let bossHitFlash = 0; // Boss被擊中閃爍計數
-let upPressed = false; // 追蹤上鍵是否已經按下
-let chargeAudioTimeout = null; // 集氣音效延遲計時器
-let bossCanAttack = false; // Boss是否可以攻擊
-let bossCanMove = false; // Boss是否可以移動
-let bossHpAnimating = false; // Boss血條是否正在動畫
-let canShoot = true; // 玩家是否可以射擊
-let midEventTriggered = false; // 中途事件是否已觸發
-let playerDead = false; // 玩家死亡狀態
-let playerDeadX = 0;   // 死亡時的X
-let playerDeadY = 0;   // 死亡時的Y
-let JUMP_EXTRA      = 0.5; // 長按跳躍時每幀額外加速度（正數，實際運算自動轉負）
-let JUMP_EXTRA_FRAMES = 12;      // 跳躍額外加速最大幀數
-let isWinInvincible = false; // 勝利畫面無敵狀態
-let isPaused = false; // 全域暫停旗標
-let isWinScreen = false;
-let bossDefeated = false;
-let fakeBoss = null;
-let fakeBossFlashFrame = 0;
+let   score               = 0;      // 玩家分數
+const WORLD_WIDTH         = 5400;   // 世界寬度
+const WORLD_HEIGHT        = 500;    // 世界高度
+const BOSS_AREA_X         = 4600;   // Boss區域起點X座標
+let   CHARGE_MIN_FRAME    = 42;     // 集氣彈最少需要的幀數
+let   CHARGE_CANCEL_FRAME = 12;     // 集氣取消的最短幀數
+let   bossBulletCount     = 3;      // boss子彈數量
+let   gameRunning         = false;  // 遊戲是否正在進行中
+let   bossActive          = false;  // Boss是否啟動
+let   bossTimer           = 0;      // Boss出場動畫計時器
+let   reachedBossArea     = false;  // 玩家是否已經抵達過boss區域
+let   charging            = false;  // 是否正在集氣
+let   chargeFrame         = 0;      // 集氣持續幀數
+let   chargeReady         = false;  // 是否集氣完成
+let   bossHitFlash        = 0;      // Boss被擊中閃爍計數
+let   upPressed           = false;  // 追蹤上鍵是否已經按下
+let   chargeAudioTimeout  = null;   // 集氣音效延遲計時器
+let   bossCanAttack       = false;  // Boss是否可以攻擊
+let   bossCanMove         = false;  // Boss是否可以移動
+let   bossHpAnimating     = false;  // Boss血條是否正在動畫
+let   canShoot            = true;   // 玩家是否可以射擊
+let   midEventTriggered   = false;  // 中途事件是否已觸發
+let   playerDead          = false;  // 玩家死亡狀態
+let   playerDeadX         = 0;      // 死亡時的X
+let   playerDeadY         = 0;      // 死亡時的Y
+let   JUMP_EXTRA          = 0.5;    // 長按跳躍時每幀額外加速度（正數，實際運算自動轉負）
+let   JUMP_EXTRA_FRAMES   = 12;     // 跳躍額外加速最大幀數
+let   isWinInvincible     = false;  // 勝利畫面無敵狀態
+let   isPaused            = false;  // 全域暫停旗標
+let   isWinScreen         = false;
+let   bossDefeated        = false;
+let   fakeBoss            = null;
+let   fakeBossFlashFrame  = 0;
 
 // ===== 流星雨（隕石）相關設定 =====
 let meteor_params = {...normal_meteor_params};
@@ -366,13 +367,13 @@ let bossCollisionBoxCircle = 0.3; // 0=圓形，1=矩形，越小越圓
 checkBoxShowHideAll(1);
 
 // 碰撞顏色設定
-const COLOR_PLAYER          = 'rgba(68, 255, 121,1)';      // 玩家顏色
-const COLOR_FLY_RED         = 'rgba(255,0,0,1)';      // 飛行紅色顏色
-const COLOR_FLY_ORANGE      = 'rgba(255,165,0,1)';      // 飛行橙色顏色
-const COLOR_GROUND_RED      = 'rgba(255,0,0,1)';      // 地面紅色顏色
-const COLOR_GROUND_ORANGE   = 'rgba(255,165,0,1)';      // 地面橙色顏色
-const COLOR_GROUND_PINK     = 'rgba(255, 105, 180, 0.98)';      // 地面粉色顏色   
-const COLOR_BOSS            = 'rgba(243, 240, 33, 0.95)';   // Boss主體顏色
+const COLOR_PLAYER        = 'rgba(68, 255, 121,1)';       // 玩家顏色
+const COLOR_FLY_RED       = 'rgba(255,0,0,1)';            // 飛行紅色顏色
+const COLOR_FLY_ORANGE    = 'rgba(255,165,0,1)';          // 飛行橙色顏色
+const COLOR_GROUND_RED    = 'rgba(255,0,0,1)';            // 地面紅色顏色
+const COLOR_GROUND_ORANGE = 'rgba(255,165,0,1)';          // 地面橙色顏色
+const COLOR_GROUND_PINK   = 'rgba(255, 105, 180, 0.98)';  // 地面粉色顏色   
+const COLOR_BOSS          = 'rgba(243, 240, 33, 0.95)';   // Boss主體顏色
 
 const COLOR_BULLET_ENEMY    = 'rgba(255,136,255,1)';      // 敵人子彈顏色
 const COLOR_BULLET_BOSS     = 'rgba(255,68,170,1)';      // Boss子彈顏色
@@ -2473,133 +2474,133 @@ function winGame() {
 // ===== 語言資料 =====
 const LANGUAGES = {
     zh: {
-        title: '歐骷先漫',
-        shoot: '空白鍵 射擊',
-        move: ' ← → 移動',
-        jump: ' ↑ 跳躍',
-        start: 'START',
-        gameover: '何回やっても　何回やっても　エアーまんが...',
-        retry: '再trytry',
-        win: '<div style="font-size:80%">命運試圖阻止你...</div><div style="font-size:80%">但你戰勝了！</div><div style="font-size:80%">請相信自己！</div><div style="font-size:80%">不管多大困難！你都能克服！</div>',
-        winScore: '<div style="font-size:95%">SCORE: 無人能定義你的分數，那些看不見的努力，才是你最真實的實力!</div>',
+        title    : '歐骷先漫',
+        shoot    : '空白鍵 射擊',
+        move     : ' ← → 移動',
+        jump     : ' ↑ 跳躍',
+        start    : 'START',
+        gameover : '何回やっても　何回やっても　エアーまんが...',
+        retry    : '再trytry',
+        win      : '<div style="font-size:80%">命運試圖阻止你...</div><div style="font-size:80%">但你戰勝了！</div><div style="font-size:80%">請相信自己！</div><div style="font-size:80%">不管多大困難！你都能克服！</div>',
+        winScore : '<div style="font-size:95%">SCORE: 無人能定義你的分數，那些看不見的努力，才是你最真實的實力!</div>',
         playagain: '你想再玩一次也是可以...',
-        // Settings 多語言
+          // Settings 多語言
         settings: {
-            title: '設定選單',
-            selectLang: '選擇語言',
-            music: '音樂',
-            sfx: '音效',
-            startX: '起始 X',
-            startY: '起始 Y',
-            moveSpeed: '玩家移動速度',
-            weaponPower: '武器攻擊力',
-            maxFps: '最大 FPS',
-            gravity: '重力',
-            jumpPower: '跳躍力',
-            enemyMaxCount: '敵人最大數量',
-            bossBulletSpeed: 'Boss子彈速度',
+            title            : '設定選單',
+            selectLang       : '選擇語言',
+            music            : '音樂',
+            sfx              : '音效',
+            startX           : '起始 X',
+            startY           : '起始 Y',
+            moveSpeed        : '玩家移動速度',
+            weaponPower      : '武器攻擊力',
+            maxFps           : '最大 FPS',
+            gravity          : '重力',
+            jumpPower        : '跳躍力',
+            enemyMaxCount    : '敵人最大數量',
+            bossBulletSpeed  : 'Boss子彈速度',
             bossBulletPattern: 'Boss子彈模式：',
-            bossPatternEasy: '簡單',
+            bossPatternEasy  : '簡單',
             bossPatternNormal: '普通',
-            bossPatternHard: '困難',
-            showScore: '分數',
-            showMoved: '移動',
-            showFps: 'FPS',
-            showXy: '座標',
-            showNxy: '區塊座標',
-            showEntityCounts: '物件數量',
-            showMobileTouch: '顯示手機觸控',
-            autoFlipPlayer: '左右轉身',
-            showCollisionBox: '碰撞箱',
-            showStar: '顯示星星',
-            showMeteor: '顯示流星',
-            ok: '確定'
+            bossPatternHard  : '困難',
+            showScore        : '分數',
+            showMoved        : '移動',
+            showFps          : 'FPS',
+            showXy           : '座標',
+            showNxy          : '區塊座標',
+            showEntityCounts : '物件數量',
+            showMobileTouch  : '顯示手機觸控',
+            autoFlipPlayer   : '左右轉身',
+            showCollisionBox : '碰撞箱',
+            showStar         : '顯示星星',
+            showMeteor       : '顯示流星',
+            ok               : '確定'
         }
     },
     ja: {
-        title: 'オックセンマン',
-        shoot: 'スペースキー ショット',
-        move: ' ← → キー 移動',
-        jump: '↑ キー ジャンプ',
-        start: 'スタート',
-        gameover: '何回やっても　何回やっても　エアーまんが...',
-        retry: 'もう一度',
-        win: '<div style="font-size:80%">運命は君を止めたが、</div><div style="font-size:80%">君が勝った！</div><div style="font-size:80%">自分を信じて！</div><div style="font-size:80%">どんな困難でも必ず乗り越えられる！</div>',
-        winScore: '<div style="font-size:95%">SCORE: 君の価値を点数で決められるわけがない！</div>',
+        title    : 'オックセンマン',
+        shoot    : 'スペースキー ショット',
+        move     : ' ← → キー 移動',
+        jump     : '↑ キー ジャンプ',
+        start    : 'スタート',
+        gameover : '何回やっても　何回やっても　エアーまんが...',
+        retry    : 'もう一度',
+        win      : '<div style="font-size:80%">運命は君を止めたが、</div><div style="font-size:80%">君が勝った！</div><div style="font-size:80%">自分を信じて！</div><div style="font-size:80%">どんな困難でも必ず乗り越えられる！</div>',
+        winScore : '<div style="font-size:95%">SCORE: 君の価値を点数で決められるわけがない！</div>',
         playagain: 'もう一度遊びますか？',
-        settings: {
-            title: '設定メニュー',
-            selectLang: '言語を選択',
-            music: '音楽',
-            sfx: '効果音',
-            startX: '開始 X',
-            startY: '開始 Y',
-            moveSpeed: 'プレイヤー移動速度',
-            weaponPower: '武器パワー',
-            maxFps: '最大 FPS',
-            gravity: '重力',
-            jumpPower: 'ジャンプ力',
-            enemyMaxCount: '敵最大数',
-            bossBulletSpeed: 'ボス弾スピード',
+        settings : {
+            title            : '設定メニュー',
+            selectLang       : '言語を選択',
+            music            : '音楽',
+            sfx              : '効果音',
+            startX           : '開始 X',
+            startY           : '開始 Y',
+            moveSpeed        : 'プレイヤー移動速度',
+            weaponPower      : '武器パワー',
+            maxFps           : '最大 FPS',
+            gravity          : '重力',
+            jumpPower        : 'ジャンプ力',
+            enemyMaxCount    : '敵最大数',
+            bossBulletSpeed  : 'ボス弾スピード',
             bossBulletPattern: 'ボス弾パターン：',
-            bossPatternEasy: '簡単',
+            bossPatternEasy  : '簡単',
             bossPatternNormal: '普通',
-            bossPatternHard: '難しい',
-            showScore: 'スコア',
-            showMoved: '移動',
-            showFps: 'FPS',
-            showXy: '座標',
-            showNxy: 'ブロック座標',
-            showEntityCounts: 'エンティティ数',
-            showMobileTouch: 'モバイルタッチ表示',
-            autoFlipPlayer: '左右反転',
-            showCollisionBox: '当たり判定',
-            showStar: '星を表示',
-            showMeteor: '流星を表示',
-            ok: 'OK'
+            bossPatternHard  : '難しい',
+            showScore        : 'スコア',
+            showMoved        : '移動',
+            showFps          : 'FPS',
+            showXy           : '座標',
+            showNxy          : 'ブロック座標',
+            showEntityCounts : 'エンティティ数',
+            showMobileTouch  : 'モバイルタッチ表示',
+            autoFlipPlayer   : '左右反転',
+            showCollisionBox : '当たり判定',
+            showStar         : '星を表示',
+            showMeteor       : '流星を表示',
+            ok               : 'OK'
         }
     },
     en: {
-        title: 'Mega AI',
-        shoot: 'Press SPACE to Shoot',
-        move: 'Press ← → to Move',
-        jump: 'Press ↑ to Jump',
-        start: 'START',
-        gameover: 'The Untouchable Airman',
-        retry: 'Retry',
-        win: '<div style="font-size:80%">Fate tried to stop you...</div><div style="font-size:80%">but you prevailed !</div><div style="font-size:80%">Believe in yourself !</div><div style="font-size:80%">And overcome any difficulty !</div>',
-        winScore: '<div style="font-size:95%">SCORE: Scores are for tests. You\'re not a test-you\'re a force.</div>',
+        title    : 'Mega AI',
+        shoot    : 'Press SPACE to Shoot',
+        move     : 'Press ← → to Move',
+        jump     : 'Press ↑ to Jump',
+        start    : 'START',
+        gameover : 'The Untouchable Airman',
+        retry    : 'Retry',
+        win      : '<div style="font-size:80%">Fate tried to stop you...</div><div style="font-size:80%">but you prevailed !</div><div style="font-size:80%">Believe in yourself !</div><div style="font-size:80%">And overcome any difficulty !</div>',
+        winScore : '<div style="font-size:95%">SCORE: Scores are for tests. You\'re not a test-you\'re a force.</div>',
         playagain: 'Play again?',
-        settings: {
-            title: 'Settings',
-            selectLang: 'Select Language',
-            music: 'Music',
-            sfx: 'Effects Sound',
-            startX: 'Start X',
-            startY: 'Start Y',
-            moveSpeed: 'Player Move Speed',
-            weaponPower: 'Weapon Power',
-            maxFps: 'Max FPS',
-            gravity: 'Gravity',
-            jumpPower: 'Jump Power',
-            enemyMaxCount: 'Enemy Max Count',
-            bossBulletSpeed: 'Boss Bullet Speed',
+        settings : {
+            title            : 'Settings',
+            selectLang       : 'Select Language',
+            music            : 'Music',
+            sfx              : 'Effects Sound',
+            startX           : 'Start X',
+            startY           : 'Start Y',
+            moveSpeed        : 'Player Move Speed',
+            weaponPower      : 'Weapon Power',
+            maxFps           : 'Max FPS',
+            gravity          : 'Gravity',
+            jumpPower        : 'Jump Power',
+            enemyMaxCount    : 'Enemy Max Count',
+            bossBulletSpeed  : 'Boss Bullet Speed',
             bossBulletPattern: 'Boss Bullet Pattern:',
-            bossPatternEasy: 'Easy',
+            bossPatternEasy  : 'Easy',
             bossPatternNormal: 'Normal',
-            bossPatternHard: 'Hard',
-            showScore: 'Score',
-            showMoved: 'Move',
-            showFps: 'FPS',
-            showXy: 'Position',
-            showNxy: 'Block Pos',
-            showEntityCounts: 'Entity Count',
-            showMobileTouch: 'Show Mobile Touch',
-            autoFlipPlayer: 'Flip LR',
-            showCollisionBox: 'Collision',
-            showStar: 'Show Star',
-            showMeteor: 'Show Meteor',
-            ok: 'OK'
+            bossPatternHard  : 'Hard',
+            showScore        : 'Score',
+            showMoved        : 'Move',
+            showFps          : 'FPS',
+            showXy           : 'Position',
+            showNxy          : 'Block Pos',
+            showEntityCounts : 'Entity Count',
+            showMobileTouch  : 'Show Mobile Touch',
+            autoFlipPlayer   : 'Flip LR',
+            showCollisionBox : 'Collision',
+            showStar         : 'Show Star',
+            showMeteor       : 'Show Meteor',
+            ok               : 'OK'
         }
     }
 };
