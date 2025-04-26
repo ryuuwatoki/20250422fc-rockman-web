@@ -43,18 +43,18 @@ let bossBulletDelay       = [40, 90];  // boss 子彈延遲時間(每幾偵～�
 let bossBulletEnable      = 1;         // boss 子彈是否射擊，1=是，0=否｜ボス弾発射するか 1=はい 0=いいえ
 let bossFixedPosition     = 0;         // boss 是否固定座標（取消移動），1=是，0=否｜ボス座標固定するか（移動しない）1=はい 0=いいえ
 
-let showScore                = 1;  // score:0 顯示1 隱藏0｜スコア表示 1=表示 0=非表示
-let showMoved                = 0;  // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
-let showFPS                  = 1;  //showfps｜FPS表示
-let showXY                   = 0;  //show xy｜XY座標表示
-let showNXY                  = 0;  //show new xy｜グリッド座標表示
-let ShowCollisionBox         = 0;  //是否顯示遮圖顯示目前碰撞箱 ｜当たり判定表示
-let showPlayGroundCheck = 1;  //是否顯示地面偵測
-let AutoFlipPlayer           = 1;  // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1｜自動左右反転 1=キーで反転 0=常に右 デフォルト1
-let showEntityCounts         = 0;  //show 人物怪物子彈數量｜エンティティ数表示
-let showMobileTouch          = 1;  // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
-let showStar                 = 1;  // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
-let showMeteor               = 1;  // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
+let showScore           = 1;  // score:0 顯示1 隱藏0｜スコア表示 1=表示 0=非表示
+let showMoved           = 0;  // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
+let showFPS             = 1;  //showfps｜FPS表示
+let showXY              = 0;  //show xy｜XY座標表示
+let showNXY             = 0;  //show new xy｜グリッド座標表示
+let ShowCollisionBox    = 0;  //是否顯示遮圖顯示目前碰撞箱 ｜当たり判定表示
+let showPlayGroundCheck = 0;  //是否顯示地面偵測
+let AutoFlipPlayer      = 1;  // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1｜自動左右反転 1=キーで反転 0=常に右 デフォルト1
+let showEntityCounts    = 0;  //show 人物怪物子彈數量｜エンティティ数表示
+let showMobileTouch     = 1;  // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
+let showStar            = 1;  // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
+let showMeteor          = 1;  // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
 
 // **玩家飛行無敵模式 =｜プレイヤー飛行無敵モード**
 let isFlyingMode = 0; // 預設關閉 請預設上面hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
@@ -323,6 +323,7 @@ function checkBoxShowHideAll(mode) {
     showMobileTouch = mode;
     showStar = mode;
     showMeteor = mode;
+    showPlayGroundCheck = mode;
 
 };
 
@@ -2625,6 +2626,7 @@ const LANGUAGES = {
             showMobileTouch  : '顯示手機觸控',
             autoFlipPlayer   : '左右轉身',
             showCollisionBox : '碰撞箱',
+            showPlayGroundCheck : '地面偵測',
             showStar         : '顯示星星',
             showMeteor       : '顯示流星',
             ok               : '確定'
@@ -2668,6 +2670,7 @@ const LANGUAGES = {
             showMobileTouch  : 'モバイルタッチ表示',
             autoFlipPlayer   : '左右反転',
             showCollisionBox : '当たり判定',
+            showPlayGroundCheck : '地面検出',
             showStar         : '星を表示',
             showMeteor       : '流星を表示',
             ok               : 'OK'
@@ -2711,6 +2714,7 @@ const LANGUAGES = {
             showMobileTouch  : 'Show Mobile Touch',
             autoFlipPlayer   : 'Flip LR',
             showCollisionBox : 'Collision',
+            showPlayGroundCheck : 'Ground Check',
             showStar         : 'Show Star',
             showMeteor       : 'Show Meteor',
             ok               : 'OK'
@@ -2955,8 +2959,8 @@ settingsPanel.innerHTML = `
         <label><input type="checkbox" id="setting-show-nxy"> Show NXY</label>
         <label style="margin-left:16px;"><input type="checkbox" id="setting-show-entity-counts"> Show Entity Counts</label>
         <label style="margin-left:16px;"><input type="checkbox" id="setting-show-collision-box"> 顯示碰撞箱</label>
-
-        </div>
+        <label style="margin-left:16px;"><input type="checkbox" id="setting-show-player-ground-check"> 顯示地面偵測</label>
+    </div>
 
     <div style="margin-bottom:16px;">
         <label><input type="checkbox" id="setting-auto-flip-player"> 自動翻轉角色</label>
@@ -3002,6 +3006,7 @@ settingsBtn.onclick = function() {
     var startYInput = document.getElementById('setting-start-y');
     var AutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
     var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
+    var showPlayerGroundCheckInput = document.getElementById('setting-show-player-ground-check');
     var showStarInput = document.getElementById('setting-show-star');
     var showMeteorInput = document.getElementById('setting-show-meteor');
     // 同步 UI｜UIを同期
@@ -3026,6 +3031,7 @@ settingsBtn.onclick = function() {
     if (showMobileTouchInput) showMobileTouchInput.checked = !!showMobileTouch;
     if (AutoFlipPlayerInput) AutoFlipPlayerInput.checked = !!AutoFlipPlayer;
     if (showCollisionBoxInput) showCollisionBoxInput.checked = !!ShowCollisionBox;
+    if (showPlayerGroundCheckInput) showPlayerGroundCheckInput.checked = !!showPlayGroundCheck;
     if (showStarInput) showStarInput.checked = !!showStar;
     if (showMeteorInput) showMeteorInput.checked = !!showMeteor;
     settingsPanel.style.display = 'block';
@@ -3059,6 +3065,7 @@ if (settingsCloseBtn) {
         var startYInput = document.getElementById('setting-start-y');
         var AutoFlipPlayerInput = document.getElementById('setting-auto-flip-player');
         var showCollisionBoxInput = document.getElementById('setting-show-collision-box');
+        var showPlayerGroundCheckInput = document.getElementById('setting-show-player-ground-check');
         var showStarInput = document.getElementById('setting-show-star');
         var showMeteorInput = document.getElementById('setting-show-meteor');
         // 儲存（同步變數）｜保存（変数を同期）
@@ -3083,6 +3090,7 @@ if (settingsCloseBtn) {
         if (showMobileTouchInput) showMobileTouch = showMobileTouchInput.checked ? 1 : 0;
         if (AutoFlipPlayerInput) AutoFlipPlayer = AutoFlipPlayerInput.checked ? 1 : 0;
         if (showCollisionBoxInput) ShowCollisionBox = showCollisionBoxInput.checked ? 1 : 0;
+        if (showPlayerGroundCheckInput) showPlayGroundCheck = showPlayerGroundCheckInput.checked ? 1 : 0;
         if (showStarInput) showStar = showStarInput.checked ? 1 : 0;
         if (showMeteorInput) showMeteor = showMeteorInput.checked ? 1 : 0;
         settingsPanel.style.display = 'none';
@@ -3342,6 +3350,7 @@ function updateSettingsPanelLang() {
     updateCheckboxLabel('setting-show-collision-box', L.showCollisionBox || '顯示碰撞箱');
     updateCheckboxLabel('setting-show-star', L.showStar || '顯示星星');
     updateCheckboxLabel('setting-show-meteor', L.showMeteor || '顯示流星');
+    updateCheckboxLabel('setting-show-player-ground-check', L.showPlayGroundCheck || '顯示地面偵測');
     document.getElementById('settings-close-btn').textContent = L.ok;
     // 新增多語言
     document.getElementById('label-enemy-max-count').childNodes[0].textContent = (L.enemyMaxCount || '敵人最大數量') + ' ';
