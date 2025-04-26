@@ -1494,7 +1494,7 @@ function update() {
         if (bossActive && checkCollision(bullet, boss)) {
             if (bullet.isCharge) {
                 boss.health -= weaponPower * 3; // 集氣彈攻擊力3倍
-                boss.pauseTimer = 42; // 暫停42偵
+                boss.pauseTimer = 5; // 暫停10偵
                 boss.lastHitCharge = true; // 集氣彈
             } else {
                 boss.health -= weaponPower; // 普通子彈攻擊力
@@ -1623,7 +1623,12 @@ function update() {
         
         // 檢測玩家碰撞
         if (checkCollision(bullet, player)) {
-            player.takeDamage(5);
+            // 判斷是否為 Boss 子彈
+            if (bullet.color === 'rgba(255,68,170,1)') {
+                player.takeDamage(bossBulletPower); // Boss 子彈
+            } else {
+                player.takeDamage(5); // 其他敵人子彈
+            }
             enemyBullets.splice(i, 1);
         }
     }
@@ -3216,3 +3221,5 @@ document.addEventListener('click', function(e) {
     customLangList.style.display = 'none';
 });
 window.addEventListener('DOMContentLoaded', updateCustomLangBtn);
+
+let bossBulletPower = 8; // Boss 子彈威力（新增）
