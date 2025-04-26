@@ -1018,7 +1018,7 @@ function updateAreaColors() {
 
 
 
-// ===== 控制系統 =====
+// ===== 控制系統 =====｜コントロールシステム
 const keys = {
     ArrowLeft: false,
     ArrowRight: false,
@@ -1028,12 +1028,12 @@ const keys = {
     'Enter': false
 };
 
-// ===== 事件監聽 =====
+// ===== 事件監聽 =====｜イベントリスナー
 startButton.addEventListener('click', startGame);
 restartButton.addEventListener('click', startGame);
 playAgainButton.addEventListener('click', startGame);
 
-// 跳躍鍵按下時間記錄
+// 跳躍鍵按下時間記錄｜ジャンプキー押下時間記録
 let jumpKeyDownTime = 0;
 let jumpKeyPressed = false;
 let isJumping = false;
@@ -1052,20 +1052,20 @@ document.addEventListener('keydown', (e) => {
             startGame();
         }
         if (e.key === ' ' && gameRunning) {
-            // 按下空白鍵，立即啟動普通射擊
+            // 按下空白鍵，立即啟動普通射擊｜スペースキー押下時、即時普通射撃
             if (!charging) {
                 charging = true;
                 chargeFrame = 0;
                 chargeReady = false;
-                player.shootAnimFrame = 7; // 只顯示1幀
-                // 播放射擊音效
+                player.shootAnimFrame = 7; // 只顯示1幀｜1フレームのみ表示
+                // 播放射擊音效｜射撃音響再生
                 const shootAudio = document.getElementById('shoot-audio');
                 if (shootAudio) {
                     shootAudio.currentTime = 0;
                     shootAudio.volume = VOLUME_SHOOT;
                     if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
                 }
-                // 延遲0.5秒後才播放集氣音效
+                // 延遲0.5秒後才播放集氣音效｜0.5秒後に集気音響再生 
                 if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
                 chargeAudioTimeout = setTimeout(() => {
                     if (charging) {
@@ -1088,37 +1088,37 @@ document.addEventListener('keyup', (e) => {
         if (e.key === 'ArrowUp' && jumpKeyPressed) {
             const pressDuration = Date.now() - jumpKeyDownTime;
             if (pressDuration < 200 && player.vy < 0) {
-                // 0.2秒以下，1/4高度
+                // 0.2秒以下，1/4高度｜0.2秒以下、1/4高度
                 player.vy /= 4;
             } else if (pressDuration < 300 && player.vy < 0) {
-                // 0.2~0.3秒，1/3高度
+                // 0.2~0.3秒，1/3高度｜0.2~0.3秒、1/3高度
                 player.vy /= 3;
             } else if (pressDuration < 400 && player.vy < 0) {
-                // 0.3~0.4秒，一半高度
+                // 0.3~0.4秒，一半高度｜0.3~0.4秒、1/2高度
                 player.vy /= 2;
             }
-            // 超過0.4秒，維持原本最高高度
+            // 超過0.4秒，維持原本最高高度｜0.4秒以上、原本最高高度維持
             jumpKeyPressed = false;
         }
         if (e.key === ' ') {
-            // 放開空白鍵時，根據集氣時間決定發射什麼
+            // 放開空白鍵時，根據集氣時間決定發射什麼｜スペースキー放開時、集氣時間で射撃決定
             if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
                 chargeReady = true; // 發射集氣彈
             } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
-                // 只有 chargeReady 為 false 才補發普通彈，且不受冷卻限制
+                // 只有 chargeReady 為 false 才補發普通彈，且不受冷卻限制｜chargeReady が false の場合のみ普通弾を補充、冷卻制限なし
                 bullets.push({
                     x: player.x + (player.direction === 1 ? player.width : -10),
                     y: player.y + player.height / 2 - 3,
                     width: 10,
                     height: 6,
-                    speed: 10 * 1.1 * player.direction, // 1.1倍
+                    speed: 10 * 1.1 * player.direction, // 1.1倍｜1.1倍
                     color: PLAYER_Attack_shoot_color,
                     isCharge: false
                 });
                 player.shootAnimFrame = 1;
             }
             charging = false;
-            // 停止集氣音效
+            // 停止集氣音效｜集気音響停止
             if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
             const chargeAudio = document.getElementById('charge-audio');
             if (chargeAudio) {
@@ -1130,11 +1130,11 @@ document.addEventListener('keyup', (e) => {
     }
 });
 
-// ===== 遊戲初始化 =====
+// ===== 遊戲初始化 =====｜ゲーム初期化
 const bgm = document.getElementById('bgm');
 const bgm2 = document.getElementById('bgm2'); // 新增 boss 區 BGM
 
-//遊戲初始化，重設所有狀態並開始遊戲主循環
+//遊戲初始化，重設所有狀態並開始遊戲主循環｜ゲーム初期化、すべての状態をリセットし、ゲームのメインループを開始
 function startGame() {
     // 停止outro音樂
     const outroAudio = document.getElementById('outro-audio');
@@ -1144,18 +1144,18 @@ function startGame() {
         outroAudio.volume = VOLUME_OUTRO;
         outroAudio.onended = null;
     }
-    // 停止 boss 區 BGM
+    // 停止 boss 區 BGM｜ボスエリアBGM停止
     if (bgm2) {
         bgm2.pause();
         bgm2.currentTime = 0;
     }
-    // 音樂播放控制
+    // 音樂播放控制｜音楽再生制御
     if (bgm) {
         bgm.currentTime = 0;
         bgm.volume = VOLUME_BGM;
         if (isBgmOn) { bgm.pause(); bgm.currentTime = 0; bgm.play().catch(()=>{}); }
     }
-    // 重置遊戲狀態
+    // 重置遊戲狀態｜ゲーム状態をリセット
     gameRunning = true;
     score = 0;
     wa_player_to_Health_ki = playerMaxHealth;
@@ -1167,7 +1167,7 @@ function startGame() {
     bossActive = false;
     reachedBossArea = false;
     
-    // 重置玩家位置
+    // 重置玩家位置｜プレイヤー位置をリセット
     player.x = playerStartX;
     player.y = playerStartY;
     player.vy = 0;
@@ -1175,23 +1175,23 @@ function startGame() {
     player.direction = 1;
     player.invincible = 0;
     
-    // 清空陣列
+    // 清空陣列｜配列を空にする
     bullets.length = 0;
     enemyBullets.length = 0;
     enemies.length = 0;
     
-    // 隱藏介面元素
+    // 隱藏介面元素｜インターフェース要素を非表示にする
     startScreen.style.display = 'none';
     gameOverScreen.style.display = 'none';
     winScreen.style.display = 'none';
     bossHealthContainer.style.display = 'none';
     
-    // 更新UI
+    // 更新UI｜UIを更新する
     updateHealthBar();
     updateBossHealthBar();
     updateScore();
     
-    // 啟動遊戲循環
+    // 啟動遊戲循環｜ゲームループを開始する 
     requestAnimationFrame(gameLoop);
     langToggle.style.display = 'none';
     langSelect.style.display = 'none';
@@ -1202,19 +1202,19 @@ function startGame() {
     chargeReady = false;
     if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
     setTimeout(() => { canShoot = true; }, 200);
-    playerDead = false; // 重設死亡狀態
+    playerDead = false; // 重設死亡狀態｜死亡状態をリセットする
     playerDeadX = 0;
     playerDeadY = 0;
     bossDefeated = false;
     isWinInvincible = false;
-    // 修正：如果玩家起始位置就在 boss 區，直接切換 bgm2
+    // 修正：如果玩家起始位置就在 boss 區，直接切換 bgm2｜修正：プレイヤーの起始位置がボスエリアにある場合、直接bgm2を切り替える
     if (playerStartX >= BOSS_AREA_X) {
         if (bgm) { bgm.pause(); }
         if (bgm2) { bgm2.currentTime = 0; bgm2.volume = VOLUME_BGM2; if (isBgmOn) bgm2.play().catch(()=>{}); }
     }
 }
 
-// ===== 遊戲主循環 =====
+// ===== 遊戲主循環 =====｜ゲームメインループ
 let lastFrameTime = 0;
 function getFrameDuration() {
     return 1000 / MAX_FPS;
@@ -1222,7 +1222,7 @@ function getFrameDuration() {
 
 function gameLoop(now) {
     requestAnimationFrame(gameLoop);
-    if (isPaused) return; // 暫停時不更新遊戲
+    if (isPaused) return; // 暫停時不更新遊戲｜一時停止時ゲームを更新しない
     if (now - lastFrameTime < getFrameDuration()) return;
     lastFrameTime = now;
     update();
@@ -1230,18 +1230,18 @@ function gameLoop(now) {
     updateFPS();
 }
 
-// ===== 遊戲狀態更新 =====
-// 更新遊戲所有狀態（玩家、敵人、子彈、Boss等）
-// *無參數，無回傳值
+// ===== 遊戲狀態更新 =====｜ゲーム状態更新
+// 更新遊戲所有狀態（玩家、敵人、子彈、Boss等）｜ゲームの全ての状態を更新（プレイヤー、敵、弾、ボスなど）
+// *無參數，無回傳值｜*引数なし、戻り値なし
 
 function update() {
-    // 集氣狀態計數
+    // 集氣狀態計數｜集氣状態カウント
     if (charging) {
         chargeFrame++;
     }
-    // 先處理集氣彈
+    // 先處理集氣彈｜まず集氣弾を処理
     if (chargeReady) {
-        // 發射集氣彈
+        // 發射集氣彈｜集氣弾を発射
         bullets.push({
             x: player.x + (player.direction === 1 ? player.width : -40),
             y: player.y + player.height / 2 - 12,
@@ -1249,10 +1249,10 @@ function update() {
             height: 24,
             speed: 10 * 1.1 * player.direction, // 1.1倍
             color: PLAYER_Charge_Attack_shoot_color,
-            isCharge: true // 標記為集氣彈
+            isCharge: true // 標記為集氣彈｜集氣弾として標記    
         });
-        player.shootCooldown = player.shootDelay; // 給一點冷卻
-        // 播放shoot音效
+        player.shootCooldown = player.shootDelay; // 給一點冷卻｜少しのクールダウンを与える
+        // 播放shoot音效｜射撃音響再生
         const shootAudio = document.getElementById('shoot-audio');
         if (shootAudio) {
             shootAudio.currentTime = 0;
@@ -1262,26 +1262,26 @@ function update() {
         player.shootAnimFrame = 14; // 集氣彈顯示0.2秒
         chargeReady = false;
     }
-    // 更新玩家
+    // 更新玩家｜プレイヤーを更新
     player.update();
     player.shoot();
     
-    // 監控玩家位置 - 僅在操作方向鍵時輸出
+    // 監控玩家位置 - 僅在操作方向鍵時輸出｜プレイヤー位置を監視 - 操作方向キー時のみ出力
     if (keys.ArrowLeft || keys.ArrowRight || keys.ArrowUp) {
         // console.log('玩家位置:', { x: player.x, y: player.y, onGround: player.onGround });
     }
     
-    // 更新鏡頭
+    // 更新鏡頭｜カメラを更新
     camera.follow(player);
     
-    // Boss區域效果
+    // Boss區域效果｜ボスエリア効果
     if (player.x >= BOSS_AREA_X && !bossActive && bossTimer === 0 && !isWinScreen && !bossDefeated) {
         // 先不顯示正式boss血條
         bossHealthContainer.style.display = 'none';
-        // 先移除所有舊的 fake hp 條
+        // 先移除所有舊的 fake hp 條｜まず古い fake hp バーを削除
         let oldFakeBar = document.getElementById('boss-fake-bar');
         if (oldFakeBar) oldFakeBar.remove();
-        // 新 fake hp 條動畫
+        // 新 fake hp 條動畫｜新しい fake hp バーのアニメーション
         let fakeBar = document.createElement('div');
         fakeBar.style.position = 'absolute';
         fakeBar.style.top = '10px';
@@ -1306,7 +1306,7 @@ function update() {
             if (animPercent >= 100) {
                 animPercent = 100;
                 clearInterval(anim);
-                // 移除 fake hp 條，顯示正式 boss hp 條
+                // 移除 fake hp 條，顯示正式 boss hp 條｜fake hp バーを削除し、正式なボス hp バーを表示
                 let oldFakeBar2 = document.getElementById('boss-fake-bar');
                 if (oldFakeBar2) oldFakeBar2.remove();
                 bossHealthContainer.style.display = 'block';
@@ -1319,18 +1319,18 @@ function update() {
         enemyBullets.length = 0;
     }
     
-    // 計時器運行，3 秒後激活 BOSS
+    // 計時器運行，3 秒後激活 BOSS｜計時器運行、3 秒後にボスをアクティブ化
     if (bossTimer > 0 && bossTimer < 250) {
         bossTimer++;
         if (bossTimer === 100) {
-            // 播放boss出場音效 bosstimer 是boss出場延遲時間
+            // 播放boss出場音效 bosstimer 是boss出場延遲時間｜bosstimer はボス出場遅延時間
             const bossAudio = document.getElementById('boss-audio');
             if (bossAudio) {
                 bossAudio.currentTime = 0;
                 bossAudio.volume = VOLUME_BOSS;
                 if (isSfxOn) { bossAudio.pause(); bossAudio.currentTime = 0; bossAudio.play().catch(()=>{}); }
             }
-            // 延遲0.4秒後才讓boss出現
+            // 延遲0.4秒後才讓boss出現｜0.4秒後にボスが出現する
             setTimeout(() => {
                 bossActive = true;
                 bossTimer = 0;
@@ -1344,29 +1344,29 @@ function update() {
         }
     }
     
-    // 生成敵人
+    // 生成敵人｜敵を生成
     if (Math.random() < 0.015 && enemies.length < 8 && !bossActive && player.x < WORLD_WIDTH - 1000) {
-        // 依照 spawn 變數決定哪些敵人型別可以生成
+        // 依照 spawn 變數決定哪些敵人型別可以生成｜spawn 変数でどの敵人型別が生成できるかを決定
         const enemyTypes = [];
         if (FLY_RED_spawn) enemyTypes.push(ENEMY_TYPES.FLY_RED);
         if (FLY_ORANGE_spawn) enemyTypes.push(ENEMY_TYPES.FLY_ORANGE);
         if (GROUND_RED_spawn) enemyTypes.push(ENEMY_TYPES.GROUND_RED);
         if (GROUND_ORANGE_spawn) enemyTypes.push(ENEMY_TYPES.GROUND_ORANGE);
         if (GROUND_PINK_spawn) enemyTypes.push(ENEMY_TYPES.GROUND_PINK);
-        if (enemyTypes.length === 0) return; // 沒有可生成的敵人
+        if (enemyTypes.length === 0) return; // 沒有可生成的敵人｜生成可能な敵がない場合は戻る
         let type;
         let tryCount = 0;
         do {
             type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
-            // 如果是粉紅色地面怪，只有玩家往右時才允許生成
+            // 如果是粉紅色地面怪，只有玩家往右時才允許生成｜粉紅色地面怪の場合、プレイヤーが右を向いている場合のみ生成を許可
             if (type === ENEMY_TYPES.GROUND_PINK && !keys.ArrowRight) {
                 tryCount++;
                 continue;
             }
             break;
         } while (tryCount < 10);
-        // 給每隻敵人一個唯一 id 供飄浮用
-        // 依照敵人類型決定血量
+        // 給每隻敵人一個唯一 id 供飄浮用｜各敵体に一意の ID を与え、浮遊用に供する
+        // 依照敵人類型決定血量｜敵体の型に応じて体力を決定
         let hp = 3;
         if (type === ENEMY_TYPES.FLY_RED) hp = Fly_RED_HP; // 飛行紅色敵人血量｜飛行赤色敵体の体力
         if (type === ENEMY_TYPES.FLY_ORANGE) hp = Fly_ORANGE_HP; // 飛行橘色敵人血量｜飛行オレンジ敵体の体力
@@ -1374,25 +1374,25 @@ function update() {
         if (type === ENEMY_TYPES.GROUND_ORANGE) hp = GROUND_ORANGE_HP; // 地面橘色敵人血量｜地上オレンジ敵体の体力
         if (type === ENEMY_TYPES.GROUND_PINK) hp = GROUND_PINK_HP; // 地面粉紅敵人血量｜地上ピンク敵体の体力
         const enemy = {
-            x: camera.x + camera.width + 50, // 初始X座標（生成在鏡頭右側）
-            y: type.isFlying ? (Math.random() * (WORLD_HEIGHT - 200) + 50) : (Math.random() * (WORLD_HEIGHT - 100) + 50), // 初始Y座標
-            width: 35, // 寬度（稍後根據型別覆蓋）
-            height: 35, // 高度（稍後根據型別覆蓋）
-            speed: type.speed, // 移動速度
-            health: hp, // 當前血量
-            maxHealth: hp, // 最大血量
-            score: type.score, // 擊殺得分
-            color: type.color, // 顏色
-            behavior: type.behavior, // 行為函數
-            onGround: false, // 是否在地面上
-            vy: 0, // 垂直速度
-            shootCooldown: (type === ENEMY_TYPES.GROUND_PINK) ? 50 : 0, // 粉色小兵第一發延遲50偵，其餘為0
-            shootDelay: type.shootDelay || 0, // 射擊間隔
-            isFlying: type.isFlying, // 是否為飛行敵人
-            eye: type.eye, // 眼睛樣式
-            _id: Math.random() * 1000000 | 0, // 唯一ID（飄浮用）
-            dying: false, // 是否進入死亡閃爍
-            dyingFrame: 0 // 死亡閃爍計數
+            x: camera.x + camera.width + 50, // 初始X座標（生成在鏡頭右側）｜初期 X 座標（鏡頭の右側に生成）
+            y: type.isFlying ? (Math.random() * (WORLD_HEIGHT - 200) + 50) : (Math.random() * (WORLD_HEIGHT - 100) + 50), // 初始Y座標｜初期 Y 座標
+            width: 35, // 寬度（稍後根據型別覆蓋）｜幅（後で型に応じてカバー）
+            height: 35, // 高度（稍後根據型別覆蓋）｜高さ（後で型に応じてカバー）
+            speed: type.speed, // 移動速度｜移動速度
+            health: hp, // 當前血量｜現在の体力
+            maxHealth: hp, // 最大血量｜最大体力
+            score: type.score, // 擊殺得分｜撃破得点
+            color: type.color, // 顏色｜色
+            behavior: type.behavior, // 行為函數｜行動関数
+            onGround: false, // 是否在地面上｜地上にあるかどうか
+            vy: 0, // 垂直速度｜垂直速度
+            shootCooldown: (type === ENEMY_TYPES.GROUND_PINK) ? 50 : 0, // 粉色小兵第一發延遲50偵，其餘為0｜ピンクの小兵は最初の射撃が50フレーム遅れ、その他は0
+            shootDelay: type.shootDelay || 0, // 射擊間隔｜射撃間隔
+            isFlying: type.isFlying, // 是否為飛行敵人｜飛行敵体かどうか
+            eye: type.eye, // 眼睛樣式｜目のデザイン
+            _id: Math.random() * 1000000 | 0, // 唯一ID（飄浮用）｜一意の ID（浮遊用）
+            dying: false, // 是否進入死亡閃爍｜死亡閃爍に入るかどうか
+            dyingFrame: 0 // 死亡閃爍計數｜死亡閃爍カウント
         };
         // FLY_RED 初始化動畫屬性
         if (type === ENEMY_TYPES.FLY_RED) {
@@ -1431,13 +1431,14 @@ function update() {
     // 更新敵人
     for (let i = enemies.length - 1; i >= 0; i--) {
         const enemy = enemies[i];
+
         if (enemy.isFloating) {
-            // 飄浮小兵：上下飄動，不受重力與平台影響
+            // 飄浮小兵：上下飄動，不受重力與平台影響｜浮遊小兵：上下浮動、重力とプラットフォームの影響を受けない
             if (!enemy.floatBaseY) enemy.floatBaseY = enemy.y;
             enemy.y = enemy.floatBaseY + Math.sin(Date.now() / 400 + i) * 40;
             enemy.x -= enemy.speed;
         } else {
-            // 原本地面小兵
+            // 地面小兵：受重力影響，會受平台限制｜地上小兵：重力の影響を受け、プラットフォームの制限を受ける
             enemy.vy += GRAVITY;
             let newY = enemy.y + enemy.vy;
             enemy.onGround = false;
@@ -1452,7 +1453,7 @@ function update() {
             enemy.y = newY;
             enemy.behavior(enemy);
         }
-        // 更新敵人閃爍狀態
+        // 更新敵人閃爍狀態｜敵体のフラッシュ状態を更新
         if (enemyHitFlash.has(enemy)) {
             let frame = enemyHitFlash.get(enemy);
             frame--;
@@ -1462,23 +1463,23 @@ function update() {
                 enemyHitFlash.set(enemy, frame);
             }
         }
-        // 移除屏幕外的敵人
+        // 移除屏幕外的敵人｜画面外の敵体を削除
         if (enemy.x < camera.x - 100 || enemy.x > camera.x + camera.width + 100) {
             enemies.splice(i, 1);
             continue;
         }
-        // 檢測玩家碰撞
+        // 檢測玩家碰撞｜プレイヤーとの衝突を検出
         if (checkCollision(player, enemy)) {
             if (enemy.health > 0) {
                 player.takeDamage(10);
             }
-            // 小兵不會因碰撞玩家而消失
+            // 小兵不會因碰撞玩家而消失｜小兵はプレイヤーとの衝突によって消えない
             continue;
         }
-        // 在敵人更新時，處理死亡閃爍與自動消失
+        // 在敵人更新時，處理死亡閃爍與自動消失｜敵体の更新時に、死亡閃爍と自動消失を処理
         if (enemy.dying) {
             enemy.dyingFrame++;
-            // 閃爍兩下（12幀，約0.2秒）後自動消失
+            // 閃爍兩下（12幀，約0.2秒）後自動消失｜2回フラッシュ（12フレーム、約0.2秒）後、自動的に消える
             if (enemy.dyingFrame >= 12) {
                 enemies.splice(i, 1);
                 score += enemy.score;
@@ -1488,38 +1489,38 @@ function update() {
         }
     }
     
-    // 更新Boss
+    // 更新Boss｜ボスを更新
     if (bossActive) {
         boss.update();
         
-        // 檢測玩家碰撞
+        // 檢測玩家碰撞｜プレイヤーとの衝突を検出
         if (checkCollision(player, boss)) {
             player.takeDamage(bossImpactDamage);
         }
     }
     
-    // 更新子彈
+    // 更新子彈｜弾丸を更新
     for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
         bullet.x += bullet.speed;
         
-        // 移除屏幕外的子彈
+        // 移除屏幕外的子彈｜画面外の弾丸を削除
         if (bullet.x < camera.x - 50 || bullet.x > camera.x + camera.width + 50) {
             bullets.splice(i, 1);
             continue;
         }
         
-        // 檢測敵人碰撞
+        // 檢測敵人碰撞｜敵体との衝突を検出
         for (let j = enemies.length - 1; j >= 0; j--) {
             const enemy = enemies[j];
             if (checkCollision(bullet, enemy)) {
                 if (bullet.isCharge) {
-                    enemy.health -= weaponPower * 5; // 集氣彈攻擊力5倍
+                    enemy.health -= weaponPower * 5; // 集氣彈攻擊力5倍｜集氣弾の攻撃力は5倍
                 } else {
-                    enemy.health -= weaponPower * 1; // 普通子彈攻擊力
+                    enemy.health -= weaponPower * 1; // 普通子彈攻擊力｜普通の弾丸の攻撃力
                 }
-                enemyHitFlash.set(enemy, 12); // 0.2秒閃爍
-                // 播放boom音效（集氣彈也有）
+                enemyHitFlash.set(enemy, 12); // 0.2秒閃爍｜0.2秒フラッシュ
+                // 播放boom音效（集氣彈也有）｜boom音效（集氣弾もあります）
                 const boomAudio = document.getElementById('boom-audio');
                 if (boomAudio) {
                     const clone = boomAudio.cloneNode();
@@ -1535,17 +1536,17 @@ function update() {
             }
         }
         
-        // 檢測Boss碰撞
+        // 檢測Boss碰撞｜ボスとの衝突を検出
         if (bossActive && checkCollision(bullet, boss)) {
             if (bullet.isCharge) {
-                boss.health -= weaponPower * 3; // 集氣彈攻擊力3倍
-                boss.pauseTimer = bossStopTime; // boss被攻擊暫停偵數
-                boss.lastHitCharge = true; // 集氣彈
+                boss.health -= weaponPower * 3; // 集氣彈攻擊力3倍｜集氣弾の攻撃力は3倍
+                boss.pauseTimer = bossStopTime; // boss被攻擊暫停偵數｜ボスが攻撃を受けたときの一時停止カウント
+                boss.lastHitCharge = true; // 集氣彈｜集氣弾
             } else {
-                boss.health -= weaponPower; // 普通子彈攻擊力
-                boss.lastHitCharge = false; // 記錄這次不是集氣彈
+                boss.health -= weaponPower; // 普通子彈攻擊力｜普通の弾丸の攻撃力
+                boss.lastHitCharge = false; // 記錄這次不是集氣彈｜この回は集氣弾ではないことを記録
             }
-            bossHitFlash = 12; // 0.2秒閃爍
+            bossHitFlash = 12; // 0.2秒閃爍｜0.2秒フラッシュ    
             updateBossHealthBar();
             if (boss.health > 0) {
                 const boomAudio = document.getElementById('boom-audio');
@@ -1564,8 +1565,8 @@ function update() {
                 bossActive = false;
                 bossDefeated = true;
                 gameRunning = false;
-                enemyBullets.length = 0; // Boss死亡時清空所有敵方子彈
-                // 停止BGM
+                enemyBullets.length = 0; // Boss死亡時清空所有敵方子彈｜ボスが死亡時、すべての敵の弾丸を削除
+                // 停止BGM｜BGMを停止
                 if (bgm) {
                     bgm.pause();
                     bgm.currentTime = 0;
@@ -1574,14 +1575,14 @@ function update() {
                     bgm2.pause();
                     bgm2.currentTime = 0;
                 }
-                // 播放bossdie音效
+                // 播放bossdie音效｜ボスが死んだときの音
                 const bossdieAudio = document.getElementById('bossdie-audio');
                 if (bossdieAudio) {
                     bossdieAudio.currentTime = 0;
                     bossdieAudio.volume = VOLUME_BOSSDIE;
                     if (isSfxOn) { bossdieAudio.pause(); bossdieAudio.currentTime = 0; bossdieAudio.play().catch(()=>{}); }
                 }
-                // 1. 黃白閃爍2秒
+                // 1. 黃白閃爍2秒｜1. 黄色のホワイトフラッシュ2秒
                 const flashDiv = document.getElementById('flash-effect');
                 const winScreen = document.getElementById('win-screen');
                 // ===== fakeBoss =====
@@ -1605,7 +1606,7 @@ function update() {
                     }, 100);
                     setTimeout(() => {
                         clearInterval(flashInterval);
-                        // 2. 3秒漸層變全白
+                        // 2. 3秒漸層變全白｜3秒でグラデーションを全白に変更
                         let opacity = 0.7;
                         flashDiv.style.background = '#fff';
                         const fadeInStep = 0.0067; // 0.0067*20ms*150次 ≈ 1
@@ -1615,18 +1616,18 @@ function update() {
                             if (opacity >= 1) {
                                 clearInterval(fadeIn);
                                 // 3. 全白時播放outro並顯示勝利畫面，勝利畫面opacity=0
-                                // 延遲120幀（約2秒）再顯示勝利畫面
+                                // 延遲120幀（約2秒）再顯示勝利畫面｜120フレーム（約2秒）遅れて勝利画面を表示
                                 setTimeout(() => {
                                     winGame();
                                     winScreen.style.opacity = 0;
-                                    // 播放outro音樂
+                                    // 播放outro音樂｜outro音楽を再生
                                     const outroAudio = document.getElementById('outro-audio');
                                     if (outroAudio) {
                                         outroAudio.currentTime = 0;
                                         outroAudio.volume = VOLUME_OUTRO;
                                         if (isBgmOn) { outroAudio.pause(); outroAudio.currentTime = 0; outroAudio.play().catch(()=>{}); }
                                     }
-                                    // 4. 2秒內白色遮罩淡出、勝利畫面同步淡入
+                                    // 4. 2秒內白色遮罩淡出、勝利畫面同步淡入｜2秒で白色のカバーが薄くなり、勝利画面も同時に薄くなる
                                     let outOpacity = 1;
                                     let winOpacity = 0;
                                     const fadeOut = setInterval(() => {
@@ -1640,48 +1641,48 @@ function update() {
                                             winScreen.style.opacity = 1;
                                         }
                                     }, 20);
-                                }, 90 * (1000 / MAX_FPS)); // 90幀延遲
+                                }, 90 * (1000 / MAX_FPS)); // 90幀延遲/ 90フレーム遅延
                             }
                         }, 20);
                     }, 2000);
                 } else {
                     setTimeout(() => {
-                        setTimeout(() => { winGame(); }, 90 * (1000 / MAX_FPS)); // 90幀延遲
+                        setTimeout(() => { winGame(); }, 90 * (1000 / MAX_FPS)); // 90幀延遲/ 90フレーム遅延
                     }, 3000);
                 }
             }
         }
     }
     
-    // 更新敵方子彈
+    // 更新敵方子彈｜敵の弾丸を更新
     for (let i = enemyBullets.length - 1; i >= 0; i--) {
         const bullet = enemyBullets[i];
         bullet.x += bullet.speedX;
         bullet.y += bullet.speedY;
         
-        // 移除屏幕外的子彈
+        // 移除屏幕外的子彈｜画面外の弾丸を削除
         if (bullet.x < camera.x - 50 || bullet.x > camera.x + camera.width + 50 ||
             bullet.y < camera.y - 50 || bullet.y > camera.y + camera.height + 50) {
             enemyBullets.splice(i, 1);
             continue;
         }
         
-        // 檢測玩家碰撞
+        // 檢測玩家碰撞｜プレイヤーとの衝突を検出
         if (checkCollision(bullet, player)) {
-            // 判斷是否為 Boss 子彈
+            // 判斷是否為 Boss 子彈｜Bossの弾丸かどうかを判断
             if (bullet.color === 'rgba(255,68,170,1)') {
                 player.takeDamage(bossBulletDamage); // Boss 子彈
             } else {
-                player.takeDamage(5); // 其他敵人子彈
+                player.takeDamage(5); // 其他敵人子彈｜他の敵の弾丸
             }
             enemyBullets.splice(i, 1);
         }
     }
     
-    // 在update()最後加上bossHitFlash遞減
+    // 在update()最後加上bossHitFlash遞減｜update()の最後にbossHitFlashを減らす
     if (bossHitFlash > 0) bossHitFlash--;
 
-    // 勝利畫面無敵狀態下，若玩家不在地圖外，強制歸位 (0,0)
+    // 勝利畫面無敵狀態下，若玩家不在地圖外，強制歸位 (0,0)｜勝利画面の無敵状態下、プレイヤーが地図外にいない場合、強制的に位置を (0,0) にする 
     if (isWinInvincible) {
         if (!(player.x < 0 || player.x > WORLD_WIDTH || player.y < 0 || player.y > WORLD_HEIGHT)) {
             player.x = 0;
@@ -1695,7 +1696,7 @@ function update() {
     if (now_in_boss_area !== is_in_boss_area) {
         is_in_boss_area = now_in_boss_area;
         if (is_in_boss_area) {
-            // 進入boss區
+            // 進入boss區｜ボスのエリアに入る
             target_area_colors = [
                 boss_area_color1, boss_area_color2, boss_area_color3, boss_area_color4, boss_area_color5,
                 boss_area_color6, boss_area_color7, boss_area_color8, boss_area_color9, boss_area_color10
