@@ -4,41 +4,41 @@ let FirstLanguage = localStorage.getItem('lang') || 'ja'; //預設語言日文�
 // let FirstLanguage = localStorage.getItem('lang') || 'en'; //預設語言英文｜デフォルト言語：英語
 
 // ===== 遊戲狀態 =====｜ゲーム状態
-let MAX_FPS = 60; // 最大FPS設定 預設60｜最大FPS設定 デフォルト60
+let MAX_FPS = 60;            // 最大FPS設定 預設60｜最大FPS設定 デフォルト60
 
-let playerMoveSpeed = 8; // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
-let weaponPower = 1;   // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
-let playerStartX = 150;   // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
-let playerStartY = 150;   // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
-let playerMaxHealth = 100; // 玩家血量 預設100｜プレイヤー体力 デフォルト100
-let GRAVITY         = 1.6;         // 重力加速度
-let JUMP_POWER      = 21; // 跳躍力量
+let playerMoveSpeed = 8;     // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
+let weaponPower = 1;         // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
+let playerStartX = 5150;     // 玩家初始座標 x 預設200｜プレイヤー初期座標 x デフォルト200
+let playerStartY = 150;      // 玩家初始座標 y 預設100 ｜プレイヤー初期座標 y デフォルト100
+let playerMaxHealth = 100;   // 玩家血量 預設100｜プレイヤー体力 デフォルト100
+let GRAVITY         = 1.6;   // 重力加速度
+let JUMP_POWER      = 21;    // 跳躍力量
 let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';  // 玩家攻擊子彈顏色   
 let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';  // 玩家集氣攻擊子彈顏色
 let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';  // 玩家集氣攻擊子彈顏色
 
-// **玩家飛行無敵模式 =｜プレイヤー飛行無敵モード**
-let isFlyingMode = 0; // 預設關閉 請預設上面hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
+let Fly_RED_HP = 1;        // 飛行紅色敵人血量｜飛行赤色敵体の体力
+let Fly_ORANGE_HP = 3;     // 飛行橘色敵人血量｜飛行オレンジ敵体の体力
+let GROUND_RED_HP = 3;     // 地面紅色敵人血量｜地上赤色敵体の体力
+let GROUND_ORANGE_HP = 3;  // 地面橘色敵人血量｜地上オレンジ敵体の体力
+let GROUND_PINK_HP = 5;    // 地面粉紅敵人血量｜地上ピンク敵体の体力
 
-let Fly_RED_HP = 1; // 飛行紅色敵人血量｜飛行赤色敵体の体力
-let Fly_ORANGE_HP = 3; // 飛行橘色敵人血量｜飛行オレンジ敵体の体力
-let GROUND_RED_HP = 3; // 地面紅色敵人血量｜地上赤色敵体の体力
-let GROUND_ORANGE_HP = 3; // 地面橘色敵人血量｜地上オレンジ敵体の体力
-let GROUND_PINK_HP = 5; // 地面粉紅敵人血量｜地上ピンク敵体の体力
+let enemyMaxCount = 15;    // 敵人最大數量 預設15｜敵最大数 デフォルト15
 
-let enemyMaxCount = 15; // 敵人最大數量 預設15｜敵最大数 デフォルト15
-
-let FLY_RED_spawn = 1; // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
-let FLY_ORANGE_spawn = 1; // 敵人Ｂ是否生成，1=是，0=否｜敵B生成するか 1=はい 0=いいえ
-let GROUND_RED_spawn = 1; // 敵人Ｃ是否生成，1=是，0=否｜敵C生成するか 1=はい 0=いいえ
-let GROUND_ORANGE_spawn = 1; // 敵人Ｄ是否生成，1=是，0=否｜敵D生成するか 1=はい 0=いいえ
-let GROUND_PINK_spawn = 1; // 敵人Ｅ是否生成，1=是，0=否｜敵E生成するか 1=はい 0=いいえ
-
-let bossHealth   = 200;  // Boss血量 預設200｜ボス体力 デフォルト200
-let bossSetX = 5000; // boss 座標 x 預設5000｜ボス座標 x デフォルト5000
-let bossSetY = 230; // boss 座標 y 預設230｜ボス座標 y デフォルト230
-let bossBulletSpeed = 4; // boss 子彈速度（預設4，數值越大越快）｜ボス弾スピード（デフォルト4、数値が大きいほど速い）
+let FLY_RED_spawn = 1;         // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
+let FLY_ORANGE_spawn = 1;      // 敵人Ｂ是否生成，1=是，0=否｜敵B生成するか 1=はい 0=いいえ
+let GROUND_RED_spawn = 1;      // 敵人Ｃ是否生成，1=是，0=否｜敵C生成するか 1=はい 0=いいえ
+let GROUND_ORANGE_spawn = 1;   // 敵人Ｄ是否生成，1=是，0=否｜敵D生成するか 1=はい 0=いいえ
+let GROUND_PINK_spawn = 1;     // 敵人Ｅ是否生成，1=是，0=否｜敵E生成するか 1=はい 0=いいえ
+let bossHealth   = 100;        // Boss血量 預設100｜ボス体力 デフォルト100
+let bossSetX = 5000;           // boss 座標 x 預設5000｜ボス座標 x デフォルト5000
+let bossSetY = 230;            // boss 座標 y 預設230｜ボス座標 y デフォルト230
+let bossBulletDamage = 4;      // boss 子彈攻擊力 預設5
+let bossImpactDamage = 8;      // boss 撞擊攻擊力 預設10
+let bossBulletSpeed = 4;       // boss 子彈速度（預設4，數值越大越快）｜ボス弾スピード（デフォルト4、数値が大きいほど速い）
+let bossStopTime = 60;         // boss被蓄氣攻擊後暫停時間(幾偵)
 let bossBulletPatternMode = 2; // boss發射子彈的模式 1:固定3發 2:隨機3/4/5發 3:隨機3/4/5/7發｜ボス弾パターン 1:固定3発 2:ランダム3/4/5発 3:ランダム3/4/5/7発
+let bossBulletDelay = [40, 90]; // boss 子彈延遲時間(每幾偵～幾偵發射一次)
 let bossBulletEnable = 1; // boss 子彈是否射擊，1=是，0=否｜ボス弾発射するか 1=はい 0=いいえ
 let bossFixedPosition = 0; // boss 是否固定座標（取消移動），1=是，0=否｜ボス座標固定するか（移動しない）1=はい 0=いいえ
 
@@ -54,6 +54,8 @@ let showMobileTouch = 1; // 是否顯示手機觸控按鈕（1=顯示，0=隱藏
 let showStar = 1; // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
 let showMeteor = 1; // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
 
+// **玩家飛行無敵模式 =｜プレイヤー飛行無敵モード**
+let isFlyingMode = 0; // 預設關閉 請預設上面hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
 // ===== 設定選單狀態顯示全開/全關 1=全開 0=全關 2=pass =====
 checkBoxShowHideAll(2);
 // checkBoxShowHideAll(0); // 測試用 1=全開 0=全關 2=pass
@@ -858,6 +860,7 @@ const boss = {
             this.pattern = (this.pattern + 1) % 4;
             this.patternTimer = 0;
         }
+        // boss 動作行為
         if (!bossCanMove) return; // 0.7秒內不能移動
         // 不受重力影響，直接根據行為模式調整y座標
         const bossDisplayHeight = 190;
@@ -924,7 +927,7 @@ const boss = {
                     color: 'rgba(255,68,170,1)'
                 });
             }
-            this.shootCooldown = this.shootDelay; // ← 每次發射後重設冷卻
+            this.shootCooldown = bossBulletDelay[0] + Math.floor(Math.random() * (bossBulletDelay[1] - bossBulletDelay[0] + 1)); // 每次發射後隨機冷卻
         }
         // === 加入邊界限制 ===
         const bossDisplayWidth = 190;
@@ -1462,7 +1465,7 @@ function update() {
         
         // 檢測玩家碰撞
         if (checkCollision(player, boss)) {
-            player.takeDamage(15);
+            player.takeDamage(bossImpactDamage);
         }
     }
     
@@ -1507,7 +1510,7 @@ function update() {
         if (bossActive && checkCollision(bullet, boss)) {
             if (bullet.isCharge) {
                 boss.health -= weaponPower * 3; // 集氣彈攻擊力3倍
-                boss.pauseTimer = 5; // 暫停10偵
+                boss.pauseTimer = bossStopTime; // boss被攻擊暫停偵數
                 boss.lastHitCharge = true; // 集氣彈
             } else {
                 boss.health -= weaponPower; // 普通子彈攻擊力
@@ -1638,7 +1641,7 @@ function update() {
         if (checkCollision(bullet, player)) {
             // 判斷是否為 Boss 子彈
             if (bullet.color === 'rgba(255,68,170,1)') {
-                player.takeDamage(bossBulletPower); // Boss 子彈
+                player.takeDamage(bossBulletDamage); // Boss 子彈
             } else {
                 player.takeDamage(5); // 其他敵人子彈
             }
@@ -3248,5 +3251,3 @@ document.addEventListener('click', function(e) {
     customLangList.style.display = 'none';
 });
 window.addEventListener('DOMContentLoaded', updateCustomLangBtn);
-
-let bossBulletPower = 8; // Boss 子彈威力（新增）
