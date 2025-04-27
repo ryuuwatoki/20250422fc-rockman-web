@@ -1083,13 +1083,6 @@ document.addEventListener('keydown', (e) => {
                 chargeFrame = 0;
                 chargeReady = false;
                 player.shootAnimFrame = 7; // 只顯示1幀｜1フレームのみ表示
-                // 播放射擊音效｜射撃音響再生
-                const shootAudio = document.getElementById('shoot-audio');
-                if (shootAudio) {
-                    shootAudio.currentTime = 0;
-                    shootAudio.volume = VOLUME_SHOOT;
-                    if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
-                }
                 // 延遲0.5秒後才播放集氣音效｜0.5秒後に集気音響再生 
                 if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
                 chargeAudioTimeout = setTimeout(() => {
@@ -1129,6 +1122,13 @@ document.addEventListener('keyup', (e) => {
             // 放開空白鍵時，根據集氣時間決定發射什麼｜スペースキー放開時、集氣時間で射撃決定
             if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
                 chargeReady = true; // 發射集氣彈
+                // 播放集氣彈射擊音效
+                const shootAudio = document.getElementById('shoot-audio');
+                if (shootAudio) {
+                    shootAudio.currentTime = 0;
+                    shootAudio.volume = VOLUME_SHOOT;
+                    if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
+                }
             } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
                 // 只有 chargeReady 為 false 才補發普通彈，且不受冷卻限制｜chargeReady が false の場合のみ普通弾を補充、冷卻制限なし
                 bullets.push({
@@ -1141,6 +1141,13 @@ document.addEventListener('keyup', (e) => {
                     isCharge: false
                 });
                 player.shootAnimFrame = 1;
+                // 播放普通彈射擊音效
+                const shootAudio = document.getElementById('shoot-audio');
+                if (shootAudio) {
+                    shootAudio.currentTime = 0;
+                    shootAudio.volume = VOLUME_SHOOT;
+                    if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
+                }
             }
             charging = false;
             // 停止集氣音效｜集気音響停止
@@ -3231,12 +3238,7 @@ function simulateKey(key, pressed) {
                 chargeFrame = 0;
                 chargeReady = false;
                 player.shootAnimFrame = 1;
-                const shootAudio = document.getElementById('shoot-audio');
-                if (shootAudio) {
-                    shootAudio.currentTime = 0;
-                    shootAudio.volume = VOLUME_SHOOT;
-                    if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
-                }
+                // (移除這裡的射擊音效)
                 if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
                 chargeAudioTimeout = setTimeout(() => {
                     if (charging) {
@@ -3252,6 +3254,13 @@ function simulateKey(key, pressed) {
         } else {
             if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
                 chargeReady = true;
+                // (放開時才播放射擊音效)
+                const shootAudio = document.getElementById('shoot-audio');
+                if (shootAudio) {
+                    shootAudio.currentTime = 0;
+                    shootAudio.volume = VOLUME_SHOOT;
+                    if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
+                }
             } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
                 // 只有 chargeReady 為 false 才補發普通彈，且不受冷卻限制 // chargeReadyがfalseの場合のみ普通の弾を補充し、冷却制限を受けない
                 bullets.push({
@@ -3264,6 +3273,13 @@ function simulateKey(key, pressed) {
                     isCharge: false
                 });
                 player.shootAnimFrame = 1;
+                // (放開時才播放射擊音效)
+                const shootAudio = document.getElementById('shoot-audio');
+                if (shootAudio) {
+                    shootAudio.currentTime = 0;
+                    shootAudio.volume = VOLUME_SHOOT;
+                    if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
+                }
             }
             charging = false;
             if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
