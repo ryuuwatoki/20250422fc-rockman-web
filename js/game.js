@@ -49,7 +49,7 @@ let showFPS             = 1;  //showfps｜FPS表示
 let showXY              = 0;  //show xy｜XY座標表示
 let showNXY             = 0;  //show new xy｜グリッド座標表示
 let ShowCollisionBox    = 0;  //是否顯示遮圖顯示目前碰撞箱 ｜当たり判定表示
-let showPlayGroundCheck = 0;  //是否顯示地面偵測
+let showPlayGroundCheck = 0;  //是否顯示地面偵測 / 接地判定表示
 let AutoFlipPlayer      = 1;  // 是否自動水平翻轉角色圖片（1=按方向鍵時自動翻轉，0=永遠朝右），預設1｜自動左右反転 1=キーで反転 0=常に右 デフォルト1
 let showEntityCounts    = 0;  //show 人物怪物子彈數量｜エンティティ数表示
 let showMobileTouch     = 1;  // 是否顯示手機觸控按鈕（1=顯示，0=隱藏）｜モバイルタッチボタン表示 1=表示 0=非表示
@@ -384,7 +384,7 @@ let GROUND_PINK_CollisionBoxNY     = 50;        //碰撞箱中心移動y｜当�
 let GROUND_PINK_CollisionBoxCircle = 0.9;       // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
 
 //魔王
-let bossCollisionBox       = [160, 50];  // [寬度, 高度]｜[幅, 高さ]
+let bossCollisionBox       = [160, 150];  // [寬度, 高度]｜[幅, 高さ]
 let bossCollisionBoxNX     = 50;          //碰撞箱中心移動x｜当たり判定中心移動x
 let bossCollisionBoxNY     = 40;          //碰撞箱中心移動y｜当たり判定中心移動y
 let bossCollisionBoxCircle = 0.3;         // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
@@ -2670,7 +2670,7 @@ const LANGUAGES = {
             showMobileTouch  : 'モバイルタッチ表示',
             autoFlipPlayer   : '左右反転',
             showCollisionBox : '当たり判定',
-            showPlayGroundCheck : '地面検出',
+            showPlayGroundCheck : '接地判定',
             showStar         : '星を表示',
             showMeteor       : '流星を表示',
             ok               : 'OK'
