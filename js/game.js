@@ -7,7 +7,7 @@ let FirstLanguage = localStorage.getItem('lang') || 'ja';  //預設語言日文�
 let MAX_FPS = 60;            // 最大FPS設定 預設60｜最大FPS設定 デフォルト60
 
 let playerMoveSpeed = 6;     // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
-let weaponPower     = 1;     // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
+let weaponPower     = 2;     // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
 let playerStartX    = 150;  // 玩家初始座標 x 預設150｜プレイヤー初期座標 x デフォルト150
 let playerStartY    = 150;   // 玩家初始座標 y 預設150 ｜プレイヤー初期座標 y デフォルト150
 let playerMaxHealth = 100;   // 玩家血量 預設100｜プレイヤー体力 デフォルト100
@@ -31,6 +31,7 @@ let FLY_ORANGE_spawn      = 1;         // 敵人Ｂ是否生成，1=是，0=否�
 let GROUND_RED_spawn      = 1;         // 敵人Ｃ是否生成，1=是，0=否｜敵C生成するか 1=はい 0=いいえ
 let GROUND_ORANGE_spawn   = 1;         // 敵人Ｄ是否生成，1=是，0=否｜敵D生成するか 1=はい 0=いいえ
 let GROUND_PINK_spawn     = 1;         // 敵人Ｅ是否生成，1=是，0=否｜敵E生成するか 1=はい 0=いいえ
+
 let bossHealth            = 100;       // Boss血量 預設100｜ボス体力 デフォルト100
 let bossSetX              = 5000;      // boss 座標 x 預設5000｜ボス座標 x デフォルト5000
 let bossSetY              = 230;       // boss 座標 y 預設230｜ボス座標 y デフォルト230
@@ -56,11 +57,13 @@ let showMobileTouch     = 1;  // 是否顯示手機觸控按鈕（1=顯示，0=�
 let showStar            = 1;  // 是否顯示星星（1=顯示，0=隱藏）｜星表示 1=表示 0=非表示
 let showMeteor          = 1;  // 是否顯示隕石（1=顯示，0=隱藏）｜隕石表示 1=表示 0=非表示
 
+
 // **玩家飛行無敵模式 =｜プレイヤー飛行無敵モード**
 let isFlyingMode = 0; // 預設關閉 請預設上面hp100第一下會判斷受傷碰到怪物就死了｜デフォルトオフ HP100で最初の一撃でダメージ判定、敵に当たると即死
 // ===== 設定選單狀態顯示全開/全關 1=全開 0=全關 2=pass =====
 checkBoxShowHideAll(2); // 設定選單狀態顯示全開/全關 1=全開 0=全關 2=不做任何事｜設定メニュー状態全開/全閉 1=全開 0=全閉 2=何もしない
 // checkBoxShowHideAll(0); // 測試用 1=全開 0=全關 2=pass
+
 
 // 音量設定｜音量設定
 let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
@@ -327,13 +330,6 @@ function checkBoxShowHideAll(mode) {
 
 };
 
-//地板確認面積 原則上高度要跟PLAYER_size設定不一樣用NY調整
-
-let PLAYER_ground_check = [15,50]; //寬度 高度
-let PLAYER_ground_check_NX = 50; // 中心左右偏移度數值越大越右邊50為中心
-let PLAYER_ground_check_NY = 50; // 中心上下偏移樹數值越大越下方50為中心
-let PLAYER_ground_check_color = "rgb(255, 255, 96)";
-
 // ===== 物件面積 =====｜オブジェクトサイズ
 
 let PLAYER_size               = [38,50];    //玩家尺寸 寬度,高度｜プレイヤーサイズ 幅,高さ
@@ -345,6 +341,12 @@ let GROUND_RED_size           = [35,60];    //地面紅掃敵人尺寸｜地上�
 let GROUND_ORANGE_size        = [50,70];    //地面橙色敵人尺寸｜地上オレンジ敵体サイズ
 let GROUND_PINK_size          = [40,40];    // 地面粉色敵人尺寸｜地上ピンク敵体サイズ
 let BOSS_size                 = [190,190];  // boss尺寸｜ボスサイズ
+
+//地板確認面積 原則上高度要跟PLAYER_size設定不一樣用NY調整
+let PLAYER_ground_check = [15,PLAYER_size[1]]; //寬度 高度固定綁定玩家高度
+let PLAYER_ground_check_NX = 0; // 0為腳底x中心 增加往右減少往左 單位px
+let PLAYER_ground_check_NY = 0; // 0為腳底y中心 增加往下減少往上 單位px
+let PLAYER_ground_check_color = "rgb(255, 255, 96)";
 
 // ===== 碰撞箱 =====｜当たり判定
 //玩家
@@ -615,8 +617,8 @@ let player = {
         // 平台碰撞檢測 // プラットフォーム衝突判定
         this.onGround = false;
         // 以 PLAYER_ground_check 計算偵測區域中心
-        const groundCheckCenterX = this.x + this.width * (PLAYER_ground_check_NX / 100);
-        const groundCheckCenterY = this.y + this.height * (PLAYER_ground_check_NY / 100);
+        const groundCheckCenterX = this.x + this.width / 2 + PLAYER_ground_check_NX;
+        const groundCheckCenterY = this.y + this.height / 2 + PLAYER_ground_check_NY;
         const groundCheckX1 = groundCheckCenterX - PLAYER_ground_check[0] / 2;
         const groundCheckX2 = groundCheckCenterX + PLAYER_ground_check[0] / 2;
         const groundCheckY1 = groundCheckCenterY - PLAYER_ground_check[1] / 2;
@@ -1983,16 +1985,21 @@ function render() {
         if (showPlayGroundCheck == 1) {
             ctx.save();
             // 以玩家圖片中心為原點，支援 NX/NY 百分比移動
-            const checkCenterX = player.x + PLAYER_size[0] * (PLAYER_ground_check_NX / 100);
-            const checkCenterY = player.y + PLAYER_size[1] * (PLAYER_ground_check_NY / 100);
-            ctx.globalAlpha = 0.5;
+            const checkCenterX = player.x + PLAYER_size[0] / 2 + PLAYER_ground_check_NX;
+            const checkCenterY = player.y + PLAYER_size[1] / 2 + PLAYER_ground_check_NY;
+            const x = checkCenterX - PLAYER_ground_check[0] / 2;
+            const y = checkCenterY - PLAYER_ground_check[1] / 2;
+            const w = PLAYER_ground_check[0];
+            const h = PLAYER_ground_check[1];
+            // 調整說明
+            // 上半部（0.8，高度半透明）
+            ctx.globalAlpha = 0.1;
             ctx.fillStyle = PLAYER_ground_check_color;
-            ctx.fillRect(
-                checkCenterX - PLAYER_ground_check[0] / 2,
-                checkCenterY - PLAYER_ground_check[1] / 2,
-                PLAYER_ground_check[0],
-                PLAYER_ground_check[1]
-            );
+            ctx.fillRect(x, y, w, h * 0.92);
+            // 下半部（0.2，高度不透明）
+            ctx.globalAlpha = 0.6;
+            ctx.fillStyle = PLAYER_ground_check_color;
+            ctx.fillRect(x, y + h * 0.92, w, h * 0.08);
             ctx.restore();
         }
         // 劉羽發射時額外疊一張 shoot 圖 // 発射時に追加で shoot画像 を重ねる
