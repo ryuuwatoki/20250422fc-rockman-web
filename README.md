@@ -11,15 +11,15 @@
 <table>
   <tr>
     <td align="center">
-      遊戲畫面 / Gameplay screen<br>
+      ゲーム画面 /遊戲畫面 / Gameplay screen<br>
       <img src="readme/001.gif" width="300" />
     </td>
     <td align="center">
-      開啟遊戲監測與碰撞箱畫面 / Debugging and collision box display<br>
+      ゲーム監視と衝突ボックス表示 /開啟遊戲監測與碰撞箱畫面 / Debugging and collision box display<br>
       <img src="readme/002.gif" width="300" />
     </td>
     <td align="center">
-      語言切換 / Language switching<br>
+      言語切替 /語言切換 / Language switching<br>
       <img src="readme/003.gif" width="300" />
     </td>
   </tr>
@@ -31,6 +31,11 @@
 <img src="readme/004.gif" />
 <img src="readme/005.gif" />
 <img src="readme/006.gif" />
+<div style="display: flex; justify-content: space-around;">
+  <img src="readme/007.gif" height="180" />
+  <img src="readme/008.gif" width="280" />
+  <img src="readme/009.gif" width="280" />
+</div>
 </p>
 <br>
 
