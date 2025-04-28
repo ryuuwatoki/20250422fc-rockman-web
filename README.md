@@ -11,7 +11,7 @@
 
 ### 圖片預覽：
 
-![遊戲畫面 1](readme/01.PNG)  
+![遊戲畫面 1](readme/091.gif)  
 ![遊戲畫面 2](readme/02.PNG)  
 ![遊戲畫面 3](readme/03.PNG)
 
