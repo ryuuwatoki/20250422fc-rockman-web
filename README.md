@@ -28,9 +28,9 @@
 <br>
 図層機能テスト | 圖層功能測試 | Layer Feature Testing
 <br>
-<img src="readme/004.gif" width="900" />
-<img src="readme/005.gif" width="900" />
-<img src="readme/006.gif" width="900" />
+<img src="readme/004.gif" />
+<img src="readme/005.gif" />
+<img src="readme/006.gif" />
 </p>
 <br>
 
