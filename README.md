@@ -21,10 +21,26 @@
     <td align="center">
       言語切替 /語言切換 / Language switching<br>
       <img src="readme/003.gif" width="300" />
+    </td>    
+  </tr>
+</table>
+<br>
+<br>
+<table>
+  <tr>
+    <td align="center">
+      今回の挑戦者 / 本次的挑戰者 / This time's challenger<br>
+      <img src="readme/011.gif" width="300" />
+    </td>
+    <td align="center">
+      ボス-エアーマン / 王-空氣人 / BOSS-Air Man<br>
+      <img src="readme/010.gif" width="300" />
     </td>
   </tr>
 </table>
 <br>
+
+
 <br>
 図層機能テスト | 圖層功能測試 | Layer Feature Testing
 <br>
