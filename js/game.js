@@ -39,7 +39,7 @@ let bossSetY              = 230;       // boss 座標 y 預設230｜ボス座標
 let bossBulletDamage      = 4;         // boss 子彈攻擊力 預設5｜ボス弾攻撃力 デフォルト5
 let bossImpactDamage      = 8;         // boss 撞擊攻擊力 預設10｜ボス体当たり攻撃力 デフォルト10
 let bossBulletSpeed       = 4;         // boss 子彈速度（預設4，數值越大越快）｜ボス弾スピード（デフォルト4、数値が大きいほど速い）
-let bossStopTime          = 60;        // boss被蓄氣攻擊後暫停時間(幾偵)｜ボスが溜め攻撃を受けた後の停止時間（フレーム数）
+let bossStopTime          = 10;        // boss被蓄氣攻擊後暫停時間(幾偵)｜ボスが溜め攻撃を受けた後の停止時間（フレーム数）
 let bossBulletPatternMode = 2;         // boss發射子彈的模式 1:固定3發 2:隨機3/4/5發 3:隨機3/4/5/7發｜ボス弾パターン 1:固定3発 2:ランダム3/4/5発 3:ランダム3/4/5/7発
 let bossBulletDelay       = [40, 90];  // boss 子彈延遲時間(每幾偵～幾偵發射一次)｜ボス弾発射ディレイ（何フレームごとに発射）
 let bossBulletEnable      = 1;         // boss 子彈是否射擊，1=是，0=否｜ボス弾発射するか 1=はい 0=いいえ
