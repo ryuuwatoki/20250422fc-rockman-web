@@ -25,7 +25,7 @@ let GROUND_ORANGE_HP = 3;   // 地面橘色敵人血量｜地上オレンジ敵�
 let GROUND_PINK_HP   = 5;   // 地面粉紅敵人血量｜地上ピンク敵体の体力
 
 let enemyMaxCount    = 15;  // 敵人最大數量 預設15｜敵最大数 デフォルト15
-let enemySpawnRate   = 0.015; // 每 1fps 生成一個敵人機率 | 1fps で敵を生成する確率
+let enemySpawnRate   = 0.01; // 每 1fps 生成一個敵人機率 | 1fps で敵を生成する確率
 
 let FLY_RED_spawn         = 1;         // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
 let FLY_ORANGE_spawn      = 1;         // 敵人Ｂ是否生成，1=是，0=否｜敵B生成するか 1=はい 0=いいえ
@@ -2955,7 +2955,7 @@ settingsPanel.innerHTML = `
         <label id="label-enemy-max-count">敵人最大數量 <input id="setting-enemy-max-count" type="number" min="1" max="50" step="1" style="width:80px;"></label>
     </div>
     <div style="margin-bottom:16px;">
-        <label id="label-enemy-spawn-rate">敵人生成機率 <input id="setting-enemy-spawn-rate" type="number" min="0.01" max="1" step="0.01" style="width:80px;"></label>
+        <label id="label-enemy-spawn-rate">敵人生成機率 <input id="setting-enemy-spawn-rate" type="number" min="0" max="1" step="0.01" style="width:80px;"></label>
     </div>
 
     <div style="margin-bottom:16px;">
@@ -3101,7 +3101,7 @@ if (settingsCloseBtn) {
         if (gravityInput) GRAVITY = parseFloat(gravityInput.value) || 1;
         if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || 11.5*1.3;
         if (enemyMaxCountInput) enemyMaxCount = parseInt(enemyMaxCountInput.value) || 1;
-        if (enemySpawnRateInput) enemySpawnRate = parseFloat(enemySpawnRateInput.value) || 0.01;
+        if (enemySpawnRateInput) enemySpawnRate = (enemySpawnRateInput.value === "" ? 0.01 : parseFloat(enemySpawnRateInput.value));
         if (bossBulletSpeedInput) bossBulletSpeed = parseInt(bossBulletSpeedInput.value) || 1;
         if (bossPattern1 && bossPattern1.checked) bossBulletPatternMode = 1;
         if (bossPattern2 && bossPattern2.checked) bossBulletPatternMode = 2;
@@ -3206,7 +3206,8 @@ if (enemyMaxCountInput2) enemyMaxCountInput2.addEventListener('input', function(
 });
 var enemySpawnRateInput2 = document.getElementById('setting-enemy-spawn-rate');
 if (enemySpawnRateInput2) enemySpawnRateInput2.addEventListener('input', function() {
-    enemySpawnRate = parseFloat(this.value) || 0.01;
+    // 允許 0，空值才預設 0.01
+    enemySpawnRate = (this.value === "" ? 0.01 : parseFloat(this.value));
 });
 var bossBulletSpeedInput2 = document.getElementById('setting-boss-bullet-speed');
 if (bossBulletSpeedInput2) bossBulletSpeedInput2.addEventListener('input', function() {
