@@ -8,7 +8,7 @@ let MAX_FPS = 60;            // 最大FPS設定 預設60｜最大FPS設定 デ�
 
 let playerMoveSpeed = 6;     // 玩家移動速度設定，數值越大移動越快，預設6｜プレイヤー移動速度設定、数値が大きいほど速い、デフォルト6
 let weaponPower     = 2;     // 武器攻擊力設定，方便統一調整玩家子彈傷害 1為正常數字越大傷害越高｜武器攻撃力設定、プレイヤー弾のダメージ調整用 1が標準、数値が大きいほど強い
-let playerStartX    = 150;  // 玩家初始座標 x 預設150｜プレイヤー初期座標 x デフォルト150
+let playerStartX    = 150;   // 玩家初始座標 x 預設150｜プレイヤー初期座標 x デフォルト150
 let playerStartY    = 150;   // 玩家初始座標 y 預設150 ｜プレイヤー初期座標 y デフォルト150
 let playerMaxHealth = 100;   // 玩家血量 預設100｜プレイヤー体力 デフォルト100
 let GRAVITY         = 1.6;   // 重力1.6｜重力
@@ -25,6 +25,7 @@ let GROUND_ORANGE_HP = 3;   // 地面橘色敵人血量｜地上オレンジ敵�
 let GROUND_PINK_HP   = 5;   // 地面粉紅敵人血量｜地上ピンク敵体の体力
 
 let enemyMaxCount    = 15;  // 敵人最大數量 預設15｜敵最大数 デフォルト15
+let enemySpawnRate   = 0.015; // 每 1fps 生成一個敵人機率 | 1fps で敵を生成する確率
 
 let FLY_RED_spawn         = 1;         // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
 let FLY_ORANGE_spawn      = 1;         // 敵人Ｂ是否生成，1=是，0=否｜敵B生成するか 1=はい 0=いいえ
@@ -1377,7 +1378,7 @@ function update() {
     }
     
     // 生成敵人｜敵を生成
-    if (Math.random() < 0.015 && enemies.length < 8 && !bossActive && player.x < WORLD_WIDTH - 1000) {
+    if (Math.random() < enemySpawnRate && enemies.length < enemyMaxCount && !bossActive && player.x < WORLD_WIDTH - 1000) {
         // 依照 spawn 變數決定哪些敵人型別可以生成｜spawn 変数でどの敵人型別が生成できるかを決定
         const enemyTypes = [];
         if (FLY_RED_spawn) enemyTypes.push(ENEMY_TYPES.FLY_RED);
@@ -2626,6 +2627,7 @@ const LANGUAGES = {
             gravity          : '重力',
             jumpPower        : '跳躍力',
             enemyMaxCount    : '敵人最大數量',
+            enemySpawnRate   : '敵人生成機率',
             bossBulletSpeed  : 'Boss子彈速度',
             bossBulletPattern: 'Boss子彈模式：',
             bossPatternEasy  : '簡單',
@@ -2670,6 +2672,7 @@ const LANGUAGES = {
             gravity          : '重力',
             jumpPower        : 'ジャンプ力',
             enemyMaxCount    : '敵最大数',
+            enemySpawnRate   : '敵生成確率',
             bossBulletSpeed  : 'ボス弾スピード',
             bossBulletPattern: 'ボス弾パターン：',
             bossPatternEasy  : '簡単',
@@ -2714,6 +2717,7 @@ const LANGUAGES = {
             gravity          : 'Gravity',
             jumpPower        : 'Jump Power',
             enemyMaxCount    : 'Enemy Max Count',
+            enemySpawnRate   : 'Enemy Spawn Rate',
             bossBulletSpeed  : 'Boss Bullet Speed',
             bossBulletPattern: 'Boss Bullet Pattern:',
             bossPatternEasy  : 'Easy',
@@ -2909,8 +2913,8 @@ settingsPanel.innerHTML = `
         <div id="custom-lang-select-wrapper" style="position:relative;display:flex;align-items:center;height:20px;">
             <button id="custom-lang-select-btn" style="font-size:14px;padding:2px 10px;border-radius:6px;background:#fff;color:#222;border:1px solid #888;min-width:60px;text-align:left;height:20px;display:flex;align-items:center;">中文 ▼</button>
             <ul id="custom-lang-select-list" style="display:none;position:absolute;top:110%;left:0;width:100%;background:#222;border-radius:8px;box-shadow:0 2px 12px #0008;z-index:9999;padding:0;margin:0;list-style:none;font-size:14px;">
-                <li data-lang="zh" style="padding:6px 10px;cursor:pointer;color:#fff">中文</li>
                 <li data-lang="ja" style="padding:6px 10px;cursor:pointer;color:#fff">日本語</li>
+                <li data-lang="zh" style="padding:6px 10px;cursor:pointer;color:#fff">中文</li>
                 <li data-lang="en" style="padding:6px 10px;cursor:pointer;color:#fff">English</li>
             </ul>
         </div>
@@ -2949,6 +2953,9 @@ settingsPanel.innerHTML = `
 
     <div style="margin-bottom:16px;">
         <label id="label-enemy-max-count">敵人最大數量 <input id="setting-enemy-max-count" type="number" min="1" max="50" step="1" style="width:80px;"></label>
+    </div>
+    <div style="margin-bottom:16px;">
+        <label id="label-enemy-spawn-rate">敵人生成機率 <input id="setting-enemy-spawn-rate" type="number" min="0.01" max="1" step="0.01" style="width:80px;"></label>
     </div>
 
     <div style="margin-bottom:16px;">
@@ -3005,6 +3012,7 @@ settingsBtn.onclick = function() {
     var gravityInput = document.getElementById('setting-gravity');
     var jumpPowerInput = document.getElementById('setting-jump-power');
     var enemyMaxCountInput = document.getElementById('setting-enemy-max-count');
+    var enemySpawnRateInput = document.getElementById('setting-enemy-spawn-rate');
     var bossBulletSpeedInput = document.getElementById('setting-boss-bullet-speed');
     var bossPattern1 = document.getElementById('setting-boss-bullet-pattern-1');
     var bossPattern2 = document.getElementById('setting-boss-bullet-pattern-2');
@@ -3032,6 +3040,7 @@ settingsBtn.onclick = function() {
     if (gravityInput) gravityInput.value = GRAVITY;
     if (jumpPowerInput) jumpPowerInput.value = JUMP_POWER;
     if (enemyMaxCountInput) enemyMaxCountInput.value = enemyMaxCount;
+    if (enemySpawnRateInput) enemySpawnRateInput.value = enemySpawnRate;
     if (bossBulletSpeedInput) bossBulletSpeedInput.value = bossBulletSpeed;
     if (bossPattern1) bossPattern1.checked = bossBulletPatternMode === 1;
     if (bossPattern2) bossPattern2.checked = bossBulletPatternMode === 2;
@@ -3064,6 +3073,7 @@ if (settingsCloseBtn) {
         var gravityInput = document.getElementById('setting-gravity');
         var jumpPowerInput = document.getElementById('setting-jump-power');
         var enemyMaxCountInput = document.getElementById('setting-enemy-max-count');
+        var enemySpawnRateInput = document.getElementById('setting-enemy-spawn-rate');
         var bossBulletSpeedInput = document.getElementById('setting-boss-bullet-speed');
         var bossPattern1 = document.getElementById('setting-boss-bullet-pattern-1');
         var bossPattern2 = document.getElementById('setting-boss-bullet-pattern-2');
@@ -3091,6 +3101,7 @@ if (settingsCloseBtn) {
         if (gravityInput) GRAVITY = parseFloat(gravityInput.value) || 1;
         if (jumpPowerInput) JUMP_POWER = parseFloat(jumpPowerInput.value) || 11.5*1.3;
         if (enemyMaxCountInput) enemyMaxCount = parseInt(enemyMaxCountInput.value) || 1;
+        if (enemySpawnRateInput) enemySpawnRate = parseFloat(enemySpawnRateInput.value) || 0.01;
         if (bossBulletSpeedInput) bossBulletSpeed = parseInt(bossBulletSpeedInput.value) || 1;
         if (bossPattern1 && bossPattern1.checked) bossBulletPatternMode = 1;
         if (bossPattern2 && bossPattern2.checked) bossBulletPatternMode = 2;
@@ -3192,6 +3203,10 @@ if (jumpExtraFramesInput2) jumpExtraFramesInput2.addEventListener('input', funct
 var enemyMaxCountInput2 = document.getElementById('setting-enemy-max-count');
 if (enemyMaxCountInput2) enemyMaxCountInput2.addEventListener('input', function() {
     enemyMaxCount = parseInt(this.value) || 1;
+});
+var enemySpawnRateInput2 = document.getElementById('setting-enemy-spawn-rate');
+if (enemySpawnRateInput2) enemySpawnRateInput2.addEventListener('input', function() {
+    enemySpawnRate = parseFloat(this.value) || 0.01;
 });
 var bossBulletSpeedInput2 = document.getElementById('setting-boss-bullet-speed');
 if (bossBulletSpeedInput2) bossBulletSpeedInput2.addEventListener('input', function() {
@@ -3377,6 +3392,7 @@ function updateSettingsPanelLang() {
     document.getElementById('settings-close-btn').textContent = L.ok;
     // 新增多語言
     document.getElementById('label-enemy-max-count').childNodes[0].textContent = (L.enemyMaxCount || '敵人最大數量') + ' ';
+    document.getElementById('label-enemy-spawn-rate').childNodes[0].textContent = (L.enemySpawnRate || '敵人生成機率') + ' ';
     document.getElementById('label-boss-bullet-speed').childNodes[0].textContent = (L.bossBulletSpeed || 'Boss子彈速度') + ' ';
     document.getElementById('label-boss-bullet-pattern').textContent = L.bossBulletPattern || 'Boss子彈模式：';
     document.getElementById('label-boss-pattern-easy').textContent = L.bossPatternEasy || '簡單';
@@ -3389,7 +3405,7 @@ const customLangBtn = document.getElementById('custom-lang-select-btn');
 const customLangList = document.getElementById('custom-lang-select-list');
 const customLangItems = customLangList.querySelectorAll('li');
 function updateCustomLangBtn() {
-    const map = { zh: '中文', ja: '日本語', en: 'English' };
+    const map = { ja: '日本語', zh: '中文', en: 'English' };
     customLangBtn.textContent = map[currentLang] + ' ▼';
 }
 customLangBtn.onclick = function(e) {
