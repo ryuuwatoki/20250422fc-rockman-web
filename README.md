@@ -12,25 +12,26 @@
   <tr>
     <td align="center">
       ゲーム画面 /遊戲畫面 / Gameplay screen<br>
-      <img src="readme/001.gif" width="300" />
+      <img src="readme/001.gif" width="400" />
     </td>
     <td align="center">
-      ゲーム監視と衝突ボックス表示 /開啟遊戲監測與碰撞箱畫面 / Debugging and collision box display<br>
-      <img src="readme/002.gif" width="300" />
+      ゲーム監視表示 /遊戲監測 / Debug display<br>
+      <img src="readme/002.gif" width="400" />
     </td>
     <td align="center">
       言語切替 /語言切換 / Language switching<br>
-      <img src="readme/003.gif" width="300" />
+      <img src="readme/003.gif" width="400" />
     </td>    
   </tr>
 </table>
 <br>
+
 <br>
 <table>
   <tr>
     <td align="center">
       今回の挑戦者 / 本次的挑戰者 / This time's challenger<br>
-      <img src="readme/011.gif" width="300" />
+      <img src="readme/011.png" width="300" />
     </td>
     <td align="center">
       ボス-エアーマン / 王-空氣人 / BOSS-Air Man<br>
@@ -40,22 +41,56 @@
 </table>
 <br>
 
+<br>
+<table>
+  <tr>
+    <td align="center">
+      <img src="readme/012.png" height="600" />
+    </td>
+    <td align="center">
+      <img src="readme/013.png" height="600" />
+    </td>
+    <td align="center">
+      <img src="readme/014.png" height="600" />
+    </td>
+  </tr>
+</table>
+<br>
+
 
 <br>
-図層機能テスト | 圖層功能測試 | Layer Feature Testing
+
+## 図層機能テスト | 圖層功能測試 | Layer Feature Testing
+
 <br>
+<br>
+接地判定(距離の調整テスト) | 地面碰撞箱(距離調整測試) | Ground Collision (Distance Offset Test)
 <img src="readme/004.gif" />
+<br>
+<br>
+
+接地判定(幅調整テスト) | 地面碰撞箱(寬度調整測試) | Ground Collision (Horizontal Size Test)
 <img src="readme/005.gif" />
+<br>
+<br>
+
+ハートボックス (範囲テスト) | 受擊碰撞箱（範圍測試）| Hurtbox Collider (Range Test) 
 <img src="readme/006.gif" />
-<div style="display: flex; justify-content: space-around;">
-  <img src="readme/007.gif" height="180" />
-  <img src="readme/008.gif" width="280" />
-  <img src="readme/009.gif" width="280" />
-</div>
+<br>
+<br>
+
+背景の流星エフェクトテスト | 背景流星雨效果測試 | Meteor Shower Background Effect Test
+<br>
+<img src="readme/007.gif" height="250" />
+<br>
+<img src="readme/008.gif" height="250" />
+<br>
+<img src="readme/009.gif" height="250" />
+
 </p>
 <br>
 
-🎥 ゲーム動画プレビュー | 遊戲影片預覽 | Gameplay Video Preview：  
+## ゲーム動画プレビュー | 遊戲影片預覽 | Gameplay Video Preview：  
 [こちらをクリックして視聴](https://drive.google.com/file/d/1upNH9sbyREraia6M8-w-IAxr0UHxLgVn/view?usp=drive_link)
 
 🌐 試遊 (一部スマホ対応) | 試玩（部分手機支援） | Playable Demo (Partially Mobile Compatible)：  
