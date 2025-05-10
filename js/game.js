@@ -333,9 +333,9 @@ function checkBoxShowHideAll(mode) {
 
 // ===== 物件面積 =====｜オブジェクトサイズ
 
-let PLAYER_size               = [50,50];    //玩家尺寸 寬度,高度｜プレイヤーサイズ 幅,高さ
-let PLAYER_SHOOT_size         = [50,50];    //發射子彈時玩家尺寸｜射撃時プレイヤーサイズ
-let PLAYER_Charge_size        = [100,100];    // 集氣時玩家尺寸｜チャージ時プレイヤーサイズ
+let PLAYER_size               = [60,60];    //玩家尺寸 寬度,高度｜プレイヤーサイズ 幅,高さ
+let PLAYER_SHOOT_size         = [60,60];    //發射子彈時玩家尺寸｜射撃時プレイヤーサイズ
+let PLAYER_Charge_size        = [110,110];    // 集氣時玩家尺寸｜チャージ時プレイヤーサイズ
 let PLAYER_Charge_alpha       = 0.7;    // 集氣時玩家透明度｜チャージ時プレイヤー透明度
 
 // let PLAYER_Charge_Attack_size = [38,50];    //蓄氣光圈尺寸｜チャージエフェクトサイズ
@@ -349,7 +349,7 @@ let BOSS_size                 = [190,190];  // boss尺寸｜ボスサイズ
 //地板確認面積 原則上高度要跟PLAYER_size設定不一樣用NY調整
 let PLAYER_ground_check = [15,PLAYER_size[1]]; //寬度 高度固定綁定玩家高度
 let PLAYER_ground_check_NX = 0; // 0為腳底x中心 增加往右減少往左 單位px
-let PLAYER_ground_check_NY = 0; // 0為腳底y中心 增加往下減少往上 單位px
+let PLAYER_ground_check_NY = -3.5; // 0為腳底y中心 增加往下減少往上 單位px
 let PLAYER_ground_check_color = "rgb(255, 255, 96)";
 
 // ===== 碰撞箱 =====｜当たり判定
@@ -2049,31 +2049,6 @@ function render() {
             ctx.fillRect(x, y + h * 0.92, w, h * 0.08);
             ctx.restore();
         }
-        // 劉羽發射時額外疊一張 shoot 圖 // 発射時に追加で shoot画像 を重ねる
-        if (player.shootAnimFrame > 0 && (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0)) {
-            ctx.save();
-            if (AutoFlipPlayer === 1 && player.direction === -1) {
-                ctx.translate(player.x + PLAYER_size[0] / 2, player.y + PLAYER_size[1] / 2);
-                ctx.scale(-1, 1);
-                ctx.drawImage(
-                    playerImgs[2],
-                    -(PLAYER_SHOOT_size[0] / 2),
-                    -(PLAYER_SHOOT_size[1] / 2),
-                    PLAYER_SHOOT_size[0],
-                    PLAYER_SHOOT_size[1]
-                );
-            } else {
-                ctx.drawImage(
-                    playerImgs[2],
-                    player.x + (PLAYER_size[0] - PLAYER_SHOOT_size[0]) / 2,
-                    player.y + (PLAYER_size[1] - PLAYER_SHOOT_size[1]),
-                    PLAYER_SHOOT_size[0],
-                    PLAYER_SHOOT_size[1]
-                );
-            }
-            ctx.restore();
-        }
-        // 發射時疊加發射圖（playerImgs[6]）
         if (player.shootAnimFrame > 0 && (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0)) {
             ctx.save();
             if (AutoFlipPlayer === 1 && player.direction === -1) {
