@@ -16,7 +16,6 @@ let JUMP_POWER      = 21;    // 跳躍力量21｜ジャンプ力
 
 let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';  // 玩家攻擊子彈顏色｜プレイヤー攻撃弾の色
 // let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';  // 玩家集氣攻擊子彈顏色｜プレイヤー溜め攻撃弾の色
-let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';  // 玩家集氣攻擊子彈顏色｜プレイヤー溜め攻撃弾の色
 
 let Fly_RED_HP       = 1;   // 飛行紅色敵人血量｜飛行赤色敵体の体力
 let Fly_ORANGE_HP    = 3;   // 飛行橘色敵人血量｜飛行オレンジ敵体の体力
@@ -465,29 +464,6 @@ groundPinkImgs[1].src = 'img/e05-2.png';
 
 // ===== 玩家圖片載入 =====
 // ===== プレイヤー画像の読み込み =====
-
-playerImgs[0].src = 'img/p0.png'; // 靜止
-playerImgs[1].src = 'img/p1.png'; // 移動1
-playerImgs[2].src = 'img/p2.png'; // 移動2
-playerImgs[3].src = 'img/p3.png'; // 移動3
-playerImgs[4].src = 'img/p4.png'; // 移動4
-playerImgs[5].src = 'img/p5.png'; // 移動5
-playerImgs[6].src = 'img/p6.png'; // 發射
-
-playerChargeImgs[0].src = 'img/s0.png';
-playerChargeImgs[1].src = 'img/s1.png';
-playerChargeImgs[2].src = 'img/s2.png';
-playerChargeImgs[3].src = 'img/s3.png';
-playerChargeImgs[4].src = 'img/s4.png';
-playerChargeImgs[5].src = 'img/s5.png';
-playerChargeImgs[6].src = 'img/s6.png';
-playerChargeImgs[7].src = 'img/s6.png';
-
-playerPowerBulletImgs[0].src = 'img/bu0.png';
-playerPowerBulletImgs[1].src = 'img/bu1.png';
-playerPowerBulletImgs[2].src = 'img/bu2.png';
-playerPowerBulletImgs[3].src = 'img/bu3.png';
-
 const playerImgs = [
     new Image(), // 0: 靜止
     new Image(), // 1: 移動動畫1
@@ -497,6 +473,13 @@ const playerImgs = [
     new Image(), // 5: 移動動畫5
     new Image(), // 6: 發射
 ];
+playerImgs[0].src = 'img/p0.png'; // 靜止
+playerImgs[1].src = 'img/p1.png'; // 移動1
+playerImgs[2].src = 'img/p2.png'; // 移動2
+playerImgs[3].src = 'img/p3.png'; // 移動3
+playerImgs[4].src = 'img/p4.png'; // 移動4
+playerImgs[5].src = 'img/p5.png'; // 移動5
+playerImgs[6].src = 'img/p6.png'; // 發射
 
 const playerChargeImgs = [
     new Image(),
@@ -508,15 +491,40 @@ const playerChargeImgs = [
     new Image(),
     new Image(),
 ];
+playerChargeImgs[0].src = 'img/s0.png';
+playerChargeImgs[1].src = 'img/s1.png';
+playerChargeImgs[2].src = 'img/s2.png';
+playerChargeImgs[3].src = 'img/s3.png';
+playerChargeImgs[4].src = 'img/s4.png';
+playerChargeImgs[5].src = 'img/s5.png';
+playerChargeImgs[6].src = 'img/s6.png';
+playerChargeImgs[7].src = 'img/s6.png';
 
-const playerPowerBulletImgs = [
+const playerChargeAttackShootImgs = [
     new Image(),
     new Image(),
     new Image(),
     new Image(),
 ]
+playerChargeAttackShootImgs[0].src = 'img/bu0.png';
+playerChargeAttackShootImgs[1].src = 'img/bu1.png';
+playerChargeAttackShootImgs[2].src = 'img/bu2.png';
+playerChargeAttackShootImgs[3].src = 'img/bu3.png';
 
 
+let PLAYER_Charge_Attack_shoot_size = [100,100];
+let PLAYER_Charge_Attack_shoot_speed = [1]; //fps 值越高越快
+let PLAYER_Charge_Attack_shoot_stay = 100; //fps 值越高停留越久
+
+let PLAYER_Attack_shoot_speed = [1]; //fps 值越高越快
+let PLAYER_Attack_shoot_stay = 100; //fps 值越高停留越久
+
+
+let PLAYER_Charge_Attack_shoot_CollisionBox       = [91, 58, 'rgba(255, 105, 68, 0.93)'];  // [寬度, 高度, 顏色]
+let PLAYER_Charge_Attack_shoot_CollisionBox_Show  = 1;                                     // 是否顯示碰撞箱
+let PLAYER_Charge_Attack_shoot_CollisionBoxNX     = 50;                                    //碰撞箱中心移動x｜当たり判定中心移動x
+let PLAYER_Charge_Attack_shoot_CollisionBoxNY     = 50;                                    //碰撞箱中心移動y｜当たり判定中心移動y
+let PLAYER_Charge_Attack_shoot_CollisionBoxCircle = 0;                                     // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
 
 
 
@@ -1337,23 +1345,28 @@ function update() {
     if (chargeReady) {
         // 發射集氣彈｜集氣弾を発射
         bullets.push({
-            x: player.x + (player.direction === 1 ? player.width : -40),
-            y: player.y + player.height / 2 - 12,
-            width: 40,
-            height: 24,
-            speed: 10 * 1.1 * player.direction, // 1.1倍
-            color: PLAYER_Charge_Attack_shoot_color,
-            isCharge: true // 標記為集氣彈｜集氣弾として標記    
+            x: player.x + (player.direction === 1 ? player.width : -PLAYER_Charge_Attack_shoot_size[0]),
+            y: player.y + player.height / 2 - PLAYER_Charge_Attack_shoot_size[1] / 2,
+            width: PLAYER_Charge_Attack_shoot_size[0],
+            height: PLAYER_Charge_Attack_shoot_size[1],
+            speed: PLAYER_Charge_Attack_shoot_speed[0] * player.direction,
+            isCharge: true, // 標記為集氣彈
+            imgFrame: 0, // 用於動畫輪播
+            // 集氣彈專用碰撞箱屬性
+            chargeCollisionBox: PLAYER_Charge_Attack_shoot_CollisionBox,
+            chargeCollisionBoxNX: PLAYER_Charge_Attack_shoot_CollisionBoxNX,
+            chargeCollisionBoxNY: PLAYER_Charge_Attack_shoot_CollisionBoxNY,
+            chargeCollisionBoxCircle: PLAYER_Charge_Attack_shoot_CollisionBoxCircle,
+            life: PLAYER_Charge_Attack_shoot_stay // 新增生命週期
         });
-        player.shootCooldown = player.shootDelay; // 給一點冷卻｜少しのクールダウンを与える
-        // 播放shoot音效｜射撃音響再生
+        player.shootCooldown = player.shootDelay;
         const shootAudio = document.getElementById('shoot-audio');
         if (shootAudio) {
             shootAudio.currentTime = 0;
             shootAudio.volume = VOLUME_SHOOT;
             if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
         }
-        player.shootAnimFrame = 14; // 集氣彈顯示0.2秒
+        player.shootAnimFrame = 14;
         chargeReady = false;
     }
     // 更新玩家｜プレイヤーを更新
@@ -1597,6 +1610,14 @@ function update() {
     for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
         bullet.x += bullet.speed;
+        // ====== 新增：集氣彈自動消失機制 ======
+        if (bullet.isCharge) {
+            bullet.life--;
+            if (bullet.life <= 0) {
+                bullets.splice(i, 1);
+                continue;
+            }
+        }
         
         // 移除屏幕外的子彈｜画面外の弾丸を削除
         if (bullet.x < camera.x - 50 || bullet.x > camera.x + camera.width + 50) {
@@ -2132,23 +2153,46 @@ function render() {
     
     // 繪製子彈｜弾丸を描画
     bullets.forEach(bullet => {
-        ctx.fillStyle = bullet.color;
         if (bullet.isCharge) {
             ctx.save();
-            ctx.shadowColor = PLAYER_Charge_Attack_shoot_color;
-            ctx.shadowBlur = 20;
-            // 集氣彈：上下窄的橢圓
-            ctx.beginPath();
-            ctx.ellipse(
-                bullet.x + bullet.width / 2,
-                bullet.y + bullet.height / 2,
-                bullet.width / 2,
-                bullet.height / 1.5,
-                0, 0, Math.PI * 2
+            // 集氣彈動畫圖（bu0~3）
+            const idx = Math.floor((bullet.imgFrame || 0) / 5) % 4;
+            const img = playerChargeAttackShootImgs[idx];
+            ctx.drawImage(
+                img,
+                bullet.x,
+                bullet.y,
+                bullet.width,
+                bullet.height
             );
-            ctx.fill();
+            // 顯示碰撞箱
+            if (PLAYER_Charge_Attack_shoot_CollisionBox_Show) {
+                const centerX = bullet.x + bullet.width * (PLAYER_Charge_Attack_shoot_CollisionBoxNX / 100);
+                const centerY = bullet.y + bullet.height * (PLAYER_Charge_Attack_shoot_CollisionBoxNY / 100);
+                const boxW = PLAYER_Charge_Attack_shoot_CollisionBox[0];
+                const boxH = PLAYER_Charge_Attack_shoot_CollisionBox[1];
+                const ellipseRx = boxW / 2;
+                const ellipseRy = boxH / 2;
+                if (PLAYER_Charge_Attack_shoot_CollisionBoxCircle < 1) {
+                    ctx.save();
+                    ctx.globalAlpha = 0.35;
+                    ctx.fillStyle = PLAYER_Charge_Attack_shoot_CollisionBox[2];
+                    ctx.beginPath();
+                    ctx.ellipse(centerX, centerY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+                if (PLAYER_Charge_Attack_shoot_CollisionBoxCircle > 0) {
+                    ctx.save();
+                    ctx.globalAlpha = 0.18;
+                    ctx.fillStyle = PLAYER_Charge_Attack_shoot_CollisionBox[2];
+                    ctx.fillRect(centerX - boxW / 2, centerY - boxH / 2, boxW, boxH);
+                    ctx.restore();
+                }
+            }
             ctx.restore();
         } else {
+            ctx.fillStyle = bullet.color || 'rgba(111, 196, 208, 0.89)';
             ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
         }
     });
@@ -2454,6 +2498,15 @@ function getCollisionBoxParams(obj) {
             nx: bossCollisionBoxNX,
             ny: bossCollisionBoxNY,
             circle: bossCollisionBoxCircle
+        };
+    }
+    // 集氣彈（子彈物件 isCharge 為 true）
+    if (obj.isCharge) {
+        return {
+            box: obj.chargeCollisionBox || PLAYER_Charge_Attack_shoot_CollisionBox,
+            nx: obj.chargeCollisionBoxNX !== undefined ? obj.chargeCollisionBoxNX : PLAYER_Charge_Attack_shoot_CollisionBoxNX,
+            ny: obj.chargeCollisionBoxNY !== undefined ? obj.chargeCollisionBoxNY : PLAYER_Charge_Attack_shoot_CollisionBoxNY,
+            circle: obj.chargeCollisionBoxCircle !== undefined ? obj.chargeCollisionBoxCircle : PLAYER_Charge_Attack_shoot_CollisionBoxCircle
         };
     }
     // 敵人｜敵
