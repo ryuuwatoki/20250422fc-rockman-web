@@ -516,8 +516,8 @@ let PLAYER_Charge_Attack_shoot_size = [100,100];
 let PLAYER_Charge_Attack_shoot_speed = [1]; //fps 值越高越快
 let PLAYER_Charge_Attack_shoot_stay = 100; //fps 值越高停留越久
 
-let PLAYER_Attack_shoot_speed = [1]; //fps 值越高越快
-let PLAYER_Attack_shoot_stay = 100; //fps 值越高停留越久
+let PLAYER_Attack_shoot_speed = [30]; //fps 值越高越快
+let PLAYER_Attack_shoot_stay = 30; //fps 值越高停留越久
 
 
 let PLAYER_Charge_Attack_shoot_CollisionBox       = [91, 58, 'rgba(255, 105, 68, 0.93)'];  // [寬度, 高度, 顏色]
@@ -746,9 +746,10 @@ let player = {
                 y: this.y + this.height / 2 - 3,
                 width: 10,
                 height: 6,
-                speed: 10 * 1.1 * this.direction, // 1.1倍 // 1.1倍
+                speed: PLAYER_Attack_shoot_speed[0] * this.direction,
                 color: PLAYER_Attack_shoot_color,
-                isCharge: false
+                isCharge: false,
+                life: PLAYER_Attack_shoot_stay
             });
             this.shootCooldown = this.shootDelay;
         }
@@ -1198,9 +1199,10 @@ document.addEventListener('keyup', (e) => {
                     y: player.y + player.height / 2 - 3,
                     width: 10,
                     height: 6,
-                    speed: 10 * 1.1 * player.direction, // 1.1倍｜1.1倍
+                    speed: PLAYER_Attack_shoot_speed[0] * player.direction,
                     color: PLAYER_Attack_shoot_color,
-                    isCharge: false
+                    isCharge: false,
+                    life: PLAYER_Attack_shoot_stay
                 });
                 player.shootAnimFrame = 1;
                 // 播放普通彈射擊音效
@@ -1612,6 +1614,12 @@ function update() {
         bullet.x += bullet.speed;
         // ====== 新增：集氣彈自動消失機制 ======
         if (bullet.isCharge) {
+            bullet.life--;
+            if (bullet.life <= 0) {
+                bullets.splice(i, 1);
+                continue;
+            }
+        } else if (bullet.life !== undefined) {
             bullet.life--;
             if (bullet.life <= 0) {
                 bullets.splice(i, 1);
@@ -3400,7 +3408,7 @@ function simulateKey(key, pressed) {
                     y: player.y + player.height / 2 - 3,
                     width: 10,
                     height: 6,
-                    speed: 10 * 1.1 * player.direction, // 1.1倍
+                    speed: PLAYER_Attack_shoot_speed[0] * player.direction, // 1.1倍
                     color: PLAYER_Attack_shoot_color,
                     isCharge: false
                 });
