@@ -409,119 +409,110 @@ const COLOR_BULLET_BOSS     = 'rgba(255,68,170,1)';      // Boss子彈顏色｜�
 const floorImg = new Image(); floorImg.src = 'img/01floor.png';
 const floorBossImg = new Image(); floorBossImg.src = 'img/02floor.png';
 
-// FLY_RED 兩張動畫圖
-// FLY_RED 2枚のアニメ画像
-const flyRedImgs = [
-    new Image(),
-    new Image()
-];
-flyRedImgs[0].src = 'img/e01-1.png';
-flyRedImgs[1].src = 'img/e01-2.png';
-
-// FLY_ORANGE 兩張動畫圖
-// FLY_ORANGE 3枚のアニメ画像
-const flyOrangeImgs = [
-    new Image(),
-    new Image(),
-    new Image()
-];
-flyOrangeImgs[0].src = 'img/e02-1.png';
-flyOrangeImgs[1].src = 'img/e02-2.png';
-flyOrangeImgs[2].src = 'img/e02-3.png';
-
-// GROUND_RED 兩張動畫圖
-// GROUND_RED 2枚のアニメ画像
-const groundRedImgs = [
-    new Image(),
-    new Image()
-];
-groundRedImgs[0].src = 'img/e03-1.png';
-groundRedImgs[1].src = 'img/e03-2.png';
-
-// GROUND_ORANGE 兩張動畫圖
-// GROUND_ORANGE 4枚のアニメ画像
-const groundOrangeImgs = [
-    new Image(),
-    new Image(),
-    new Image(),
-    new Image()
-];
-groundOrangeImgs[0].src = 'img/e04-1.png';
-groundOrangeImgs[1].src = 'img/e04-2.png';
-groundOrangeImgs[2].src = 'img/e04-3.png';
-groundOrangeImgs[3].src = 'img/e04-4.png';
-
-// GROUND_PINK 兩張動畫圖（同 GROUND_ORANGE）
-// GROUND_PINK 2枚のアニメ画像（GROUND_ORANGEと同じ）
-const groundPinkImgs = [
-    new Image(),
-    new Image()
-];
-groundPinkImgs[0].src = 'img/e05-1.png';
-groundPinkImgs[1].src = 'img/e05-2.png';
-
-// ===== 玩家圖片載入 =====
-// ===== プレイヤー画像の読み込み =====
-const playerImgs = [
-    new Image(), // 0: 靜止
-    new Image(), // 1: 移動動畫1
-    new Image(), // 2: 移動動畫2
-    new Image(), // 3: 移動動畫3
-    new Image(), // 4: 移動動畫4
-    new Image(), // 5: 移動動畫5
-    new Image(), // 6: 發射
-];
-playerImgs[0].src = 'img/p0.png'; // 靜止
-playerImgs[1].src = 'img/p1.png'; // 移動1
-playerImgs[2].src = 'img/p2.png'; // 移動2
-playerImgs[3].src = 'img/p3.png'; // 移動3
-playerImgs[4].src = 'img/p4.png'; // 移動4
-playerImgs[5].src = 'img/p5.png'; // 移動5
-playerImgs[6].src = 'img/p6.png'; // 發射
-
-const playerChargeImgs = Array.from({ length: 8 }, (_, i) => {
-    const img = new Image();
-    img.src = `img/s${i}.png`;
-    return img;
-});
-
-const playerAttackShootImgs = Array.from({ length: 4 }, (_, i) => {
-    const img = new Image();
-    img.src = `img/bu1/bu${i}.png`;
-    return img;
-});
-
-
-const playerChargeAttackShootImgs = Array.from({ length: 20 }, (_, i) => {
-    const img = new Image();
-    img.src = `img/bu2/bu${i}.png`;
-    return img;
-});
-
-
-// const playerChargeAttackShootImgs = [
-//     new Image(),
-//     new Image(),
-//     new Image(),
-//     new Image(),
-// ]
-// playerChargeAttackShootImgs[0].src = 'img/bu0.png';
-// playerChargeAttackShootImgs[1].src = 'img/bu1.png';
-// playerChargeAttackShootImgs[2].src = 'img/bu2.png';
-// playerChargeAttackShootImgs[3].src = 'img/bu3.png';
-
-
 // ===== 爆炸動畫設定 =====
 // 爆炸動畫圖片陣列
 const BOOM_FRAME_COUNT = 12;
 const boomImgs = [];
 for (let i = 0; i < BOOM_FRAME_COUNT; i++) {
     const img = new Image();
-    img.src = `img/boom${i}.png`;
+    img.src = `img/boom/boom${i}.png`;
     boomImgs.push(img);
 }
 // 爆炸動畫陣列，每個物件 {x, y, frame, maxFrame, width, height}
 const explosions = [];
+
+// 敵人圖片載入
+const flyRedImgs = Array.from({ length: 2 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/enemy/e01-${i}.png`;
+    return img;});
+const flyOrangeImgs = Array.from({ length: 3 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/enemy/e02-${i}.png`;
+    return img;});
+const groundRedImgs = Array.from({ length: 2 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/enemy/e03-${i}.png`;
+    return img;});
+const groundOrangeImgs = Array.from({ length: 4 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/enemy/e04-${i}.png`;
+    return img;});
+const groundPinkImgs = Array.from({ length: 2 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/enemy/e05-${i}.png`;
+    return img;});
+
+// ===== Boss圖片載入 =====
+// ===== ボス画像の読み込み =====
+const bossImgs = [];
+for (let i = 0; i <= 8; i++) {
+    bossImgs[i] = new Image();
+    bossImgs[i].src = `img/boss/b${i}.png`;
+};
+// 動態建立 tornado-img 圖片
+// トルネード画像を動的に生成
+const tornadoImg = new Image();
+tornadoImg.id = 'tornado-img';
+tornadoImg.src = 'img/tornadoes.png';
+tornadoImg.style.display = 'none';
+document.getElementById('game-wrapper').appendChild(tornadoImg);
+
+// ===== 玩家圖片載入 =====
+// ===== プレイヤー画像の読み込み =====
+//player1
+const playerImgs = Array.from({ length: 7 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/player1/p${i}.png`;
+    return img;
+});
+
+const playerChargeImgs = Array.from({ length: 8 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/player1/s${i}.png`;
+    return img;
+});
+
+const playerAttackShootImgs = Array.from({ length: 4 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/player1/bu1/bu${i}.png`;
+    return img;
+});
+
+const playerChargeAttackShootImgs = Array.from({ length: 20 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/player1/bu2/bu${i}.png`;
+    return img;
+});
+
+//player2
+const player2Imgs = Array.from({ length: 7 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/player2/p${i}.png`;
+    return img;
+});
+
+const player2ChargeImgs = Array.from({ length: 8 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/player2/s${i}.png`;
+    return img;
+});
+
+const player2AttackShootImgs = Array.from({ length: 4 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/player2/bu1/bu${i}.png`;
+    return img;
+});
+
+const player2ChargeAttackShootImgs = Array.from({ length: 20 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/player2/bu2/bu${i}.png`;
+    return img;
+});
+
+
+
+
 
 
 let boom_size = [100,100];
@@ -547,22 +538,6 @@ let PLAYER_Charge_Attack_shoot_CollisionBoxNY     = 50;                         
 let PLAYER_Charge_Attack_shoot_CollisionBoxCircle = 0;                                     // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
 
 
-
-// ===== Boss圖片載入 =====
-// ===== ボス画像の読み込み =====
-const bossImgs = [];
-for (let i = 0; i <= 8; i++) {
-    bossImgs[i] = new Image();
-    bossImgs[i].src = `img/b${i}.png`;
-};
-
-// 動態建立 tornado-img 圖片
-// トルネード画像を動的に生成
-const tornadoImg = new Image();
-tornadoImg.id = 'tornado-img';
-tornadoImg.src = 'img/tornadoes.png';
-tornadoImg.style.display = 'none';
-document.getElementById('game-wrapper').appendChild(tornadoImg);
 
 // ===== DOM 元素選取 =====
 // ===== DOM要素の取得 =====
@@ -1134,8 +1109,39 @@ const keys = {
     ArrowUp: false,
     ArrowDown: false,
     ' ': false,
-    'Enter': false
+    'Enter': false,
+    'c': false // 新增C鍵
 };
+
+// ===== 玩家皮膚切換狀態 =====
+let isPlayer2 = false;
+
+// ===== 玩家圖片組合（可切換） =====
+let currentPlayerImgs = playerImgs;
+let currentPlayerChargeImgs = playerChargeImgs;
+let currentPlayerAttackShootImgs = playerAttackShootImgs;
+let currentPlayerChargeAttackShootImgs = playerChargeAttackShootImgs;
+let currentPlayerBulletColor = PLAYER_Attack_shoot_size[2];
+let currentPlayerChargeBulletColor = 'rgba(255, 105, 68, 0.93)'; // 預設
+
+function switchPlayerSkin() {
+    isPlayer2 = !isPlayer2;
+    if (isPlayer2) {
+        currentPlayerImgs = player2Imgs;
+        currentPlayerChargeImgs = player2ChargeImgs;
+        currentPlayerAttackShootImgs = player2AttackShootImgs;
+        currentPlayerChargeAttackShootImgs = player2ChargeAttackShootImgs;
+        PLAYER_Attack_shoot_size[2] = 'rgba(255, 232, 191, 0.94)'; // player2配色
+        PLAYER_Charge_Attack_shoot_CollisionBox[2] = 'rgba(68, 105, 255, 0.93)'; // player2配色
+    } else {
+        currentPlayerImgs = playerImgs;
+        currentPlayerChargeImgs = playerChargeImgs;
+        currentPlayerAttackShootImgs = playerAttackShootImgs;
+        currentPlayerChargeAttackShootImgs = playerChargeAttackShootImgs;
+        PLAYER_Attack_shoot_size[2] = 'rgba(191, 232, 237, 0.94)'; // player1配色
+        PLAYER_Charge_Attack_shoot_CollisionBox[2] = 'rgba(255, 105, 68, 0.93)'; // player1配色
+    }
+}
 
 // ===== 事件監聽 =====｜イベントリスナー
 startButton.addEventListener('click', startGame);
@@ -1172,7 +1178,7 @@ document.addEventListener('keydown', (e) => {
                 chargeFrame = 0;
                 chargeReady = false;
                 player.shootAnimFrame = 7; // 只顯示1幀｜1フレームのみ表示
-                // 延遲0.5秒後才播放集氣音效｜0.5秒後に集気音響再生 
+                // 延遲0.5秒後才播放集氣音效｜0.5秒後に集氣音響再生 
                 if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
                 chargeAudioTimeout = setTimeout(() => {
                     if (charging) {
@@ -1185,6 +1191,10 @@ document.addEventListener('keydown', (e) => {
                     }
                 }, 500);
             }
+        }
+        // 新增C鍵切換player皮膚
+        if (e.key === 'c' || e.key === 'C') {
+            switchPlayerSkin();
         }
     }
 });
@@ -2062,7 +2072,7 @@ function render() {
             ctx.save();
             // 以 8 張集氣圖循環
             const powerIdx = Math.floor(playerChargeAnimFrame / 3) % 8;
-            let img = playerChargeImgs[powerIdx];
+            let img = currentPlayerChargeImgs[powerIdx];
             let cx = player.x + player.width / 2;
             let cy = player.y + player.height / 2;
             let rx = PLAYER_Charge_size[0];
@@ -2085,7 +2095,7 @@ function render() {
             ctx.globalAlpha = 0.2;
         }
         // 狀態判斷｜状態判断
-        let imgToDraw = playerImgs[0]; // 預設靜止｜デフォルトの静止
+        let imgToDraw = currentPlayerImgs[0]; // 預設靜止｜デフォルトの静止
         let drawBase = true;
         // 左右移動動畫｜左右移動アニメーション 
         if (keys.ArrowLeft || keys.ArrowRight) {
@@ -2093,7 +2103,7 @@ function render() {
             window._playerMoveAnimFrame++;
             // 以 5 張移動圖循環
             const moveIdx = 1 + (Math.floor(window._playerMoveAnimFrame / 6) % 5); // 1~5
-            imgToDraw = playerImgs[moveIdx];
+            imgToDraw = currentPlayerImgs[moveIdx];
         } else {
             window._playerMoveAnimFrame = 0;
         }
@@ -2152,7 +2162,7 @@ function render() {
                 ctx.translate(player.x + PLAYER_size[0] / 2, player.y + PLAYER_size[1] / 2);
                 ctx.scale(-1, 1);
                 ctx.drawImage(
-                    playerImgs[6],
+                    currentPlayerImgs[6],
                     -(PLAYER_SHOOT_size[0] / 2),
                     -(PLAYER_SHOOT_size[1] / 2),
                     PLAYER_SHOOT_size[0],
@@ -2160,7 +2170,7 @@ function render() {
                 );
             } else {
                 ctx.drawImage(
-                    playerImgs[6],
+                    currentPlayerImgs[6],
                     player.x + (PLAYER_size[0] - PLAYER_SHOOT_size[0]) / 2,
                     player.y + (PLAYER_size[1] - PLAYER_SHOOT_size[1]),
                     PLAYER_SHOOT_size[0],
@@ -2186,7 +2196,7 @@ function render() {
             if (playerCollisionBoxCircle < 1) {
                 ctx.save();
                 ctx.globalAlpha = 0.35;
-                ctx.fillStyle = COLOR_PLAYER; // 直接用 rgba 顏色
+                ctx.fillStyle = currentPlayerBulletColor; // 直接用 rgba 顏色
                 ctx.beginPath();
                 ctx.ellipse(playerCenterX, playerCenterY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
                 ctx.fill();
@@ -2195,7 +2205,7 @@ function render() {
             if (playerCollisionBoxCircle > 0) {
                 ctx.save();
                 ctx.globalAlpha = 0.18;
-                ctx.fillStyle = COLOR_PLAYER; // 直接用 rgba 顏色
+                ctx.fillStyle = currentPlayerBulletColor; // 直接用 rgba 顏色
                 ctx.fillRect(boxX1, boxY1, boxX2 - boxX1, boxY2 - boxY1);
                 ctx.restore();
             }
@@ -2208,7 +2218,7 @@ function render() {
             ctx.save();
             // 集氣彈動畫圖（20張）
             const idx = Math.floor((bullet.imgFrame || 0) / 5) % 20;
-            const img = playerChargeAttackShootImgs[idx];
+            const img = currentPlayerChargeAttackShootImgs[idx];
             if (bullet.speed < 0) {
                 // 往左鏡像
                 ctx.translate(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2);
@@ -2240,7 +2250,7 @@ function render() {
                 if (PLAYER_Charge_Attack_shoot_CollisionBoxCircle < 1) {
                     ctx.save();
                     ctx.globalAlpha = 0.35;
-                    ctx.fillStyle = PLAYER_Charge_Attack_shoot_CollisionBox[2];
+                    ctx.fillStyle = currentPlayerChargeBulletColor;
                     ctx.beginPath();
                     ctx.ellipse(centerX, centerY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
                     ctx.fill();
@@ -2249,7 +2259,7 @@ function render() {
                 if (PLAYER_Charge_Attack_shoot_CollisionBoxCircle > 0) {
                     ctx.save();
                     ctx.globalAlpha = 0.18;
-                    ctx.fillStyle = PLAYER_Charge_Attack_shoot_CollisionBox[2];
+                    ctx.fillStyle = currentPlayerChargeBulletColor;
                     ctx.fillRect(centerX - boxW / 2, centerY - boxH / 2, boxW, boxH);
                     ctx.restore();
                 }
@@ -2259,7 +2269,7 @@ function render() {
             ctx.save();
             // 普通子彈動畫圖（bu0~3）
             const idx = Math.floor((bullet.imgFrame || 0) / 5) % 4;
-            const img = playerAttackShootImgs[idx];
+            const img = currentPlayerAttackShootImgs[idx];
             if (bullet.speed < 0) {
                 // 往左鏡像
                 ctx.translate(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2);
@@ -2290,7 +2300,7 @@ function render() {
                 const ellipseRy = boxH / 2;
                 ctx.save();
                 ctx.globalAlpha = 0.35;
-                ctx.fillStyle = bullet.attackCollisionBox[2];
+                ctx.fillStyle = currentPlayerBulletColor;
                 ctx.beginPath();
                 ctx.ellipse(centerX, centerY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
                 ctx.fill();
