@@ -14,8 +14,6 @@ let playerMaxHealth = 100;   // 玩家血量 預設100｜プレイヤー体力 �
 let GRAVITY         = 1.6;   // 重力1.6｜重力
 let JUMP_POWER      = 21;    // 跳躍力量21｜ジャンプ力
 
-let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';  // 玩家攻擊子彈顏色｜プレイヤー攻撃弾の色
-// let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';  // 玩家集氣攻擊子彈顏色｜プレイヤー溜め攻撃弾の色
 
 let Fly_RED_HP       = 1;   // 飛行紅色敵人血量｜飛行赤色敵体の体力
 let Fly_ORANGE_HP    = 3;   // 飛行橘色敵人血量｜飛行オレンジ敵体の体力
@@ -512,16 +510,23 @@ playerChargeAttackShootImgs[2].src = 'img/bu2.png';
 playerChargeAttackShootImgs[3].src = 'img/bu3.png';
 
 
-let PLAYER_Charge_Attack_shoot_size = [100,100];
-let PLAYER_Charge_Attack_shoot_speed = [1]; //fps 值越高越快
-let PLAYER_Charge_Attack_shoot_stay = 100; //fps 值越高停留越久
 
-let PLAYER_Attack_shoot_speed = [30]; //fps 值越高越快
+
+let PLAYER_Attack_shoot_size = [10,8,'rgba(191, 232, 237, 0.94)',0]; // 寬度,長度,顏色,0=圓形，1=矩形
+let PLAYER_Attack_shoot_speed = [22]; //fps 值越高越快
 let PLAYER_Attack_shoot_stay = 30; //fps 值越高停留越久
+let PLAYER_Attack_shoot_limit = 3; //fps 每次子彈數量
+let PLAYER_Attack_shoot_CollisionBox       = [11, 11, 'rgba(255, 105, 68, 0.93)'];  // [寬度, 高度, 顏色]
+let PLAYER_Attack_shoot_CollisionBox_Show  = 0;                                     // 是否顯示碰撞箱
 
 
+
+
+let PLAYER_Charge_Attack_shoot_size = [100,100];
+let PLAYER_Charge_Attack_shoot_speed = [19]; //fps 值越高越快
+let PLAYER_Charge_Attack_shoot_stay = 35; //fps 值越高停留越久
 let PLAYER_Charge_Attack_shoot_CollisionBox       = [91, 58, 'rgba(255, 105, 68, 0.93)'];  // [寬度, 高度, 顏色]
-let PLAYER_Charge_Attack_shoot_CollisionBox_Show  = 1;                                     // 是否顯示碰撞箱
+let PLAYER_Charge_Attack_shoot_CollisionBox_Show  = 0;                                     // 是否顯示碰撞箱
 let PLAYER_Charge_Attack_shoot_CollisionBoxNX     = 50;                                    //碰撞箱中心移動x｜当たり判定中心移動x
 let PLAYER_Charge_Attack_shoot_CollisionBoxNY     = 50;                                    //碰撞箱中心移動y｜当たり判定中心移動y
 let PLAYER_Charge_Attack_shoot_CollisionBoxCircle = 0;                                     // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
@@ -741,15 +746,20 @@ let player = {
         // 集氣狀態下，只有集氣超過0.7秒才不發射普通子彈 // チャージ状態で0.7秒以上のみ通常弾を発射しない
         if (charging && chargeFrame >= CHARGE_CANCEL_FRAME) return;
         if (this.isShooting && this.shootCooldown === 0) {
+            // 新增：子彈數量限制
+            const normalBulletCount = bullets.filter(b => !b.isCharge).length;
+            if (normalBulletCount >= PLAYER_Attack_shoot_limit) return;
             bullets.push({
-                x: this.x + (this.direction === 1 ? this.width : -10),
-                y: this.y + this.height / 2 - 3,
-                width: 10,
-                height: 6,
+                x: this.x + (this.direction === 1 ? this.width : -PLAYER_Attack_shoot_size[0]),
+                y: this.y + this.height / 2 - PLAYER_Attack_shoot_size[1] / 2,
+                width: PLAYER_Attack_shoot_size[0],
+                height: PLAYER_Attack_shoot_size[1],
                 speed: PLAYER_Attack_shoot_speed[0] * this.direction,
-                color: PLAYER_Attack_shoot_color,
+                color: PLAYER_Attack_shoot_size[2],
                 isCharge: false,
-                life: PLAYER_Attack_shoot_stay
+                life: PLAYER_Attack_shoot_stay,
+                shape: PLAYER_Attack_shoot_size[3],
+                attackCollisionBox: PLAYER_Attack_shoot_CollisionBox
             });
             this.shootCooldown = this.shootDelay;
         }
@@ -1193,16 +1203,20 @@ document.addEventListener('keyup', (e) => {
                     if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
                 }
             } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
-                // 只有 chargeReady 為 false 才補發普通彈，且不受冷卻限制｜chargeReady が false の場合のみ普通弾を補充、冷卻制限なし
+                // 新增：子彈數量限制
+                const normalBulletCount = bullets.filter(b => !b.isCharge).length;
+                if (normalBulletCount >= PLAYER_Attack_shoot_limit) return;
                 bullets.push({
-                    x: player.x + (player.direction === 1 ? player.width : -10),
-                    y: player.y + player.height / 2 - 3,
-                    width: 10,
-                    height: 6,
+                    x: player.x + (player.direction === 1 ? player.width : -PLAYER_Attack_shoot_size[0]),
+                    y: player.y + player.height / 2 - PLAYER_Attack_shoot_size[1] / 2,
+                    width: PLAYER_Attack_shoot_size[0],
+                    height: PLAYER_Attack_shoot_size[1],
                     speed: PLAYER_Attack_shoot_speed[0] * player.direction,
-                    color: PLAYER_Attack_shoot_color,
+                    color: PLAYER_Attack_shoot_size[2],
                     isCharge: false,
-                    life: PLAYER_Attack_shoot_stay
+                    life: PLAYER_Attack_shoot_stay,
+                    shape: PLAYER_Attack_shoot_size[3],
+                    attackCollisionBox: PLAYER_Attack_shoot_CollisionBox
                 });
                 player.shootAnimFrame = 1;
                 // 播放普通彈射擊音效
@@ -2200,8 +2214,40 @@ function render() {
             }
             ctx.restore();
         } else {
+            ctx.save();
             ctx.fillStyle = bullet.color || 'rgba(111, 196, 208, 0.89)';
-            ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+            if (bullet.shape === 0) {
+                // 畫圓形
+                ctx.beginPath();
+                ctx.ellipse(
+                    bullet.x + bullet.width / 2,
+                    bullet.y + bullet.height / 2,
+                    bullet.width / 2,
+                    bullet.height / 2,
+                    0, 0, Math.PI * 2
+                );
+                ctx.fill();
+            } else {
+                // 畫矩形
+                ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+            }
+            // 顯示碰撞箱
+            if (PLAYER_Attack_shoot_CollisionBox_Show && bullet.attackCollisionBox) {
+                const centerX = bullet.x + bullet.width / 2;
+                const centerY = bullet.y + bullet.height / 2;
+                const boxW = bullet.attackCollisionBox[0];
+                const boxH = bullet.attackCollisionBox[1];
+                const ellipseRx = boxW / 2;
+                const ellipseRy = boxH / 2;
+                ctx.save();
+                ctx.globalAlpha = 0.35;
+                ctx.fillStyle = bullet.attackCollisionBox[2];
+                ctx.beginPath();
+                ctx.ellipse(centerX, centerY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+            ctx.restore();
         }
     });
     
@@ -2515,6 +2561,15 @@ function getCollisionBoxParams(obj) {
             nx: obj.chargeCollisionBoxNX !== undefined ? obj.chargeCollisionBoxNX : PLAYER_Charge_Attack_shoot_CollisionBoxNX,
             ny: obj.chargeCollisionBoxNY !== undefined ? obj.chargeCollisionBoxNY : PLAYER_Charge_Attack_shoot_CollisionBoxNY,
             circle: obj.chargeCollisionBoxCircle !== undefined ? obj.chargeCollisionBoxCircle : PLAYER_Charge_Attack_shoot_CollisionBoxCircle
+        };
+    }
+    // 一般子彈（isCharge 為 false）
+    if (obj.attackCollisionBox) {
+        return {
+            box: obj.attackCollisionBox,
+            nx: 50,
+            ny: 50,
+            circle: 0 // 這裡可依需求調整
         };
     }
     // 敵人｜敵
@@ -3404,13 +3459,15 @@ function simulateKey(key, pressed) {
             } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
                 // 只有 chargeReady 為 false 才補發普通彈，且不受冷卻限制 // chargeReadyがfalseの場合のみ普通の弾を補充し、冷却制限を受けない
                 bullets.push({
-                    x: player.x + (player.direction === 1 ? player.width : -10),
-                    y: player.y + player.height / 2 - 3,
-                    width: 10,
-                    height: 6,
+                    x: player.x + (player.direction === 1 ? player.width : -PLAYER_Attack_shoot_size[0]),
+                    y: player.y + player.height / 2 - PLAYER_Attack_shoot_size[1] / 2,
+                    width: PLAYER_Attack_shoot_size[0],
+                    height: PLAYER_Attack_shoot_size[1],
                     speed: PLAYER_Attack_shoot_speed[0] * player.direction, // 1.1倍
-                    color: PLAYER_Attack_shoot_color,
-                    isCharge: false
+                    color: PLAYER_Attack_shoot_size[2],
+                    isCharge: false,
+                    life: PLAYER_Attack_shoot_stay,
+                    shape: PLAYER_Attack_shoot_size[3] // 0=圓形, 1=矩形
                 });
                 player.shootAnimFrame = 1;
                 // (放開時才播放射擊音效)
