@@ -1103,11 +1103,16 @@ let jumpHoldFrames = 0;
 const jumpMaxHoldTime = 300; // 最長0.3秒
 let jumpStartY = 0; // 起跳時y座標
 
+// ===== 全域動畫 frame 計數器 =====
+let globalAnimFrame = 0; // 全域動畫用 frame 計數器
+let playerChargeAnimFrame = 0; // 蓄氣動畫 frame 計數器
+let jumpKeyDownFrame = 0; // 跳躍按下時的 frame
+
 document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) {
         keys[e.key] = true;
         if (e.key === 'ArrowUp' && !jumpKeyPressed) {
-            jumpKeyDownTime = Date.now();
+            jumpKeyDownFrame = globalAnimFrame;
             jumpKeyPressed = true;
         }
         if (e.key === 'Enter' && !gameRunning) {
@@ -1141,18 +1146,15 @@ document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) {
         keys[e.key] = false;
         if (e.key === 'ArrowUp' && jumpKeyPressed) {
-            const pressDuration = Date.now() - jumpKeyDownTime;
-            if (pressDuration < 200 && player.vy < 0) {
-                // 0.2秒以下，1/4高度｜0.2秒以下、1/4高度
+            const pressDuration = globalAnimFrame - jumpKeyDownFrame;
+            // 200ms/16.67ms ≈ 12 frame, 300ms ≈ 18, 400ms ≈ 24
+            if (pressDuration < 12 && player.vy < 0) {
                 player.vy /= 4;
-            } else if (pressDuration < 300 && player.vy < 0) {
-                // 0.2~0.3秒，1/3高度｜0.2~0.3秒、1/3高度
+            } else if (pressDuration < 18 && player.vy < 0) {
                 player.vy /= 3;
-            } else if (pressDuration < 400 && player.vy < 0) {
-                // 0.3~0.4秒，一半高度｜0.3~0.4秒、1/2高度
+            } else if (pressDuration < 24 && player.vy < 0) {
                 player.vy /= 2;
             }
-            // 超過0.4秒，維持原本最高高度｜0.4秒以上、原本最高高度維持
             jumpKeyPressed = false;
         }
         if (e.key === ' ') {
@@ -1304,9 +1306,17 @@ function gameLoop(now) {
 // *無參數，無回傳值｜*引数なし、戻り値なし
 
 function update() {
+    globalAnimFrame++;
     // 集氣狀態計數｜集氣状態カウント
     if (charging) {
         chargeFrame++;
+        if (chargeFrame >= CHARGE_CANCEL_FRAME) {
+            playerChargeAnimFrame++;
+        } else {
+            playerChargeAnimFrame = 0;
+        }
+    } else {
+        playerChargeAnimFrame = 0;
     }
     // 先處理集氣彈｜まず集氣弾を処理
     if (chargeReady) {
@@ -1504,7 +1514,7 @@ function update() {
         if (enemy.isFloating) {
             // 飄浮小兵：上下飄動，不受重力與平台影響｜浮遊小兵：上下浮動、重力とプラットフォームの影響を受けない
             if (!enemy.floatBaseY) enemy.floatBaseY = enemy.y;
-            enemy.y = enemy.floatBaseY + Math.sin(Date.now() / 400 + i) * 40;
+            enemy.y = enemy.floatBaseY + Math.sin(globalAnimFrame / 24 + i) * 40;
             enemy.x -= enemy.speed;
         } else {
             // 地面小兵：受重力影響，會受平台限制｜地上小兵：重力の影響を受け、プラットフォームの制限を受ける
@@ -1964,7 +1974,7 @@ function render() {
         if (charging && chargeFrame >= CHARGE_CANCEL_FRAME) {
             ctx.save();
             // 以 8 張集氣圖循環
-            const powerIdx = Math.floor(Date.now() / 80) % 8;
+            const powerIdx = Math.floor(playerChargeAnimFrame / 5) % 8;
             let img = playerChargeImgs[powerIdx];
             let cx = player.x + player.width / 2;
             let cy = player.y + player.height / 2;
@@ -2132,7 +2142,7 @@ function render() {
     enemies.forEach(enemy => {
         // 閃爍效果｜点滅エフェクト
         if (enemyHitFlash.has(enemy)) {
-            if (Math.floor(Date.now() / 50) % 2 === 0) {
+            if (Math.floor(globalAnimFrame / 3) % 2 === 0) {
                 ctx.globalAlpha = 0.3;
             } else {
                 ctx.globalAlpha = 1;
@@ -2197,7 +2207,7 @@ function render() {
         ctx.globalAlpha = 1;
         // 在 render() 繪製敵人時，若 enemy.dying，根據 dyingFrame 閃爍
         if (enemy.dying) {
-            if (Math.floor(enemy.dyingFrame / 6) % 2 === 0) {
+            if (Math.floor(enemy.dyingFrame / 3) % 2 === 0) {
                 ctx.globalAlpha = 0.3;
             } else {
                 ctx.globalAlpha = 1;
@@ -2293,13 +2303,13 @@ function render() {
             if (boss.lastHitCharge) {
                 ctx.globalAlpha = 1;
                 ctx.save();
-                if (Math.floor(Date.now() / 50) % 2 === 0) {
+                if (Math.floor(globalAnimFrame / 3) % 2 === 0) {
                     ctx.filter = 'brightness(1.5) sepia(1) hue-rotate(60deg)';
                 } else {
                     ctx.filter = 'brightness(2)';
                 }
             } else {
-                if (Math.floor(Date.now() / 50) % 2 === 0) {
+                if (Math.floor(globalAnimFrame / 3) % 2 === 0) {
                     ctx.globalAlpha = 0.3;
                 } else {
                     ctx.globalAlpha = 1;
@@ -3267,17 +3277,17 @@ function simulateKey(key, pressed) {
     if (key === 'ArrowUp') {
         if (pressed) {
             if (!jumpKeyPressed) {
-                jumpKeyDownTime = Date.now();
+                jumpKeyDownFrame = globalAnimFrame;
                 jumpKeyPressed = true;
             }
         } else {
             if (jumpKeyPressed) {
-                const pressDuration = Date.now() - jumpKeyDownTime;
-                if (pressDuration < 200 && player.vy < 0) {
+                const pressDuration = globalAnimFrame - jumpKeyDownFrame;
+                if (pressDuration < 12 && player.vy < 0) {
                     player.vy /= 4;
-                } else if (pressDuration < 300 && player.vy < 0) {
+                } else if (pressDuration < 18 && player.vy < 0) {
                     player.vy /= 3;
-                } else if (pressDuration < 400 && player.vy < 0) {
+                } else if (pressDuration < 24 && player.vy < 0) {
                     player.vy /= 2;
                 }
                 jumpKeyPressed = false;
