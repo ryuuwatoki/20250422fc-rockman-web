@@ -21,8 +21,8 @@ let GROUND_RED_HP    = 3;   // 地面紅色敵人血量｜地上赤色敵体の�
 let GROUND_ORANGE_HP = 3;   // 地面橘色敵人血量｜地上オレンジ敵体の体力
 let GROUND_PINK_HP   = 5;   // 地面粉紅敵人血量｜地上ピンク敵体の体力
 
-let enemyMaxCount    = 15;  // 敵人最大數量 預設15｜敵最大数 デフォルト15
-let enemySpawnRate   = 0.01; // 每 1fps 生成一個敵人機率 | 1fps で敵を生成する確率
+let enemyMaxCount    = 17;  // 敵人最大數量 預設15｜敵最大数 デフォルト15
+let enemySpawnRate   = 0.02; // 每 1fps 生成一個敵人機率 | 1fps で敵を生成する確率
 
 let FLY_RED_spawn         = 1;         // 敵人Ａ是否生成，1=是，0=否｜敵A生成するか 1=はい 0=いいえ
 let FLY_ORANGE_spawn      = 1;         // 敵人Ｂ是否生成，1=是，0=否｜敵B生成するか 1=はい 0=いいえ
@@ -44,7 +44,7 @@ let bossFixedPosition     = 0;         // boss 是否固定座標（取消移動
 
 let showScore           = 1;  // score:0 顯示1 隱藏0｜スコア表示 1=表示 0=非表示
 let showMoved           = 0;  // moved:(0) 顯示1 隱藏0｜移動量表示 1=表示 0=非表示
-let showFPS             = 1;  //showfps｜FPS表示
+let showFPS             = 0;  //showfps｜FPS表示
 let showXY              = 0;  //show xy｜XY座標表示
 let showNXY             = 0;  //show new xy｜グリッド座標表示
 let ShowCollisionBox    = 0;  //是否顯示遮圖顯示目前碰撞箱 ｜当たり判定表示
@@ -1591,6 +1591,11 @@ function update() {
             enemies.splice(i, 1);
             continue;
         }
+        // 新增：Y 超過 500 直接刪除敵人
+        if (enemy.y > 500) {
+            enemies.splice(i, 1);
+            continue;
+        }
         // 檢測玩家碰撞｜プレイヤーとの衝突を検出
         if (checkCollision(player, enemy)) {
             if (enemy.health > 0) {
@@ -2515,6 +2520,20 @@ function render() {
                 ctx.fillStyle = bullet.color;
                 ctx.fillRect(bullet.x, bullet.y, 10, 20);
             }
+        } else if (bullet.color === 'rgba(255,136,204,1)') {
+            // GROUND_PINK 子彈畫圓形
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(
+                bullet.x + bullet.width / 2,
+                bullet.y + bullet.height / 2,
+                bullet.width / 2,
+                0,
+                Math.PI * 2
+            );
+            ctx.fillStyle = bullet.color;
+            ctx.fill();
+            ctx.restore();
         } else {
             ctx.fillStyle = bullet.color;
             ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
