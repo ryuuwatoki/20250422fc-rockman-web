@@ -510,6 +510,21 @@ playerChargeAttackShootImgs[2].src = 'img/bu2.png';
 playerChargeAttackShootImgs[3].src = 'img/bu3.png';
 
 
+// ===== 爆炸動畫設定 =====
+// 爆炸動畫圖片陣列
+const BOOM_FRAME_COUNT = 12;
+const boomImgs = [];
+for (let i = 0; i < BOOM_FRAME_COUNT; i++) {
+    const img = new Image();
+    img.src = `img/boom${i}.png`;
+    boomImgs.push(img);
+}
+// 爆炸動畫陣列，每個物件 {x, y, frame, maxFrame, width, height}
+const explosions = [];
+
+
+let boom_size = [100,100];
+let charge_boom_size = [200,200];
 
 
 let PLAYER_Attack_shoot_size = [10,8,'rgba(191, 232, 237, 0.94)',0]; // 寬度,長度,顏色,0=圓形，1=矩形
@@ -1669,6 +1684,15 @@ function update() {
                     clone.volume = VOLUME_BOOM;
                     if (isSfxOn) { clone.pause(); clone.currentTime = 0; clone.play().catch(()=>{}); }
                 }
+                // ===== 新增爆炸動畫 =====
+                explosions.push({
+                    x: bullet.x + bullet.width / 2 - (bullet.isCharge ? charge_boom_size[0] : boom_size[0]) / 2, // 以中心顯示
+                    y: bullet.y + bullet.height / 2 - (bullet.isCharge ? charge_boom_size[1] : boom_size[1]) / 2,
+                    frame: 0,
+                    maxFrame: 18, // 0.3秒@60fps
+                    width: bullet.isCharge ? charge_boom_size[0] : boom_size[0],
+                    height: bullet.isCharge ? charge_boom_size[1] : boom_size[1]
+                });
                 if (enemy.health <= 0 && !enemy.dying) {
                     enemy.dying = true;
                     enemy.dyingFrame = 0;
@@ -2537,6 +2561,27 @@ function render() {
         } else {
             ctx.fillStyle = bullet.color;
             ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+        }
+    });
+    
+    // ====== 更新爆炸動畫 ======
+    for (let i = explosions.length - 1; i >= 0; i--) {
+        explosions[i].frame++;
+        if (explosions[i].frame > explosions[i].maxFrame) {
+            explosions.splice(i, 1);
+        }
+    }
+    // ====== 繪製爆炸動畫 ======
+    explosions.forEach(e => {
+        // 只在動畫期間顯示
+        if (e.frame <= e.maxFrame) {
+            ctx.save();
+            // 計算目前要顯示第幾張圖
+            let idx = Math.floor(e.frame / e.maxFrame * BOOM_FRAME_COUNT);
+            if (idx >= BOOM_FRAME_COUNT) idx = BOOM_FRAME_COUNT - 1;
+            ctx.globalAlpha = 1 - e.frame / e.maxFrame; // 漸淡出
+            ctx.drawImage(boomImgs[idx], e.x, e.y, e.width, e.height);
+            ctx.restore();
         }
     });
     
