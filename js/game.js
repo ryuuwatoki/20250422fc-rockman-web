@@ -463,13 +463,23 @@ groundPinkImgs[1].src = 'img/e05-2.png';
 // ===== 玩家圖片載入 =====
 // ===== プレイヤー画像の読み込み =====
 const playerImgs = [
-    new Image(), // 0: 靜止 // 0: 静止
-    new Image(), // 1: 移動動畫 // 1: 移動アニメ
-    new Image(), // 2: 發射 // 2: 発射
+    new Image(), // 0: 靜止
+    new Image(), // 1: 移動動畫1
+    new Image(), // 2: 移動動畫2
+    new Image(), // 3: 移動動畫3
+    new Image(), // 4: 移動動畫4
+    new Image(), // 5: 移動動畫5
+    new Image(), // 6: 發射
 ];
-playerImgs[0].src = 'img/p1.png';
-playerImgs[1].src = 'img/p2.png';
-playerImgs[2].src = 'img/p3.png';
+
+playerImgs[0].src = 'img/p0.png'; // 靜止
+playerImgs[1].src = 'img/p1.png'; // 移動1
+playerImgs[2].src = 'img/p2.png'; // 移動2
+playerImgs[3].src = 'img/p3.png'; // 移動3
+playerImgs[4].src = 'img/p4.png'; // 移動4
+playerImgs[5].src = 'img/p5.png'; // 移動5
+playerImgs[6].src = 'img/p6.png'; // 發射
+
 
 // ===== Boss圖片載入 =====
 // ===== ボス画像の読み込み =====
@@ -1953,11 +1963,9 @@ function render() {
         if (keys.ArrowLeft || keys.ArrowRight) {
             if (!window._playerMoveAnimFrame) window._playerMoveAnimFrame = 0;
             window._playerMoveAnimFrame++;
-            if (Math.floor(window._playerMoveAnimFrame / 8) % 2 === 0) {
-                imgToDraw = playerImgs[0];
-            } else {
-                imgToDraw = playerImgs[1];
-            }
+            // 以 5 張移動圖循環
+            const moveIdx = 1 + (Math.floor(window._playerMoveAnimFrame / 6) % 5); // 1~5
+            imgToDraw = playerImgs[moveIdx];
         } else {
             window._playerMoveAnimFrame = 0;
         }
@@ -2026,6 +2034,30 @@ function render() {
             } else {
                 ctx.drawImage(
                     playerImgs[2],
+                    player.x + (PLAYER_size[0] - PLAYER_SHOOT_size[0]) / 2,
+                    player.y + (PLAYER_size[1] - PLAYER_SHOOT_size[1]),
+                    PLAYER_SHOOT_size[0],
+                    PLAYER_SHOOT_size[1]
+                );
+            }
+            ctx.restore();
+        }
+        // 發射時疊加發射圖（playerImgs[6]）
+        if (player.shootAnimFrame > 0 && (player.invincible <= 0 || Math.floor(player.invincible / 5) % 2 === 0)) {
+            ctx.save();
+            if (AutoFlipPlayer === 1 && player.direction === -1) {
+                ctx.translate(player.x + PLAYER_size[0] / 2, player.y + PLAYER_size[1] / 2);
+                ctx.scale(-1, 1);
+                ctx.drawImage(
+                    playerImgs[6],
+                    -(PLAYER_SHOOT_size[0] / 2),
+                    -(PLAYER_SHOOT_size[1] / 2),
+                    PLAYER_SHOOT_size[0],
+                    PLAYER_SHOOT_size[1]
+                );
+            } else {
+                ctx.drawImage(
+                    playerImgs[6],
                     player.x + (PLAYER_size[0] - PLAYER_SHOOT_size[0]) / 2,
                     player.y + (PLAYER_size[1] - PLAYER_SHOOT_size[1]),
                     PLAYER_SHOOT_size[0],
