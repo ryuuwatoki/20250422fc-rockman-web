@@ -504,7 +504,7 @@ const player2AttackShootImgs = Array.from({ length: 4 }, (_, i) => {
     return img;
 });
 
-const player2ChargeAttackShootImgs = Array.from({ length: 20 }, (_, i) => {
+const player2ChargeAttackShootImgs = Array.from({ length: 16 }, (_, i) => {
     const img = new Image();
     img.src = `img/player2/bu2/bu${i}.png`;
     return img;
