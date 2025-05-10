@@ -410,16 +410,7 @@ const floorImg = new Image(); floorImg.src = 'img/01floor.png';
 const floorBossImg = new Image(); floorBossImg.src = 'img/02floor.png';
 
 // ===== 爆炸動畫設定 =====
-// 爆炸動畫圖片陣列
-const BOOM_FRAME_COUNT = 12;
-const boomImgs = [];
-for (let i = 0; i < BOOM_FRAME_COUNT; i++) {
-    const img = new Image();
-    img.src = `img/boom/boom${i}.png`;
-    boomImgs.push(img);
-}
-// 爆炸動畫陣列，每個物件 {x, y, frame, maxFrame, width, height}
-const explosions = [];
+
 
 // 敵人圖片載入
 const flyRedImgs = Array.from({ length: 2 }, (_, i) => {
@@ -485,6 +476,21 @@ const playerChargeAttackShootImgs = Array.from({ length: 20 }, (_, i) => {
     return img;
 });
 
+// 爆炸動畫圖片陣列
+const BOOM_FRAME_COUNT = 12;
+const boomImgs = [];
+for (let i = 0; i < BOOM_FRAME_COUNT; i++) {
+    const img = new Image();
+    img.src = `img/player1/boom/boom${i}.png`;
+    boomImgs.push(img);
+}
+// 爆炸動畫陣列，每個物件 {x, y, frame, maxFrame, width, height}
+const explosions = [];
+
+
+
+
+
 //player2
 const player2Imgs = Array.from({ length: 7 }, (_, i) => {
     const img = new Image();
@@ -510,6 +516,17 @@ const player2ChargeAttackShootImgs = Array.from({ length: 16 }, (_, i) => {
     return img;
 });
 
+// 爆炸動畫圖片陣列
+const player2BOOM_FRAME_COUNT = 12;
+const player2boomImgs = [];
+for (let i = 0; i < BOOM_FRAME_COUNT; i++) {
+    const img = new Image();
+    img.src = `img/player2/boom/boom${i}.png`;
+    player2boomImgs.push(img);
+}
+// 爆炸動畫陣列，每個物件 {x, y, frame, maxFrame, width, height}
+const player2explosions = [];
+
 
 
 
@@ -525,7 +542,6 @@ let PLAYER_Attack_shoot_stay = 35; //fps 值越高停留越久
 let PLAYER_Attack_shoot_limit = 3; //fps 每次子彈數量
 let PLAYER_Attack_shoot_CollisionBox       = [11, 11, 'rgba(255, 105, 68, 0.93)'];  // [寬度, 高度, 顏色]
 let PLAYER_Attack_shoot_CollisionBox_Show  = 0;                                     // 是否顯示碰撞箱
-
 
 let PLAYER_Charge_Attack_shoot_startx = 30; // 集氣子彈X偏移
 let PLAYER_Charge_Attack_shoot_size = [100,100];
@@ -2610,7 +2626,7 @@ function render() {
             let idx = Math.floor(e.frame / e.maxFrame * BOOM_FRAME_COUNT);
             if (idx >= BOOM_FRAME_COUNT) idx = BOOM_FRAME_COUNT - 1;
             ctx.globalAlpha = 1 - e.frame / e.maxFrame; // 漸淡出
-            ctx.drawImage(boomImgs[idx], e.x, e.y, e.width, e.height);
+            ctx.drawImage(isPlayer2 ? player2boomImgs[idx] : boomImgs[idx], e.x, e.y, e.width, e.height);
             ctx.restore();
         }
     });
