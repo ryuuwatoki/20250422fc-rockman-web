@@ -465,6 +465,29 @@ groundPinkImgs[1].src = 'img/e05-2.png';
 
 // ===== 玩家圖片載入 =====
 // ===== プレイヤー画像の読み込み =====
+
+playerImgs[0].src = 'img/p0.png'; // 靜止
+playerImgs[1].src = 'img/p1.png'; // 移動1
+playerImgs[2].src = 'img/p2.png'; // 移動2
+playerImgs[3].src = 'img/p3.png'; // 移動3
+playerImgs[4].src = 'img/p4.png'; // 移動4
+playerImgs[5].src = 'img/p5.png'; // 移動5
+playerImgs[6].src = 'img/p6.png'; // 發射
+
+playerChargeImgs[0].src = 'img/s0.png';
+playerChargeImgs[1].src = 'img/s1.png';
+playerChargeImgs[2].src = 'img/s2.png';
+playerChargeImgs[3].src = 'img/s3.png';
+playerChargeImgs[4].src = 'img/s4.png';
+playerChargeImgs[5].src = 'img/s5.png';
+playerChargeImgs[6].src = 'img/s6.png';
+playerChargeImgs[7].src = 'img/s6.png';
+
+playerPowerBulletImgs[0].src = 'img/bu0.png';
+playerPowerBulletImgs[1].src = 'img/bu1.png';
+playerPowerBulletImgs[2].src = 'img/bu2.png';
+playerPowerBulletImgs[3].src = 'img/bu3.png';
+
 const playerImgs = [
     new Image(), // 0: 靜止
     new Image(), // 1: 移動動畫1
@@ -474,14 +497,6 @@ const playerImgs = [
     new Image(), // 5: 移動動畫5
     new Image(), // 6: 發射
 ];
-
-playerImgs[0].src = 'img/p0.png'; // 靜止
-playerImgs[1].src = 'img/p1.png'; // 移動1
-playerImgs[2].src = 'img/p2.png'; // 移動2
-playerImgs[3].src = 'img/p3.png'; // 移動3
-playerImgs[4].src = 'img/p4.png'; // 移動4
-playerImgs[5].src = 'img/p5.png'; // 移動5
-playerImgs[6].src = 'img/p6.png'; // 發射
 
 const playerChargeImgs = [
     new Image(),
@@ -494,14 +509,14 @@ const playerChargeImgs = [
     new Image(),
 ];
 
-playerChargeImgs[0].src = 'img/s0.png';
-playerChargeImgs[1].src = 'img/s1.png';
-playerChargeImgs[2].src = 'img/s2.png';
-playerChargeImgs[3].src = 'img/s3.png';
-playerChargeImgs[4].src = 'img/s4.png';
-playerChargeImgs[5].src = 'img/s5.png';
-playerChargeImgs[6].src = 'img/s6.png';
-playerChargeImgs[7].src = 'img/s6.png';
+const playerPowerBulletImgs = [
+    new Image(),
+    new Image(),
+    new Image(),
+    new Image(),
+]
+
+
 
 
 
