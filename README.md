@@ -13,15 +13,7 @@
     <td align="center">
       ゲーム画面 /遊戲畫面 / Gameplay screen<br>
       <img src="readme/001.gif" width="400" />
-    </td>
-    <td align="center">
-      ゲーム監視表示 /遊戲監測 / Debug display<br>
-      <img src="readme/002.gif" width="400" />
-    </td>
-    <td align="center">
-      言語切替 /語言切換 / Language switching<br>
-      <img src="readme/003.gif" width="400" />
-    </td>    
+    </td>  
   </tr>
 </table>
 <br>
