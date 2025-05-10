@@ -479,35 +479,36 @@ playerImgs[4].src = 'img/p4.png'; // 移動4
 playerImgs[5].src = 'img/p5.png'; // 移動5
 playerImgs[6].src = 'img/p6.png'; // 發射
 
-const playerChargeImgs = [
-    new Image(),
-    new Image(),
-    new Image(),
-    new Image(),
-    new Image(),
-    new Image(),
-    new Image(),
-    new Image(),
-];
-playerChargeImgs[0].src = 'img/s0.png';
-playerChargeImgs[1].src = 'img/s1.png';
-playerChargeImgs[2].src = 'img/s2.png';
-playerChargeImgs[3].src = 'img/s3.png';
-playerChargeImgs[4].src = 'img/s4.png';
-playerChargeImgs[5].src = 'img/s5.png';
-playerChargeImgs[6].src = 'img/s6.png';
-playerChargeImgs[7].src = 'img/s6.png';
+const playerChargeImgs = Array.from({ length: 8 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/s${i}.png`;
+    return img;
+});
 
-const playerChargeAttackShootImgs = [
-    new Image(),
-    new Image(),
-    new Image(),
-    new Image(),
-]
-playerChargeAttackShootImgs[0].src = 'img/bu0.png';
-playerChargeAttackShootImgs[1].src = 'img/bu1.png';
-playerChargeAttackShootImgs[2].src = 'img/bu2.png';
-playerChargeAttackShootImgs[3].src = 'img/bu3.png';
+const playerAttackShootImgs = Array.from({ length: 4 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/bu1/bu${i}.png`;
+    return img;
+});
+
+
+const playerChargeAttackShootImgs = Array.from({ length: 20 }, (_, i) => {
+    const img = new Image();
+    img.src = `img/bu2/bu${i}.png`;
+    return img;
+});
+
+
+// const playerChargeAttackShootImgs = [
+//     new Image(),
+//     new Image(),
+//     new Image(),
+//     new Image(),
+// ]
+// playerChargeAttackShootImgs[0].src = 'img/bu0.png';
+// playerChargeAttackShootImgs[1].src = 'img/bu1.png';
+// playerChargeAttackShootImgs[2].src = 'img/bu2.png';
+// playerChargeAttackShootImgs[3].src = 'img/bu3.png';
 
 
 // ===== 爆炸動畫設定 =====
@@ -1645,6 +1646,8 @@ function update() {
         bullet.x += bullet.speed;
         // ====== 新增：集氣彈自動消失機制 ======
         if (bullet.isCharge) {
+            // 每幀遞增動畫幀數
+            bullet.imgFrame = (bullet.imgFrame || 0) + 1;
             bullet.life--;
             if (bullet.life <= 0) {
                 bullets.splice(i, 1);
@@ -2058,7 +2061,7 @@ function render() {
         if (charging && chargeFrame >= CHARGE_CANCEL_FRAME) {
             ctx.save();
             // 以 8 張集氣圖循環
-            const powerIdx = Math.floor(playerChargeAnimFrame / 5) % 8;
+            const powerIdx = Math.floor(playerChargeAnimFrame / 3) % 8;
             let img = playerChargeImgs[powerIdx];
             let cx = player.x + player.width / 2;
             let cy = player.y + player.height / 2;
@@ -2203,8 +2206,8 @@ function render() {
     bullets.forEach(bullet => {
         if (bullet.isCharge) {
             ctx.save();
-            // 集氣彈動畫圖（bu0~3）
-            const idx = Math.floor((bullet.imgFrame || 0) / 5) % 4;
+            // 集氣彈動畫圖（20張）
+            const idx = Math.floor((bullet.imgFrame || 0) / 5) % 20;
             const img = playerChargeAttackShootImgs[idx];
             if (bullet.speed < 0) {
                 // 往左鏡像
@@ -2256,7 +2259,7 @@ function render() {
             ctx.save();
             // 普通子彈動畫圖（bu0~3）
             const idx = Math.floor((bullet.imgFrame || 0) / 5) % 4;
-            const img = playerChargeAttackShootImgs[idx];
+            const img = playerAttackShootImgs[idx];
             if (bullet.speed < 0) {
                 // 往左鏡像
                 ctx.translate(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2);
