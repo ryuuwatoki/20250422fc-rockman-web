@@ -15,7 +15,7 @@ let GRAVITY         = 1.6;   // 重力1.6｜重力
 let JUMP_POWER      = 21;    // 跳躍力量21｜ジャンプ力
 
 let PLAYER_Attack_shoot_color = 'rgba(111, 196, 208, 0.89)';  // 玩家攻擊子彈顏色｜プレイヤー攻撃弾の色
-let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';  // 玩家集氣攻擊子彈顏色｜プレイヤー溜め攻撃弾の色
+// let PLAYER_Charge_Attack_color = 'rgba(0, 179, 255, 0.7)';  // 玩家集氣攻擊子彈顏色｜プレイヤー溜め攻撃弾の色
 let PLAYER_Charge_Attack_shoot_color = 'rgba(0, 225, 255, 0.7)';  // 玩家集氣攻擊子彈顏色｜プレイヤー溜め攻撃弾の色
 
 let Fly_RED_HP       = 1;   // 飛行紅色敵人血量｜飛行赤色敵体の体力
@@ -479,6 +479,29 @@ playerImgs[3].src = 'img/p3.png'; // 移動3
 playerImgs[4].src = 'img/p4.png'; // 移動4
 playerImgs[5].src = 'img/p5.png'; // 移動5
 playerImgs[6].src = 'img/p6.png'; // 發射
+
+const playerChargeImgs = [
+    new Image(),
+    new Image(),
+    new Image(),
+    new Image(),
+    new Image(),
+    new Image(),
+    new Image(),
+    new Image(),
+];
+
+playerChargeImgs[0].src = 'img/s0.png';
+playerChargeImgs[1].src = 'img/s1.png';
+playerChargeImgs[2].src = 'img/s2.png';
+playerChargeImgs[3].src = 'img/s3.png';
+playerChargeImgs[4].src = 'img/s4.png';
+playerChargeImgs[5].src = 'img/s5.png';
+playerChargeImgs[6].src = 'img/s6.png';
+playerChargeImgs[7].src = 'img/s6.png';
+
+
+
 
 
 // ===== Boss圖片載入 =====
@@ -1937,20 +1960,21 @@ function render() {
         // ===== 蓄氣特效：長按空白鍵0.2秒以上才顯示 =====｜蓄氣エフェクト：長押しスペースキー0.2秒以上で表示
         if (charging && chargeFrame >= CHARGE_CANCEL_FRAME) {
             ctx.save();
-            // 閃爍透明度｜点滅透明度
-            let alpha = 0.25 + 0.25 * Math.abs(Math.sin(Date.now() / 120));
-            ctx.globalAlpha = alpha;
-            ctx.beginPath();
-            // 以玩家中心為圓心｜プレイヤーの中心を円の中心にする
+            // 以 8 張集氣圖循環
+            const powerIdx = Math.floor(Date.now() / 80) % 8;
+            let img = playerChargeImgs[powerIdx];
             let cx = player.x + player.width / 2;
             let cy = player.y + player.height / 2;
-            let rx = PLAYER_Charge_Attack_size[0] / 2;
-            let ry = PLAYER_Charge_Attack_size[1] / 2;
-            ctx.arc(cx, cy, Math.max(rx, ry), 0, Math.PI * 2);
-            ctx.fillStyle = PLAYER_Charge_Attack_color;
-            ctx.shadowColor = PLAYER_Charge_Attack_color;
-            ctx.shadowBlur = 18;
-            ctx.fill();
+            let rx = PLAYER_Charge_Attack_size[0];
+            let ry = PLAYER_Charge_Attack_size[1];
+            ctx.globalAlpha = 0.7;
+            ctx.drawImage(
+                img,
+                cx - rx / 2,
+                cy - ry / 2,
+                rx,
+                ry
+            );
             ctx.restore();
         }
         if (isWinInvincible) {
