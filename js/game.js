@@ -333,9 +333,12 @@ function checkBoxShowHideAll(mode) {
 
 // ===== 物件面積 =====｜オブジェクトサイズ
 
-let PLAYER_size               = [38,50];    //玩家尺寸 寬度,高度｜プレイヤーサイズ 幅,高さ
-let PLAYER_SHOOT_size         = [40,50];    //發射子彈時玩家尺寸｜射撃時プレイヤーサイズ
-let PLAYER_Charge_Attack_size = [38,50];    //蓄氣光圈尺寸｜チャージエフェクトサイズ
+let PLAYER_size               = [50,50];    //玩家尺寸 寬度,高度｜プレイヤーサイズ 幅,高さ
+let PLAYER_SHOOT_size         = [50,50];    //發射子彈時玩家尺寸｜射撃時プレイヤーサイズ
+let PLAYER_Charge_size        = [100,100];    // 集氣時玩家尺寸｜チャージ時プレイヤーサイズ
+let PLAYER_Charge_alpha       = 0.7;    // 集氣時玩家透明度｜チャージ時プレイヤー透明度
+
+// let PLAYER_Charge_Attack_size = [38,50];    //蓄氣光圈尺寸｜チャージエフェクトサイズ
 let FLY_RED_size              = [30,30];    //飛行紅色敵人尺寸｜飛行赤色敵体サイズ
 let FLY_ORANGE_size           = [60,70];    //飛行橙色敵人尺寸｜飛行オレンジ敵体サイズ
 let GROUND_RED_size           = [35,60];    //地面紅掃敵人尺寸｜地上赤色敵体サイズ
@@ -1965,9 +1968,13 @@ function render() {
             let img = playerChargeImgs[powerIdx];
             let cx = player.x + player.width / 2;
             let cy = player.y + player.height / 2;
-            let rx = PLAYER_Charge_Attack_size[0];
-            let ry = PLAYER_Charge_Attack_size[1];
-            ctx.globalAlpha = 0.7;
+            let rx = PLAYER_Charge_size[0];
+            let ry = PLAYER_Charge_size[1];
+            
+            // 設置透明度
+            ctx.globalAlpha = PLAYER_Charge_alpha;
+            
+            // 繪製圖片
             ctx.drawImage(
                 img,
                 cx - rx / 2,
