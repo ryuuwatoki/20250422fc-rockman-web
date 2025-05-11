@@ -406,8 +406,8 @@ const COLOR_BULLET_BOSS     = 'rgba(255,68,170,1)';      // Boss子彈顏色｜�
 
 // 新增floor圖片物件
 // フロア画像オブジェクトを新規追加
-const floorImg = new Image(); floorImg.src = 'img/01floor.png';
-const floorBossImg = new Image(); floorBossImg.src = 'img/02floor.png';
+const floorImg = new Image(); floorImg.src = 'img/map/01floor.png';
+const floorBossImg = new Image(); floorBossImg.src = 'img/map/02floor.png';
 
 // ===== 爆炸動畫設定 =====
 
@@ -445,7 +445,7 @@ for (let i = 0; i <= 8; i++) {
 // トルネード画像を動的に生成
 const tornadoImg = new Image();
 tornadoImg.id = 'tornado-img';
-tornadoImg.src = 'img/tornadoes.png';
+tornadoImg.src = 'img/boss/tornadoes.png';
 tornadoImg.style.display = 'none';
 document.getElementById('game-wrapper').appendChild(tornadoImg);
 
@@ -3373,7 +3373,7 @@ settingsBtn.style.cursor = 'pointer';
 settingsBtn.style.userSelect = 'none';
 settingsBtn.style.zIndex = 1000;
 settingsBtn.style.fontSize = '22px';
-settingsBtn.innerHTML = '<img src="img/setting.png" alt="settings" style="width:70%;height:70%;object-fit:contain;display:block;margin:auto;">';
+settingsBtn.innerHTML = '<img src="img/UI/setting.png" alt="settings" style="width:70%;height:70%;object-fit:contain;display:block;margin:auto;">';
 document.getElementById('game-wrapper').appendChild(settingsBtn);
 
 // 2. 設定面板｜設定パネル
