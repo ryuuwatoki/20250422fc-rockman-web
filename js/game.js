@@ -65,60 +65,32 @@ checkBoxShowHideAll(2); // 設定選單狀態顯示全開/全關 1=全開 0=全�
 
 // 音效管理器
 
-// let VOLUME_BGM      = 0.40;  // 背景音樂音量｜BGM音量
-// let VOLUME_BGM2     = 0.55;  // Boss區域背景音樂音量｜BGM2音量
-// let VOLUME_SHOOT    = 0.55;  // 射擊音效音量｜射撃効果音音量
-// let VOLUME_CHARGE   = 0.55;  // 集氣音效音量｜チャージ効果音音量
-// let VOLUME_BOOM     = 0.45;  // 爆炸音效音量｜爆発効果音音量
-// let VOLUME_HURT     = 0.70;  // 受傷音效音量｜ダメージ効果音音量
-// let VOLUME_GAMEOVER = 0.75;  // 遊戲結束音效音量｜ゲームオーバー効果音音量
-// let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量｜ボス死亡効果音音量
-// let VOLUME_BOSS     = 0.85;  // Boss出場音效音量｜ボス登場効果音音量
-// let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量｜勝利BGM音量
-
+// ===== 音量集中管理 =====
 
 const bgm = new Audio('sound/bgm.mp3');
-let bgmVolume = 0.4;
-bgm.volume = bgmVolume;
-
 const bgm2 = new Audio('sound/bgm2.mp3');
-let bgm2Volume = 0.55;
-bgm2.volume = bgm2Volume;
-
 const boomAudio = new Audio('sound/boom.mp3');
-let boomVolume = 0.1;
-boomAudio.volume = boomVolume;
-
 const bossAudio = new Audio('sound/boss.mp3');
-let bossVolume = 0.85;
-bossAudio.volume = bossVolume;
-
 const bossdieAudio = new Audio('sound/bossdie.mp3');
-let bossdieVolume = 0.4;
-bossdieAudio.volume = bossdieVolume;
-
 const changeBtnAudio = new Audio('sound/change_btn.mp3');
-let changeBtnVolume = 0.8;
-changeBtnAudio.volume = changeBtnVolume;
-
 const chargeAudio = new Audio('sound/charge.mp3');
-let chargeVolume = 0.55;
-chargeAudio.volume = chargeVolume;
-
 const gameOverAudio = new Audio('sound/game_over.mp3');
-let gameOverVolume = 0.75;
-gameOverAudio.volume = gameOverVolume;
-
 const hurtAudio = new Audio('sound/hurt.mp3');
-let hurtVolume = 0.7;
-hurtAudio.volume = hurtVolume;
-
 const outroAudio = new Audio('sound/outro.mp3');
-let outroVolume = 0.55;
-
 const shootAudio = new Audio('sound/shoot.mp3');
-let shootVolume = 0.55;
-shootAudio.volume = shootVolume;
+
+const VOLUME_BGM      = 0.40;  // 背景音樂音量
+const VOLUME_BGM2     = 0.55;  // Boss區域背景音樂音量
+const VOLUME_SHOOT    = 0.55;  // 射擊音效音量
+const VOLUME_CHARGE   = 0.55;  // 集氣音效音量
+const VOLUME_BOOM     = 0.40;  // 爆炸音效音量
+const VOLUME_HURT     = 0.70;  // 受傷音效音量
+const VOLUME_GAMEOVER = 0.75;  // 遊戲結束音效音量
+const VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量
+const VOLUME_BOSS     = 0.85;  // Boss出場音效音量
+const VOLUME_OUTRO    = 0.55;  // 勝利音樂音量
+const VOLUME_CHANGE_BTN = 0.8; // 切換按鈕音效音量
+
 
 // 音量設定｜音量設定
 let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
@@ -638,16 +610,10 @@ let PLAYER2_Charge_Attack_shoot_CollisionBox_Show  = 1;                         
 
 
 let PLAYER2_Charge_Attack_shoot_count = 4; // 集氣子彈同時發射數量
-let PLAYER2_Charge_Attack_shoot_1 = [1, 15, 1000, 1]; // 1開始方向1上 0下, 2 y軸幅度值高幅大, 3 波動速度越高越慢, 4 是否啟用
-let PLAYER2_Charge_Attack_shoot_2 = [0, 15, 1000, 1]; //
-let PLAYER2_Charge_Attack_shoot_3 = [1, 30, 1000, 1]; // 
-let PLAYER2_Charge_Attack_shoot_4 = [0, 30, 1000, 1]; // 
-
-
-
-
-
-
+let PLAYER2_Charge_Attack_shoot_1 = [0, 10, 0, 1]; // 1開始方向0上 1下, 2 y軸幅度值高幅大, 3 波動速度越高越慢, 4 是否啟用
+let PLAYER2_Charge_Attack_shoot_2 = [1, 10, 0, 1]; //
+let PLAYER2_Charge_Attack_shoot_3 = [0, 20, 0, 1]; // 
+let PLAYER2_Charge_Attack_shoot_4 = [1, 20, 0, 1]; // 
 
 
 
@@ -878,6 +844,7 @@ let player = {
         if (this.invincible > 0) return;
         // 播放受傷音效 // ダメージ効果音再生
         if (isSfxOn) {
+            hurtAudio.volume = VOLUME_HURT;
             hurtAudio.currentTime = 0;
             hurtAudio.play().catch(()=>{});
         }
@@ -1363,6 +1330,7 @@ document.addEventListener('keydown', (e) => {
                 chargeAudioTimeout = setTimeout(() => {
                     if (charging) {
                         if (chargeAudio) {
+                            chargeAudio.volume = VOLUME_CHARGE;
                             chargeAudio.currentTime = 0;
                             if (isSfxOn) { chargeAudio.pause(); chargeAudio.currentTime = 0; chargeAudio.play().catch(()=>{}); }
                         }
@@ -1385,6 +1353,7 @@ document.addEventListener('keydown', (e) => {
             }
             switchPlayerSkin();
             // 播放切換音效
+            changeBtnAudio.volume = VOLUME_CHANGE_BTN;
             changeBtnAudio.play().catch(()=>{});
             canSwitchSkin = false;
             setTimeout(() => { canSwitchSkin = true; }, 100);
@@ -1413,6 +1382,7 @@ document.addEventListener('keyup', (e) => {
                 chargeReady = true; // 發射集氣彈
                 // 播放集氣彈射擊音效
                 if (shootAudio) {
+                    shootAudio.volume = VOLUME_SHOOT;
                     shootAudio.currentTime = 0;
                     if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
                 }
@@ -1435,6 +1405,7 @@ document.addEventListener('keyup', (e) => {
                 player.shootAnimFrame = 1;
                 // 播放普通彈射擊音效
                 if (shootAudio) {
+                    shootAudio.volume = VOLUME_SHOOT;
                     shootAudio.currentTime = 0;
                     if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
                 }
@@ -1467,6 +1438,7 @@ function startGame() {
     }
     // 音樂播放控制｜音楽再生制御
     if (bgm) {
+        bgm.volume = VOLUME_BGM;
         bgm.currentTime = 0;
         if (isBgmOn) { bgm.pause(); bgm.currentTime = 0; bgm.play().catch(()=>{}); }
     }
@@ -1616,6 +1588,7 @@ function update() {
         }
         player.shootCooldown = player.shootDelay;
         if (shootAudio) {
+            shootAudio.volume = VOLUME_SHOOT;
             shootAudio.currentTime = 0;
             if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
         }
@@ -1685,6 +1658,7 @@ function update() {
         if (bossTimer === 100) {
             // 播放boss出場音效 bosstimer 是boss出場延遲時間｜bosstimer はボス出場遅延時間
             if (bossAudio) {
+                bossAudio.volume = VOLUME_BOSS;
                 bossAudio.currentTime = 0;
                 if (isSfxOn) { bossAudio.pause(); bossAudio.currentTime = 0; bossAudio.play().catch(()=>{}); }
             }
@@ -1910,6 +1884,7 @@ function update() {
                 // 播放boom音效（集氣彈也有）｜boom音效（集氣弾もあります）
                 if (boomAudio) {
                     const clone = boomAudio.cloneNode();
+                    clone.volume = VOLUME_BOOM;
                     if (isSfxOn) { clone.pause(); clone.currentTime = 0; clone.play().catch(()=>{}); }
                 }
                 // ===== 新增爆炸動畫 =====
@@ -1944,6 +1919,7 @@ function update() {
             updateBossHealthBar();
             if (boss.health > 0) {
                 if (boomAudio) {
+                    boomAudio.volume = VOLUME_BOOM;
                     boomAudio.currentTime = 0;
                     if (isSfxOn) { boomAudio.pause(); boomAudio.currentTime = 0; boomAudio.play().catch(()=>{}); }
                 }
@@ -1969,6 +1945,7 @@ function update() {
                 }
                 // 播放bossdie音效｜ボスが死んだときの音
                 if (bossdieAudio) {
+                    bossdieAudio.volume = VOLUME_BOSSDIE;
                     bossdieAudio.currentTime = 0;
                     if (isSfxOn) { bossdieAudio.pause(); bossdieAudio.currentTime = 0; bossdieAudio.play().catch(()=>{}); }
                 }
@@ -2012,6 +1989,7 @@ function update() {
                                     winScreen.style.opacity = 0;
                                     // 播放outro音樂｜outro音楽を再生
                                     if (outroAudio) {
+                                        outroAudio.volume = VOLUME_OUTRO;
                                         outroAudio.currentTime = 0;
                                         if (isBgmOn) { outroAudio.pause(); outroAudio.currentTime = 0; outroAudio.play().catch(()=>{}); }
                                     }
@@ -3080,6 +3058,7 @@ function gameOver() {
             bgm2.currentTime = 0;
         }
         if (gameOverAudio) {
+            gameOverAudio.volume = VOLUME_GAMEOVER;
             gameOverAudio.currentTime = 0;
             if (isSfxOn) { gameOverAudio.pause(); gameOverAudio.currentTime = 0; gameOverAudio.play().catch(()=>{}); }
         }
@@ -3112,6 +3091,7 @@ function winGame() {
     }
     // 播放勝利音樂｜勝利の音楽を再生
     if (outroAudio) {
+        outroAudio.volume = VOLUME_OUTRO;
         outroAudio.currentTime = 0;
         if (isBgmOn) { outroAudio.pause(); outroAudio.currentTime = 0; outroAudio.play().catch(()=>{}); }
         // 確保onended事件設置｜onendedイベントを確保
