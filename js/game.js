@@ -490,7 +490,6 @@ const explosions = [];
 
 
 
-
 //player2
 const player2Imgs = Array.from({ length: 7 }, (_, i) => {
     const img = new Image();
@@ -531,27 +530,81 @@ const player2explosions = [];
 
 
 
-
+//player1
 let boom_size = [100,100];
 let charge_boom_size = [200,200];
 
-let PLAYER_Attack_shoot_startx = 17; // 一般子彈X偏移
+let PLAYER_Attack_shoot_startx = 14; // 一般子彈X偏移
 let PLAYER_Attack_shoot_size = [10,8,'rgba(191, 232, 237, 0.94)',0]; // 寬度,長度,顏色,0=圓形，1=矩形
-let PLAYER_Attack_shoot_speed = [19]; //fps 值越高越快
+let PLAYER_Attack_shoot_speed = [18]; //fps 值越高越快
 let PLAYER_Attack_shoot_stay = 35; //fps 值越高停留越久
 let PLAYER_Attack_shoot_limit = 3; //fps 每次子彈數量
-let PLAYER_Attack_shoot_CollisionBox       = [11, 11, 'rgba(255, 105, 68, 0.93)'];  // [寬度, 高度, 顏色]
-let PLAYER_Attack_shoot_CollisionBox_Show  = 0;                                     // 是否顯示碰撞箱
+let PLAYER_Attack_shoot_CollisionBox       = [12, 12, 'rgba(255, 105, 68, 0.93)'];  // [寬度, 高度, 顏色]
+let PLAYER_Attack_shoot_CollisionBoxNX     = 50;                                    //碰撞箱中心移動x｜当たり判定中心移動x
+let PLAYER_Attack_shoot_CollisionBoxNY     = 50;                                    //碰撞箱中心移動y｜当たり判定中心移動y
+let PLAYER_Attack_shoot_CollisionBox_Show  = 1;                                     // 是否顯示碰撞箱
+
 
 let PLAYER_Charge_Attack_shoot_startx = 30; // 集氣子彈X偏移
 let PLAYER_Charge_Attack_shoot_size = [100,100];
-let PLAYER_Charge_Attack_shoot_speed = [17]; //fps 值越高越快
-let PLAYER_Charge_Attack_shoot_stay = 40; //fps 值越高停留越久
-let PLAYER_Charge_Attack_shoot_CollisionBox       = [91, 58, 'rgba(255, 105, 68, 0.93)'];  // [寬度, 高度, 顏色]
-let PLAYER_Charge_Attack_shoot_CollisionBox_Show  = 0;                                     // 是否顯示碰撞箱
+let PLAYER_Charge_Attack_shoot_speed = [18]; //fps 值越高越快
+let PLAYER_Charge_Attack_shoot_stay = 35; //fps 值越高停留越久
+let PLAYER_Charge_Attack_shoot_CollisionBox       = [80, 70, 'rgba(255, 105, 68, 0.93)'];  // [寬度, 高度, 顏色]
 let PLAYER_Charge_Attack_shoot_CollisionBoxNX     = 50;                                    //碰撞箱中心移動x｜当たり判定中心移動x
 let PLAYER_Charge_Attack_shoot_CollisionBoxNY     = 50;                                    //碰撞箱中心移動y｜当たり判定中心移動y
 let PLAYER_Charge_Attack_shoot_CollisionBoxCircle = 0;                                     // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
+let PLAYER_Charge_Attack_shoot_CollisionBox_Show  = 1;                                     // 是否顯示碰撞箱
+
+
+let PLAYER_Charge_Attack_shoot_count = 0; // 預設值，避免未宣告錯誤
+let PLAYER_Charge_Attack_shoot_1 = [1, 0, 0,1]; // 預設值，避免未宣告錯誤
+let PLAYER_Charge_Attack_shoot_2 = [0, 0, 0,1]; // 預設值，避免未宣告錯誤
+let PLAYER_Charge_Attack_shoot_3 = [0, 0, 0,1]; // 預設值，避免未宣告錯誤
+let PLAYER_Charge_Attack_shoot_4 = [0, 0, 0,1]; // 預設值，避免未宣告錯誤
+
+
+
+
+
+//player2
+let boom2_size = [100,100];
+let charge_boom2_size = [200,200];
+
+let PLAYER2_Attack_shoot_startx = 17; // 一般子彈X偏移
+let PLAYER2_Attack_shoot_size = [50,50,'rgba(191, 232, 237, 0.94)',0]; // 寬度,長度,顏色,0=圓形，1=矩形
+let PLAYER2_Attack_shoot_speed = [10]; //fps 值越高越快
+let PLAYER2_Attack_shoot_stay = 60; //fps 值越高停留越久
+let PLAYER2_Attack_shoot_limit = 1; //fps 每次子彈數量
+let PLAYER2_Attack_shoot_CollisionBox       = [10, 8, 'rgba(255, 105, 68, 0.93)'];  // [寬度, 高度, 顏色]
+let PLAYER2_Attack_shoot_CollisionBox_Show  = 1;                                     // 是否顯示碰撞箱
+
+let PLAYER2_Charge_Attack_shoot_startx = 0; // 集氣子彈X偏移
+let PLAYER2_Charge_Attack_shoot_size = [50,50];
+let PLAYER2_Charge_Attack_shoot_speed = [5]; //fps 值越高越快
+let PLAYER2_Charge_Attack_shoot_stay = 100; //fps 值越高停留越久
+
+let PLAYER2_Charge_Attack_shoot_CollisionBox       = [60, 60, 'rgba(255, 105, 68, 0.93)'];  // [寬度, 高度, 顏色]
+let PLAYER2_Charge_Attack_shoot_CollisionBoxNX     = 50;                                    //碰撞箱中心移動x｜当たり判定中心移動x
+let PLAYER2_Charge_Attack_shoot_CollisionBoxNY     = 50;                                    //碰撞箱中心移動y｜当たり判定中心移動y
+let PLAYER2_Charge_Attack_shoot_CollisionBoxCircle = 0;                                     // 0=圓形，1=矩形，越小越圓｜0=円形、1=矩形、小さいほど円形
+let PLAYER2_Charge_Attack_shoot_CollisionBox_Show  = 1;                                     // 是否顯示碰撞箱
+
+
+let PLAYER2_Charge_Attack_shoot_count = 4; // 集氣子彈同時發射數量
+let PLAYER2_Charge_Attack_shoot_1 = [1, 15, 1000, 1]; // 1開始方向1上 0下, 2 y軸幅度值高幅大, 3 波動速度越高越慢, 4 是否啟用
+let PLAYER2_Charge_Attack_shoot_2 = [0, 15, 1000, 1]; //
+let PLAYER2_Charge_Attack_shoot_3 = [1, 30, 1000, 1]; // 
+let PLAYER2_Charge_Attack_shoot_4 = [0, 30, 1000, 1]; // 
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -753,8 +806,11 @@ let player = {
             // 新增：子彈數量限制
             const normalBulletCount = bullets.filter(b => !b.isCharge).length;
             if (normalBulletCount >= PLAYER_Attack_shoot_limit) return;
+            // 修正：以玩家中心為基準，左右偏移完全對稱
+            const bulletOffsetX = (this.direction === 1 ? 1 : -1) * PLAYER_Attack_shoot_startx;
+            const bulletX = this.x + this.width / 2 - PLAYER_Attack_shoot_size[0] / 2 + bulletOffsetX;
             bullets.push({
-                x: this.x + this.width/2 + (this.direction === 1 ? 1 : -1) * PLAYER_Attack_shoot_startx - PLAYER_Attack_shoot_size[0]/2,
+                x: bulletX,
                 y: this.y + this.height / 2 - PLAYER_Attack_shoot_size[1] / 2,
                 width: PLAYER_Attack_shoot_size[0],
                 height: PLAYER_Attack_shoot_size[1],
@@ -1147,15 +1203,75 @@ function switchPlayerSkin() {
         currentPlayerChargeImgs = player2ChargeImgs;
         currentPlayerAttackShootImgs = player2AttackShootImgs;
         currentPlayerChargeAttackShootImgs = player2ChargeAttackShootImgs;
+        // 顏色
         PLAYER_Attack_shoot_size[2] = 'rgba(255, 232, 191, 0.94)'; // player2配色
         PLAYER_Charge_Attack_shoot_CollisionBox[2] = 'rgba(68, 105, 255, 0.93)'; // player2配色
+        // 尺寸與碰撞箱
+        PLAYER_Attack_shoot_size[0] = PLAYER2_Attack_shoot_size[0];
+        PLAYER_Attack_shoot_size[1] = PLAYER2_Attack_shoot_size[1];
+        PLAYER_Attack_shoot_size[3] = PLAYER2_Attack_shoot_size[3];
+        PLAYER_Attack_shoot_CollisionBox[0] = PLAYER2_Attack_shoot_CollisionBox[0];
+        PLAYER_Attack_shoot_CollisionBox[1] = PLAYER2_Attack_shoot_CollisionBox[1];
+        PLAYER_Attack_shoot_CollisionBox[2] = PLAYER2_Attack_shoot_CollisionBox[2];
+        // 移除 PLAYER_Attack_shoot_CollisionBox_Show = PLAYER2_Attack_shoot_CollisionBox_Show;
+        PLAYER_Charge_Attack_shoot_size[0] = PLAYER2_Charge_Attack_shoot_size[0];
+        PLAYER_Charge_Attack_shoot_size[1] = PLAYER2_Charge_Attack_shoot_size[1];
+        PLAYER_Charge_Attack_shoot_CollisionBox[0] = PLAYER2_Charge_Attack_shoot_CollisionBox[0];
+        PLAYER_Charge_Attack_shoot_CollisionBox[1] = PLAYER2_Charge_Attack_shoot_CollisionBox[1];
+        PLAYER_Charge_Attack_shoot_CollisionBox[2] = PLAYER2_Charge_Attack_shoot_CollisionBox[2];
+        // 移除 PLAYER_Charge_Attack_shoot_CollisionBox_Show = PLAYER2_Charge_Attack_shoot_CollisionBox_Show;
+        PLAYER_Charge_Attack_shoot_CollisionBoxNX = PLAYER2_Charge_Attack_shoot_CollisionBoxNX;
+        PLAYER_Charge_Attack_shoot_CollisionBoxNY = PLAYER2_Charge_Attack_shoot_CollisionBoxNY;
+        PLAYER_Charge_Attack_shoot_CollisionBoxCircle = PLAYER2_Charge_Attack_shoot_CollisionBoxCircle;
+        // 集氣彈參數
+        PLAYER_Charge_Attack_shoot_count = PLAYER2_Charge_Attack_shoot_count;
+        PLAYER_Charge_Attack_shoot_1 = PLAYER2_Charge_Attack_shoot_1;
+        PLAYER_Charge_Attack_shoot_2 = PLAYER2_Charge_Attack_shoot_2;
+        PLAYER_Charge_Attack_shoot_3 = PLAYER2_Charge_Attack_shoot_3;
+        PLAYER_Charge_Attack_shoot_4 = PLAYER2_Charge_Attack_shoot_4;
+        PLAYER_Charge_Attack_shoot_speed[0] = PLAYER2_Charge_Attack_shoot_speed[0];
+        PLAYER_Attack_shoot_speed[0] = PLAYER2_Attack_shoot_speed[0]; // 新增這行
+        PLAYER_Charge_Attack_shoot_stay = PLAYER2_Charge_Attack_shoot_stay;
+        PLAYER_Charge_Attack_shoot_startx = PLAYER2_Charge_Attack_shoot_startx; // <--- 新增這行，建立關聯
+        PLAYER_Attack_shoot_limit = PLAYER2_Attack_shoot_limit; // <--- 新增這行，限制子彈數量
+        PLAYER_Attack_shoot_limit = PLAYER2_Attack_shoot_limit; // 玩家2子彈數量
     } else {
         currentPlayerImgs = playerImgs;
         currentPlayerChargeImgs = playerChargeImgs;
         currentPlayerAttackShootImgs = playerAttackShootImgs;
         currentPlayerChargeAttackShootImgs = playerChargeAttackShootImgs;
+        // 顏色
         PLAYER_Attack_shoot_size[2] = 'rgba(191, 232, 237, 0.94)'; // player1配色
         PLAYER_Charge_Attack_shoot_CollisionBox[2] = 'rgba(255, 105, 68, 0.93)'; // player1配色
+        // 尺寸與碰撞箱
+        PLAYER_Attack_shoot_size[0] = 10;
+        PLAYER_Attack_shoot_size[1] = 8;
+        PLAYER_Attack_shoot_size[3] = 0;
+        PLAYER_Attack_shoot_CollisionBox[0] = 12;
+        PLAYER_Attack_shoot_CollisionBox[1] = 12;
+        PLAYER_Attack_shoot_CollisionBox[2] = 'rgba(255, 105, 68, 0.93)';
+        // 移除 PLAYER_Attack_shoot_CollisionBox_Show = 1;
+        PLAYER_Charge_Attack_shoot_size[0] = 100;
+        PLAYER_Charge_Attack_shoot_size[1] = 100;
+        PLAYER_Charge_Attack_shoot_CollisionBox[0] = 80;
+        PLAYER_Charge_Attack_shoot_CollisionBox[1] = 70;
+        PLAYER_Charge_Attack_shoot_CollisionBox[2] = 'rgba(255, 105, 68, 0.93)';
+        // 移除 PLAYER_Charge_Attack_shoot_CollisionBox_Show = 1;
+        PLAYER_Charge_Attack_shoot_CollisionBoxNX = 50;
+        PLAYER_Charge_Attack_shoot_CollisionBoxNY = 50;
+        PLAYER_Charge_Attack_shoot_CollisionBoxCircle = 0;
+        // 集氣彈參數
+        PLAYER_Charge_Attack_shoot_count = 0;
+        PLAYER_Charge_Attack_shoot_1 = [1, 0, 0, 1];
+        PLAYER_Charge_Attack_shoot_2 = [0, 0, 0, 1];
+        PLAYER_Charge_Attack_shoot_3 = [0, 0, 0, 1];
+        PLAYER_Charge_Attack_shoot_4 = [0, 0, 0, 1];
+        PLAYER_Charge_Attack_shoot_speed[0] = 18;
+        PLAYER_Charge_Attack_shoot_stay = 35;
+        PLAYER_Attack_shoot_limit = 3; // <--- 新增這行，player1預設三發
+        // PLAYER_Attack_shoot_limit = PLAYER1_Attack_shoot_limit; // 玩家1子彈數量由變數控制（如有需要可還原）
+        PLAYER_Charge_Attack_shoot_startx = 30;
+        PLAYER_Attack_shoot_speed[0] = 18;
     }
 }
 
@@ -1399,21 +1515,55 @@ function update() {
     // 先處理集氣彈｜まず集氣弾を処理
     if (chargeReady) {
         // 發射集氣彈｜集氣弾を発射
-        bullets.push({
-            x: player.x + player.width/2 + (player.direction === 1 ? 1 : -1) * PLAYER_Charge_Attack_shoot_startx - PLAYER_Charge_Attack_shoot_size[0]/2,
-            y: player.y + player.height / 2 - PLAYER_Charge_Attack_shoot_size[1] / 2,
-            width: PLAYER_Charge_Attack_shoot_size[0],
-            height: PLAYER_Charge_Attack_shoot_size[1],
-            speed: PLAYER_Charge_Attack_shoot_speed[0] * player.direction,
-            isCharge: true, // 標記為集氣彈
-            imgFrame: 0, // 用於動畫輪播
-            // 集氣彈專用碰撞箱屬性
-            chargeCollisionBox: PLAYER_Charge_Attack_shoot_CollisionBox,
-            chargeCollisionBoxNX: PLAYER_Charge_Attack_shoot_CollisionBoxNX,
-            chargeCollisionBoxNY: PLAYER_Charge_Attack_shoot_CollisionBoxNY,
-            chargeCollisionBoxCircle: PLAYER_Charge_Attack_shoot_CollisionBoxCircle,
-            life: PLAYER_Charge_Attack_shoot_stay // 新增生命週期
-        });
+        if (PLAYER_Charge_Attack_shoot_count > 0) {
+            // 多發（player2）
+            let configs = [PLAYER_Charge_Attack_shoot_1, PLAYER_Charge_Attack_shoot_2, PLAYER_Charge_Attack_shoot_3, PLAYER_Charge_Attack_shoot_4];
+            let count = 0;
+            for (let i = 0; i < configs.length; i++) {
+                let [dir, amp, speed, enable] = configs[i];
+                if (enable && count < PLAYER_Charge_Attack_shoot_count) {
+                    bullets.push({
+                        x: player.x + player.width/2 + (player.direction === 1 ? 1 : -1) * PLAYER_Charge_Attack_shoot_startx - PLAYER_Charge_Attack_shoot_size[0]/2,
+                        y: player.y + player.height / 2 - PLAYER_Charge_Attack_shoot_size[1] / 2,
+                        width: PLAYER_Charge_Attack_shoot_size[0],
+                        height: PLAYER_Charge_Attack_shoot_size[1],
+                        speed: PLAYER_Charge_Attack_shoot_speed[0] * player.direction,
+                        isCharge: true, // 標記為集氣彈
+                        imgFrame: 0, // 用於動畫輪播
+                        chargeCollisionBox: PLAYER_Charge_Attack_shoot_CollisionBox,
+                        chargeCollisionBoxNX: PLAYER_Charge_Attack_shoot_CollisionBoxNX,
+                        chargeCollisionBoxNY: PLAYER_Charge_Attack_shoot_CollisionBoxNY,
+                        chargeCollisionBoxCircle: PLAYER_Charge_Attack_shoot_CollisionBoxCircle,
+                        life: PLAYER_Charge_Attack_shoot_stay, // 新增生命週期
+                        waveDir: dir, // 1=上, 0=下
+                        waveAmp: amp,
+                        waveSpeed: speed,
+                        waveSeed: 0 // 每發不同起始位相
+                    });
+                    count++;
+                }
+            }
+        } else {
+            // 單發（player1）
+            bullets.push({
+                x: player.x + player.width/2 + (player.direction === 1 ? 1 : -1) * PLAYER_Charge_Attack_shoot_startx - PLAYER_Charge_Attack_shoot_size[0]/2,
+                y: player.y + player.height / 2 - PLAYER_Charge_Attack_shoot_size[1] / 2,
+                width: PLAYER_Charge_Attack_shoot_size[0],
+                height: PLAYER_Charge_Attack_shoot_size[1],
+                speed: PLAYER_Charge_Attack_shoot_speed[0] * player.direction,
+                isCharge: true, // 標記為集氣彈
+                imgFrame: 0, // 用於動畫輪播
+                chargeCollisionBox: PLAYER_Charge_Attack_shoot_CollisionBox,
+                chargeCollisionBoxNX: PLAYER_Charge_Attack_shoot_CollisionBoxNX,
+                chargeCollisionBoxNY: PLAYER_Charge_Attack_shoot_CollisionBoxNY,
+                chargeCollisionBoxCircle: PLAYER_Charge_Attack_shoot_CollisionBoxCircle,
+                life: PLAYER_Charge_Attack_shoot_stay, // 新增生命週期
+                waveDir: PLAYER_Charge_Attack_shoot_1[0],
+                waveAmp: PLAYER_Charge_Attack_shoot_1[1],
+                waveSpeed: PLAYER_Charge_Attack_shoot_1[2],
+                waveSeed: 0
+            });
+        }
         player.shootCooldown = player.shootDelay;
         const shootAudio = document.getElementById('shoot-audio');
         if (shootAudio) {
@@ -1674,6 +1824,14 @@ function update() {
         if (bullet.isCharge) {
             // 每幀遞增動畫幀數
             bullet.imgFrame = (bullet.imgFrame || 0) + 1;
+            // === 新增：上下浮動 ===
+            if (typeof bullet.waveAmp === 'number' && bullet.waveAmp > 0) {
+                // dir: 1=上, 0=下
+                let baseY = bullet.baseY !== undefined ? bullet.baseY : bullet.y;
+                if (bullet.baseY === undefined) bullet.baseY = bullet.y;
+                let sign = (bullet.waveDir === 1) ? 1 : -1;
+                bullet.y = baseY + sign * Math.sin((bullet.imgFrame / 8) + bullet.waveSeed) * bullet.waveAmp * 6;
+            }
             bullet.life--;
             if (bullet.life <= 0) {
                 bullets.splice(i, 1);
@@ -2086,8 +2244,9 @@ function render() {
         // ===== 蓄氣特效：長按空白鍵0.2秒以上才顯示 =====｜蓄氣エフェクト：長押しスペースキー0.2秒以上で表示
         if (charging && chargeFrame >= CHARGE_CANCEL_FRAME) {
             ctx.save();
-            // 以 8 張集氣圖循環
-            const powerIdx = Math.floor(playerChargeAnimFrame / 3) % 8;
+            // 以 N 張集氣圖循環
+            const frameCount = currentPlayerChargeImgs.length;
+            const powerIdx = Math.floor(playerChargeAnimFrame / 3) % frameCount;
             let img = currentPlayerChargeImgs[powerIdx];
             let cx = player.x + player.width / 2;
             let cy = player.y + player.height / 2;
@@ -2117,8 +2276,9 @@ function render() {
         if (keys.ArrowLeft || keys.ArrowRight) {
             if (!window._playerMoveAnimFrame) window._playerMoveAnimFrame = 0;
             window._playerMoveAnimFrame++;
-            // 以 5 張移動圖循環
-            const moveIdx = 1 + (Math.floor(window._playerMoveAnimFrame / 6) % 5); // 1~5
+            // 以 N 張移動圖循環
+            const moveFrameCount = currentPlayerImgs.length - 1; // 移動圖從 index 1 開始
+            const moveIdx = 1 + (Math.floor(window._playerMoveAnimFrame / 6) % moveFrameCount); // 1~N
             imgToDraw = currentPlayerImgs[moveIdx];
         } else {
             window._playerMoveAnimFrame = 0;
@@ -2232,8 +2392,9 @@ function render() {
     bullets.forEach(bullet => {
         if (bullet.isCharge) {
             ctx.save();
-            // 集氣彈動畫圖（20張）
-            const idx = Math.floor((bullet.imgFrame || 0) / 5) % 20;
+            // 集氣彈動畫圖（20張或16張）
+            const frameCount = currentPlayerChargeAttackShootImgs.length;
+            const idx = Math.floor((bullet.imgFrame || 0) / 5) % frameCount;
             const img = currentPlayerChargeAttackShootImgs[idx];
             if (bullet.speed < 0) {
                 // 往左鏡像
@@ -2246,6 +2407,32 @@ function render() {
                     bullet.width,
                     bullet.height
                 );
+                // 顯示碰撞箱（修正：鏡像下也畫在正確位置）
+                if (PLAYER_Charge_Attack_shoot_CollisionBox_Show) {
+                    const nx = PLAYER_Charge_Attack_shoot_CollisionBoxNX / 100;
+                    const centerX = -bullet.width / 2 + bullet.width * nx;
+                    const centerY = -bullet.height / 2 + bullet.height * (PLAYER_Charge_Attack_shoot_CollisionBoxNY / 100);
+                    const boxW = PLAYER_Charge_Attack_shoot_CollisionBox[0];
+                    const boxH = PLAYER_Charge_Attack_shoot_CollisionBox[1];
+                    const ellipseRx = boxW / 2;
+                    const ellipseRy = boxH / 2;
+                    if (PLAYER_Charge_Attack_shoot_CollisionBoxCircle < 1) {
+                        ctx.save();
+                        ctx.globalAlpha = 0.35;
+                        ctx.fillStyle = currentPlayerChargeBulletColor;
+                        ctx.beginPath();
+                        ctx.ellipse(centerX, centerY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                    if (PLAYER_Charge_Attack_shoot_CollisionBoxCircle > 0) {
+                        ctx.save();
+                        ctx.globalAlpha = 0.18;
+                        ctx.fillStyle = currentPlayerChargeBulletColor;
+                        ctx.fillRect(centerX - boxW / 2, centerY - boxH / 2, boxW, boxH);
+                        ctx.restore();
+                    }
+                }
             } else {
                 ctx.drawImage(
                     img,
@@ -2254,37 +2441,39 @@ function render() {
                     bullet.width,
                     bullet.height
                 );
-            }
-            // 顯示碰撞箱
-            if (PLAYER_Charge_Attack_shoot_CollisionBox_Show) {
-                const centerX = bullet.x + bullet.width * (PLAYER_Charge_Attack_shoot_CollisionBoxNX / 100);
-                const centerY = bullet.y + bullet.height * (PLAYER_Charge_Attack_shoot_CollisionBoxNY / 100);
-                const boxW = PLAYER_Charge_Attack_shoot_CollisionBox[0];
-                const boxH = PLAYER_Charge_Attack_shoot_CollisionBox[1];
-                const ellipseRx = boxW / 2;
-                const ellipseRy = boxH / 2;
-                if (PLAYER_Charge_Attack_shoot_CollisionBoxCircle < 1) {
-                    ctx.save();
-                    ctx.globalAlpha = 0.35;
-                    ctx.fillStyle = currentPlayerChargeBulletColor;
-                    ctx.beginPath();
-                    ctx.ellipse(centerX, centerY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                }
-                if (PLAYER_Charge_Attack_shoot_CollisionBoxCircle > 0) {
-                    ctx.save();
-                    ctx.globalAlpha = 0.18;
-                    ctx.fillStyle = currentPlayerChargeBulletColor;
-                    ctx.fillRect(centerX - boxW / 2, centerY - boxH / 2, boxW, boxH);
-                    ctx.restore();
+                // 顯示碰撞箱
+                if (PLAYER_Charge_Attack_shoot_CollisionBox_Show) {
+                    const nx = PLAYER_Charge_Attack_shoot_CollisionBoxNX / 100;
+                    const centerX = bullet.x + bullet.width * nx;
+                    const centerY = bullet.y + bullet.height * (PLAYER_Charge_Attack_shoot_CollisionBoxNY / 100);
+                    const boxW = PLAYER_Charge_Attack_shoot_CollisionBox[0];
+                    const boxH = PLAYER_Charge_Attack_shoot_CollisionBox[1];
+                    const ellipseRx = boxW / 2;
+                    const ellipseRy = boxH / 2;
+                    if (PLAYER_Charge_Attack_shoot_CollisionBoxCircle < 1) {
+                        ctx.save();
+                        ctx.globalAlpha = 0.35;
+                        ctx.fillStyle = currentPlayerChargeBulletColor;
+                        ctx.beginPath();
+                        ctx.ellipse(centerX, centerY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                    if (PLAYER_Charge_Attack_shoot_CollisionBoxCircle > 0) {
+                        ctx.save();
+                        ctx.globalAlpha = 0.18;
+                        ctx.fillStyle = currentPlayerChargeBulletColor;
+                        ctx.fillRect(centerX - boxW / 2, centerY - boxH / 2, boxW, boxH);
+                        ctx.restore();
+                    }
                 }
             }
             ctx.restore();
         } else {
             ctx.save();
-            // 普通子彈動畫圖（bu0~3）
-            const idx = Math.floor((bullet.imgFrame || 0) / 5) % 4;
+            // 普通子彈動畫圖（bu0~3 或 bu0~3）
+            const frameCount = currentPlayerAttackShootImgs.length;
+            const idx = Math.floor((bullet.imgFrame || 0) / 5) % frameCount;
             const img = currentPlayerAttackShootImgs[idx];
             if (bullet.speed < 0) {
                 // 往左鏡像
@@ -2308,8 +2497,18 @@ function render() {
             }
             // 顯示碰撞箱
             if (PLAYER_Attack_shoot_CollisionBox_Show) {
-                const centerX = bullet.x + bullet.width * (PLAYER_Attack_shoot_CollisionBoxNX / 100);
-                const centerY = bullet.y + bullet.height * (PLAYER_Attack_shoot_CollisionBoxNY / 100);
+                let centerX, centerY;
+                const nx = PLAYER_Attack_shoot_CollisionBoxNX / 100;
+                const ny = PLAYER_Attack_shoot_CollisionBoxNY / 100;
+                if (bullet.speed < 0) {
+                    // 往左鏡像，原點為(0,0)，需以-bullet.width/2為基準
+                    centerX = -bullet.width / 2 + bullet.width * nx;
+                    centerY = -bullet.height / 2 + bullet.height * ny;
+                } else {
+                    // 往右
+                    centerX = bullet.x + bullet.width * nx;
+                    centerY = bullet.y + bullet.height * ny;
+                }
                 const boxW = PLAYER_Attack_shoot_CollisionBox[0];
                 const boxH = PLAYER_Attack_shoot_CollisionBox[1];
                 const ellipseRx = boxW / 2;
@@ -2321,6 +2520,8 @@ function render() {
                 ctx.ellipse(centerX, centerY, ellipseRx, ellipseRy, 0, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
+
+
             }
             ctx.restore();
         }
@@ -2339,10 +2540,12 @@ function render() {
         if (enemy.isFlying) {
             // FLY_RED 用圖片動畫｜FLY_RED 用画像アニメーション 
             if (enemy.behavior === ENEMY_TYPES.FLY_RED.behavior) {
-                const idx = enemy._imgIndex || 0;
+                const frameCount = flyRedImgs.length;
+                const idx = (enemy._imgIndex || 0) % frameCount;
                 ctx.drawImage(flyRedImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             } else if (enemy.behavior === ENEMY_TYPES.FLY_ORANGE.behavior) {
-                const idx = enemy._imgIndex || 0;
+                const frameCount = flyOrangeImgs.length;
+                const idx = (enemy._imgIndex || 0) % frameCount;
                 ctx.drawImage(flyOrangeImgs[idx], enemy.x, enemy.y, enemy.width, enemy.height);
             } else {
                 // 其他飛行敵人維持原本畫圓｜他の飛行敵人は元の円を維持 
