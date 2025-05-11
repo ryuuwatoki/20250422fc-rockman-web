@@ -12,7 +12,7 @@
   <tr>
     <td align="center">
       ゲーム画面 /遊戲畫面 / Gameplay screen<br>
-      <img src="readme/001.gif" width="400" />
+      <img src="readme/015.gif" width="700" />
     </td>  
   </tr>
 </table>
@@ -23,7 +23,7 @@
   <tr>
     <td align="center">
       今回の挑戦者 / 本次的挑戰者 / This time's challenger<br>
-      <img src="readme/011.png" width="300" />
+      <img src="img/player1/p0.png" width="250" />
     </td>
     <td align="center">
       ボス-エアーマン / 王-空氣人 / BOSS-Air Man<br>
@@ -82,12 +82,16 @@
 </p>
 <br>
 
-## ゲーム動画プレビュー | 遊戲影片預覽 | Gameplay Video Preview：  
-[こちらをクリックして視聴](https://drive.google.com/file/d/1upNH9sbyREraia6M8-w-IAxr0UHxLgVn/view?usp=drive_link)
-
-🌐 試遊 (一部スマホ対応) | 試玩（部分手機支援） | Playable Demo (Partially Mobile Compatible)：  
-[こちらをクリックしてプレイ](https://watoki-webgame-famicom-rockman.web.app)
-
+<br>
+## ゲーム動画プレビュー | 遊戲影片預覽 | Gameplay Video Preview：
+<br>
+https://drive.google.com/file/d/1q0RFgE3df7qu7IyvIDahL5vCoYZkZ7jI/view?usp=drive_link
+<br>
+<br>
+試遊 (一部スマホ対応) | 試玩（部分手機支援） | Playable Demo (Partially Mobile Compatible)：  
+<br>
+https://watoki-webgame-famicom-rockman.web.app
+<br>
 
 
 # スクロールシューティングゲーム（純粋なJavaScript製）
