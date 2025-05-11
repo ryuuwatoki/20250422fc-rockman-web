@@ -3280,6 +3280,7 @@ const LANGUAGES = {
         shoot    : '空白鍵 射擊',
         move     : ' ← → 移動',
         jump     : ' ↑ 跳躍',
+        playmode : 'C 鍵…!?',
         start    : 'START',
         gameover : '何回やっても　何回やっても　エアーまんが...',
         retry    : '再trytry',
@@ -3326,6 +3327,7 @@ const LANGUAGES = {
         shoot    : 'スペースキー ショット',
         move     : ' ← → キー 移動',
         jump     : '↑ キー ジャンプ',
+        playmode : 'Cキー…!?',
         start    : 'スタート',
         gameover : '何回やっても　何回やっても　エアーまんが...',
         retry    : 'もう一度',
@@ -3371,6 +3373,7 @@ const LANGUAGES = {
         shoot    : 'Press SPACE to Shoot',
         move     : 'Press ← → to Move',
         jump     : 'Press ↑ to Jump',
+        playmode : 'Press C key…!? ',
         start    : 'START',
         gameover : 'The Untouchable Airman',
         retry    : 'Retry',
@@ -3421,6 +3424,8 @@ function setLang(lang) {
     document.querySelectorAll('#start-screen p')[0].textContent = L.shoot;
     document.querySelectorAll('#start-screen p')[1].textContent = L.move;
     document.querySelectorAll('#start-screen p')[2].textContent = L.jump;
+    document.querySelectorAll('#start-screen p')[3].textContent = L.playmode;
+
     startButton.textContent = L.start;
     document.querySelector('#game-over-screen h1').textContent = L.gameover;
     restartButton.textContent = L.retry;
