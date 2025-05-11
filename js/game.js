@@ -312,6 +312,7 @@ let   isWinScreen         = false;  // 勝利畫面狀態｜勝利画面状態
 let   bossDefeated        = false;  // Boss是否被擊敗｜ボス撃破済みか
 let   fakeBoss            = null;   // 假Boss物件｜フェイクボスオブジェクト
 let   fakeBossFlashFrame  = 0;      // 假Boss閃爍計數｜フェイクボスフラッシュカウント
+let   playerLocked        = false;  // 玩家是否被鎖定｜プレイヤーがロックされているか
 
 // ===== 流星雨（隕石）相關設定 =====｜流星雨（隕石）関連設定
 let meteor_params                  = {...normal_meteor_params};
@@ -1451,6 +1452,7 @@ document.addEventListener('keyup', (e) => {
 // 各按鍵行為
 function handleJumpKeyDown(e) {
     if (!gameRunning) return;
+    if (playerLocked) return;
     if (!jumpKeyPressed) {
         jumpKeyDownFrame = globalAnimFrame;
         jumpKeyPressed = true;
@@ -1459,10 +1461,12 @@ function handleJumpKeyDown(e) {
 
 function handleEnterKeyDown(e) {
     if (!gameRunning) startGame();
+    if (playerLocked) return;
 }
 
 function handleSpaceKeyDown(e) {
     if (!gameRunning) return;
+    if (playerLocked) return;
     allowChargeOnlyByShootKey = true;
     if (!charging) {
         charging = true;
@@ -1476,6 +1480,7 @@ function handleSpaceKeyDown(e) {
 
 function handleSwitchSkinKeyDown(e) {
     if (!gameRunning) return;
+    if (playerLocked) return;
     if (bullets.length > 0 || !canSwitchSkin) return;
     switchPlayerSkin();
     playChangeBtnAudio();
@@ -1485,6 +1490,7 @@ function handleSwitchSkinKeyDown(e) {
 
 function handleJumpKeyUp(e) {
     if (!gameRunning) return;
+    if (playerLocked) return;
     if (jumpKeyPressed) {
         const pressDuration = globalAnimFrame - jumpKeyDownFrame;
         if (pressDuration < 12 && player.vy < 0) player.vy /= 4;
@@ -1496,6 +1502,7 @@ function handleJumpKeyUp(e) {
 
 function handleSpaceKeyUp(e) {
     if (!gameRunning) return;
+    if (playerLocked) return;
     allowChargeOnlyByShootKey = false;
     if (!charging) return;
     if (chargeFrame >= CHARGE_MIN_FRAME) {
@@ -1588,6 +1595,7 @@ function fireNormalBullet() {
 
 //遊戲初始化，重設所有狀態並開始遊戲主循環｜ゲーム初期化、すべての状態をリセットし、ゲームのメインループを開始
 function startGame() {
+    playerLocked = false;
     // 停止outro音樂
     if (outroAudio) {
         outroAudio.pause();
@@ -2095,6 +2103,7 @@ function update() {
             score += bullet.isCharge ? 100 : 20;
             updateScore();
             if (boss.health <= 0) {
+                playerLocked = true;
                 boss.health = 0;
                 updateBossHealthBar();
                 bossActive = false;
