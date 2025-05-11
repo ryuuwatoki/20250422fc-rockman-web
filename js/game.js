@@ -291,6 +291,7 @@ let   bossTimer           = 0;      // Boss出場動畫計時器｜ボス登場�
 let   reachedBossArea     = false;  // 玩家是否已經抵達過boss區域｜プレイヤーがボスエリア到達済みか
 let   charging            = false;  // 是否正在集氣｜チャージ中か
 let   chargeFrame         = 0;      // 集氣持續幀數｜チャージ継続フレーム数
+let   allowChargeOnlyByShootKey = false; // 是否只允許射擊鍵集氣｜射撃キーのみ集氣許可
 let   chargeReady         = false;  // 是否集氣完成｜チャージ完了か
 let   bossHitFlash        = 0;      // Boss被擊中閃爍計數｜ボス被弾時フラッシュカウント
 let   upPressed           = false;  // 追蹤上鍵是否已經按下｜上キー押下追跡
@@ -1303,118 +1304,273 @@ let globalAnimFrame = 0; // 全域動畫用 frame 計數器
 let playerChargeAnimFrame = 0; // 蓄氣動畫 frame 計數器
 let jumpKeyDownFrame = 0; // 跳躍按下時的 frame
 
+// document.addEventListener('keydown', (e) => {
+//     if (keys.hasOwnProperty(e.key)) {
+//         keys[e.key] = true;
+//         if (e.key === 'ArrowUp' && !jumpKeyPressed) {
+//             jumpKeyDownFrame = globalAnimFrame;
+//             jumpKeyPressed = true;
+//         }
+//         if (e.key === 'Enter' && !gameRunning) {
+//             startGame();
+//         }
+//         if (e.key === ' ' && gameRunning) {
+//             // 按下空白鍵，立即啟動普通射擊｜スペースキー押下時、即時普通射撃
+//             if (!charging) {
+//                 charging = true;
+//                 chargeFrame = 0;
+//                 chargeReady = false;
+//                 player.shootAnimFrame = 7; // 只顯示1幀｜1フレームのみ表示
+//                 // 延遲0.5秒後才播放集氣音效｜0.5秒後に集氣音響再生 
+//                 if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
+//                 chargeAudioTimeout = setTimeout(() => {
+//                     if (charging) {
+//                         if (chargeAudio) {
+//                             chargeAudio.volume = VOLUME_CHARGE;
+//                             chargeAudio.currentTime = 0;
+//                             if (isSfxOn) { chargeAudio.pause(); chargeAudio.currentTime = 0; chargeAudio.play().catch(()=>{}); }
+//                         }
+//                     }
+//                 }, 500);
+//             }
+//         }
+//         // 新增C鍵切換player皮膚
+//         if (e.key === 'c' || e.key === 'C') {
+//             // 檢查場上是否還有玩家子彈
+//             if (bullets.length > 0) {
+//                 // 可選：給予提示，例如 alert 或音效
+//                 // alert('場上還有子彈，無法切換角色皮膚！');
+//                 return;
+//             }
+//             // 檢查冷卻
+//             if (!canSwitchSkin) {
+//                 // 可選：給予提示，例如 alert('請稍後再切換！');
+//                 return;
+//             }
+//             switchPlayerSkin();
+//             // 播放切換音效
+//             changeBtnAudio.volume = VOLUME_CHANGE_BTN;
+//             changeBtnAudio.play().catch(()=>{});
+//             canSwitchSkin = false;
+//             setTimeout(() => { canSwitchSkin = true; }, 100);
+//         }
+//     }
+// });
+
+// document.addEventListener('keyup', (e) => {
+//     if (keys.hasOwnProperty(e.key)) {
+//         keys[e.key] = false;
+//         if (e.key === 'ArrowUp' && jumpKeyPressed) {
+//             const pressDuration = globalAnimFrame - jumpKeyDownFrame;
+//             // 200ms/16.67ms ≈ 12 frame, 300ms ≈ 18, 400ms ≈ 24
+//             if (pressDuration < 12 && player.vy < 0) {
+//                 player.vy /= 4;
+//             } else if (pressDuration < 18 && player.vy < 0) {
+//                 player.vy /= 3;
+//             } else if (pressDuration < 24 && player.vy < 0) {
+//                 player.vy /= 2;
+//             }
+//             jumpKeyPressed = false;
+//         }
+//         if (e.key === ' ') {
+//             // 放開空白鍵時，根據集氣時間決定發射什麼｜スペースキー放開時、集氣時間で射撃決定
+//             if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
+//                 chargeReady = true; // 發射集氣彈
+//                 // 播放集氣彈射擊音效
+//                 if (shootAudio) {
+//                     shootAudio.volume = VOLUME_SHOOT;
+//                     shootAudio.currentTime = 0;
+//                     if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
+//                 }
+//             } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
+//                 // 新增：子彈數量限制
+//                 const normalBulletCount = bullets.filter(b => !b.isCharge).length;
+//                 if (normalBulletCount >= PLAYER_Attack_shoot_limit) return;
+//                 bullets.push({
+//                     x: player.x + player.width/2 + (player.direction === 1 ? 1 : -1) * PLAYER_Attack_shoot_startx - PLAYER_Attack_shoot_size[0]/2,
+//                     y: player.y + player.height / 2 - PLAYER_Attack_shoot_size[1] / 2,
+//                     width: PLAYER_Attack_shoot_size[0],
+//                     height: PLAYER_Attack_shoot_size[1],
+//                     speed: PLAYER_Attack_shoot_speed[0] * player.direction,
+//                     color: PLAYER_Attack_shoot_size[2],
+//                     isCharge: false,
+//                     life: PLAYER_Attack_shoot_stay,
+//                     shape: PLAYER_Attack_shoot_size[3],
+//                     attackCollisionBox: PLAYER_Attack_shoot_CollisionBox
+//                 });
+//                 player.shootAnimFrame = 1;
+//                 // 播放普通彈射擊音效
+//                 if (shootAudio) {
+//                     shootAudio.volume = VOLUME_SHOOT;
+//                     shootAudio.currentTime = 0;
+//                     if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
+//                 }
+//             }
+//             charging = false;
+//             // 停止集氣音效｜集気音響停止
+//             if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
+//             if (chargeAudio) {
+//                 chargeAudio.pause();
+//                 chargeAudio.currentTime = 0;
+//             }
+//         }
+//     }
+// });
+
+
+
+
+// 按鍵對應的 handler
+const keyDownHandlers = {
+    ArrowUp: handleJumpKeyDown,
+    Enter: handleEnterKeyDown,
+    ' ': handleSpaceKeyDown,
+    c: handleSwitchSkinKeyDown,
+    C: handleSwitchSkinKeyDown,
+};
+
+const keyUpHandlers = {
+    ArrowUp: handleJumpKeyUp,
+    ' ': handleSpaceKeyUp,
+};
+
+// 主事件監聽器
 document.addEventListener('keydown', (e) => {
-    if (keys.hasOwnProperty(e.key)) {
-        keys[e.key] = true;
-        if (e.key === 'ArrowUp' && !jumpKeyPressed) {
-            jumpKeyDownFrame = globalAnimFrame;
-            jumpKeyPressed = true;
-        }
-        if (e.key === 'Enter' && !gameRunning) {
-            startGame();
-        }
-        if (e.key === ' ' && gameRunning) {
-            // 按下空白鍵，立即啟動普通射擊｜スペースキー押下時、即時普通射撃
-            if (!charging) {
-                charging = true;
-                chargeFrame = 0;
-                chargeReady = false;
-                player.shootAnimFrame = 7; // 只顯示1幀｜1フレームのみ表示
-                // 延遲0.5秒後才播放集氣音效｜0.5秒後に集氣音響再生 
-                if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
-                chargeAudioTimeout = setTimeout(() => {
-                    if (charging) {
-                        if (chargeAudio) {
-                            chargeAudio.volume = VOLUME_CHARGE;
-                            chargeAudio.currentTime = 0;
-                            if (isSfxOn) { chargeAudio.pause(); chargeAudio.currentTime = 0; chargeAudio.play().catch(()=>{}); }
-                        }
-                    }
-                }, 500);
-            }
-        }
-        // 新增C鍵切換player皮膚
-        if (e.key === 'c' || e.key === 'C') {
-            // 檢查場上是否還有玩家子彈
-            if (bullets.length > 0) {
-                // 可選：給予提示，例如 alert 或音效
-                // alert('場上還有子彈，無法切換角色皮膚！');
-                return;
-            }
-            // 檢查冷卻
-            if (!canSwitchSkin) {
-                // 可選：給予提示，例如 alert('請稍後再切換！');
-                return;
-            }
-            switchPlayerSkin();
-            // 播放切換音效
-            changeBtnAudio.volume = VOLUME_CHANGE_BTN;
-            changeBtnAudio.play().catch(()=>{});
-            canSwitchSkin = false;
-            setTimeout(() => { canSwitchSkin = true; }, 100);
-        }
-    }
+    if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
+    if (keyDownHandlers[e.key]) keyDownHandlers[e.key](e);
 });
 
 document.addEventListener('keyup', (e) => {
-    if (keys.hasOwnProperty(e.key)) {
-        keys[e.key] = false;
-        if (e.key === 'ArrowUp' && jumpKeyPressed) {
-            const pressDuration = globalAnimFrame - jumpKeyDownFrame;
-            // 200ms/16.67ms ≈ 12 frame, 300ms ≈ 18, 400ms ≈ 24
-            if (pressDuration < 12 && player.vy < 0) {
-                player.vy /= 4;
-            } else if (pressDuration < 18 && player.vy < 0) {
-                player.vy /= 3;
-            } else if (pressDuration < 24 && player.vy < 0) {
-                player.vy /= 2;
-            }
-            jumpKeyPressed = false;
-        }
-        if (e.key === ' ') {
-            // 放開空白鍵時，根據集氣時間決定發射什麼｜スペースキー放開時、集氣時間で射撃決定
-            if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
-                chargeReady = true; // 發射集氣彈
-                // 播放集氣彈射擊音效
-                if (shootAudio) {
-                    shootAudio.volume = VOLUME_SHOOT;
-                    shootAudio.currentTime = 0;
-                    if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
-                }
-            } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
-                // 新增：子彈數量限制
-                const normalBulletCount = bullets.filter(b => !b.isCharge).length;
-                if (normalBulletCount >= PLAYER_Attack_shoot_limit) return;
-                bullets.push({
-                    x: player.x + player.width/2 + (player.direction === 1 ? 1 : -1) * PLAYER_Attack_shoot_startx - PLAYER_Attack_shoot_size[0]/2,
-                    y: player.y + player.height / 2 - PLAYER_Attack_shoot_size[1] / 2,
-                    width: PLAYER_Attack_shoot_size[0],
-                    height: PLAYER_Attack_shoot_size[1],
-                    speed: PLAYER_Attack_shoot_speed[0] * player.direction,
-                    color: PLAYER_Attack_shoot_size[2],
-                    isCharge: false,
-                    life: PLAYER_Attack_shoot_stay,
-                    shape: PLAYER_Attack_shoot_size[3],
-                    attackCollisionBox: PLAYER_Attack_shoot_CollisionBox
-                });
-                player.shootAnimFrame = 1;
-                // 播放普通彈射擊音效
-                if (shootAudio) {
-                    shootAudio.volume = VOLUME_SHOOT;
-                    shootAudio.currentTime = 0;
-                    if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
-                }
-            }
-            charging = false;
-            // 停止集氣音效｜集気音響停止
-            if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
-            if (chargeAudio) {
-                chargeAudio.pause();
-                chargeAudio.currentTime = 0;
-            }
-        }
-    }
+    if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
+    if (keyUpHandlers[e.key]) keyUpHandlers[e.key](e);
 });
+
+// 各按鍵行為
+function handleJumpKeyDown(e) {
+    if (!jumpKeyPressed) {
+        jumpKeyDownFrame = globalAnimFrame;
+        jumpKeyPressed = true;
+    }
+}
+
+function handleEnterKeyDown(e) {
+    if (!gameRunning) startGame();
+}
+
+function handleSpaceKeyDown(e) {
+    if (!gameRunning) return;
+    allowChargeOnlyByShootKey = true;
+    if (!charging) {
+        charging = true;
+        chargeFrame = 0;
+        chargeReady = false;
+        // player.shootAnimFrame = 1;
+        if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
+        chargeAudioTimeout = setTimeout(playChargeAudio, 500);
+    }
+}
+
+function handleSwitchSkinKeyDown(e) {
+    if (bullets.length > 0 || !canSwitchSkin) return;
+    switchPlayerSkin();
+    playChangeBtnAudio();
+    canSwitchSkin = false;
+    setTimeout(() => { canSwitchSkin = true; }, 100);
+}
+
+function handleJumpKeyUp(e) {
+    if (jumpKeyPressed) {
+        const pressDuration = globalAnimFrame - jumpKeyDownFrame;
+        if (pressDuration < 12 && player.vy < 0) player.vy /= 4;
+        else if (pressDuration < 18 && player.vy < 0) player.vy /= 3;
+        else if (pressDuration < 24 && player.vy < 0) player.vy /= 2;
+        jumpKeyPressed = false;
+    }
+}
+
+function handleSpaceKeyUp(e) {
+    allowChargeOnlyByShootKey = false;
+    if (!charging) return;
+    if (chargeFrame >= CHARGE_MIN_FRAME) {
+        chargeReady = true;
+        playShootAudio();
+    } else if (chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
+        const normalBulletCount = bullets.filter(b => !b.isCharge).length;
+        if (normalBulletCount >= PLAYER_Attack_shoot_limit) return;
+        fireNormalBullet();
+        playShootAudio();
+    }
+    charging = false;
+    stopChargeAudio();
+}
+
+// 工具函式
+function playChargeAudio() {
+    if (charging && chargeAudio) {
+        chargeAudio.volume = VOLUME_CHARGE;
+        chargeAudio.currentTime = 0;
+        if (isSfxOn) { chargeAudio.pause(); chargeAudio.currentTime = 0; chargeAudio.play().catch(()=>{}); }
+    }
+}
+function playShootAudio() {
+    if (shootAudio) {
+        shootAudio.volume = VOLUME_SHOOT;
+        shootAudio.currentTime = 0;
+        if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
+    }
+}
+function playChangeBtnAudio() {
+    changeBtnAudio.volume = VOLUME_CHANGE_BTN;
+    changeBtnAudio.play().catch(()=>{});
+}
+function stopChargeAudio() {
+    if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
+    if (chargeAudio) {
+        chargeAudio.pause();
+        chargeAudio.currentTime = 0;
+    }
+}
+function fireNormalBullet() {
+    bullets.push({
+        x: player.x + player.width/2 + (player.direction === 1 ? 1 : -1) * PLAYER_Attack_shoot_startx - PLAYER_Attack_shoot_size[0]/2,
+        y: player.y + player.height / 2 - PLAYER_Attack_shoot_size[1] / 2,
+        width: PLAYER_Attack_shoot_size[0],
+        height: PLAYER_Attack_shoot_size[1],
+        speed: PLAYER_Attack_shoot_speed[0] * player.direction,
+        color: PLAYER_Attack_shoot_size[2],
+        isCharge: false,
+        life: PLAYER_Attack_shoot_stay,
+        shape: PLAYER_Attack_shoot_size[3],
+        attackCollisionBox: PLAYER_Attack_shoot_CollisionBox
+    });
+    player.shootAnimFrame = 6; // 讓射擊皮維持0.1秒
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ===== 遊戲初始化 =====｜ゲーム初期化
 
@@ -1517,6 +1673,7 @@ function gameLoop(now) {
 // *無參數，無回傳值｜*引数なし、戻り値なし
 
 function update() {
+    if (!allowChargeOnlyByShootKey && charging) charging = false;
     globalAnimFrame++;
     // 集氣狀態計數｜集氣状態カウント
     if (charging) {
@@ -3749,11 +3906,12 @@ function simulateKey(key, pressed) {
     // 射擊鍵特殊處理｜射撃キーの特殊な処理
     if (key === ' ') {
         if (pressed) {
+            allowChargeOnlyByShootKey = true;
             if (!charging && gameRunning) {
                 charging = true;
                 chargeFrame = 0;
                 chargeReady = false;
-                player.shootAnimFrame = 1;
+                // player.shootAnimFrame = 1;
                 // (移除這裡的射擊音效)
                 if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
                 chargeAudioTimeout = setTimeout(() => {
@@ -3766,6 +3924,7 @@ function simulateKey(key, pressed) {
                 }, 500);
             }
         } else {
+            allowChargeOnlyByShootKey = false;
             if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
                 chargeReady = true;
                 // (放開時才播放射擊音效)
@@ -3774,19 +3933,10 @@ function simulateKey(key, pressed) {
                     if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
                 }
             } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
-                // 只有 chargeReady 為 false 才補發普通彈，且不受冷卻限制 // chargeReadyがfalseの場合のみ普通の弾を補充し、冷却制限を受けない
-                bullets.push({
-                    x: player.x + player.width/2 + (player.direction === 1 ? 1 : -1) * PLAYER_Attack_shoot_startx - PLAYER_Attack_shoot_size[0]/2,
-                    y: player.y + player.height / 2 - PLAYER_Attack_shoot_size[1] / 2,
-                    width: PLAYER_Attack_shoot_size[0],
-                    height: PLAYER_Attack_shoot_size[1],
-                    speed: PLAYER_Attack_shoot_speed[0] * player.direction, // 1.1倍
-                    color: PLAYER_Attack_shoot_size[2],
-                    isCharge: false,
-                    life: PLAYER_Attack_shoot_stay,
-                    shape: PLAYER_Attack_shoot_size[3] // 0=圓形, 1=矩形
-                });
-                player.shootAnimFrame = 1;
+                // 修正：與 handleSpaceKeyUp 一致，加入子彈數量上限判斷
+                const normalBulletCount = bullets.filter(b => !b.isCharge).length;
+                if (normalBulletCount >= PLAYER_Attack_shoot_limit) return;
+                fireNormalBullet();
                 // (放開時才播放射擊音效)
                 if (shootAudio) {
                     shootAudio.currentTime = 0;
