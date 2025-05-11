@@ -63,20 +63,67 @@ checkBoxShowHideAll(2); // 設定選單狀態顯示全開/全關 1=全開 0=全�
 // checkBoxShowHideAll(0); // 測試用 1=全開 0=全關 2=pass
 
 
+// 音效管理器
+
+// let VOLUME_BGM      = 0.40;  // 背景音樂音量｜BGM音量
+// let VOLUME_BGM2     = 0.55;  // Boss區域背景音樂音量｜BGM2音量
+// let VOLUME_SHOOT    = 0.55;  // 射擊音效音量｜射撃効果音音量
+// let VOLUME_CHARGE   = 0.55;  // 集氣音效音量｜チャージ効果音音量
+// let VOLUME_BOOM     = 0.45;  // 爆炸音效音量｜爆発効果音音量
+// let VOLUME_HURT     = 0.70;  // 受傷音效音量｜ダメージ効果音音量
+// let VOLUME_GAMEOVER = 0.75;  // 遊戲結束音效音量｜ゲームオーバー効果音音量
+// let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量｜ボス死亡効果音音量
+// let VOLUME_BOSS     = 0.85;  // Boss出場音效音量｜ボス登場効果音音量
+// let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量｜勝利BGM音量
+
+
+const bgm = new Audio('sound/bgm.mp3');
+let bgmVolume = 0.4;
+bgm.volume = bgmVolume;
+
+const bgm2 = new Audio('sound/bgm2.mp3');
+let bgm2Volume = 0.55;
+bgm2.volume = bgm2Volume;
+
+const boomAudio = new Audio('sound/boom.mp3');
+let boomVolume = 0.1;
+boomAudio.volume = boomVolume;
+
+const bossAudio = new Audio('sound/boss.mp3');
+let bossVolume = 0.85;
+bossAudio.volume = bossVolume;
+
+const bossdieAudio = new Audio('sound/bossdie.mp3');
+let bossdieVolume = 0.4;
+bossdieAudio.volume = bossdieVolume;
+
+const changeBtnAudio = new Audio('sound/change_btn.mp3');
+let changeBtnVolume = 0.8;
+changeBtnAudio.volume = changeBtnVolume;
+
+const chargeAudio = new Audio('sound/charge.mp3');
+let chargeVolume = 0.55;
+chargeAudio.volume = chargeVolume;
+
+const gameOverAudio = new Audio('sound/game_over.mp3');
+let gameOverVolume = 0.75;
+gameOverAudio.volume = gameOverVolume;
+
+const hurtAudio = new Audio('sound/hurt.mp3');
+let hurtVolume = 0.7;
+hurtAudio.volume = hurtVolume;
+
+const outroAudio = new Audio('sound/outro.mp3');
+let outroVolume = 0.55;
+
+const shootAudio = new Audio('sound/shoot.mp3');
+let shootVolume = 0.55;
+shootAudio.volume = shootVolume;
+
 // 音量設定｜音量設定
 let isBgmOn = 1;  // BGM（包含 OUTRO）是否開啟，1=開啟，0=關閉｜BGM（OUTRO含む）オンオフ 1=オン 0=オフ
 let isSfxOn = 1; // 效果音是否開啟，1=開啟，0=關閉｜効果音オンオフ 1=オン 0=オフ
 
-let VOLUME_BGM      = 0.40;  // 背景音樂音量｜BGM音量
-let VOLUME_BGM2     = 0.55;  // Boss區域背景音樂音量｜BGM2音量
-let VOLUME_SHOOT    = 0.55;  // 射擊音效音量｜射撃効果音音量
-let VOLUME_CHARGE   = 0.55;  // 集氣音效音量｜チャージ効果音音量
-let VOLUME_BOOM     = 0.45;  // 爆炸音效音量｜爆発効果音音量
-let VOLUME_HURT     = 0.70;  // 受傷音效音量｜ダメージ効果音音量
-let VOLUME_GAMEOVER = 0.75;  // 遊戲結束音效音量｜ゲームオーバー効果音音量
-let VOLUME_BOSSDIE  = 0.40;  // Boss死亡音效音量｜ボス死亡効果音音量
-let VOLUME_BOSS     = 0.85;  // Boss出場音效音量｜ボス登場効果音音量
-let VOLUME_OUTRO    = 0.55;  // 勝利音樂音量｜勝利BGM音量
 
 // 背景色變化時間 參數有問題 請參考就好｜背景色変化時間 パラメータに問題あり 参考用
 let enter_boss_area_color_change_time = 10000; //Fps
@@ -830,11 +877,9 @@ let player = {
         if (isWinInvincible) return;
         if (this.invincible > 0) return;
         // 播放受傷音效 // ダメージ効果音再生
-        const hurtAudio = document.getElementById('hurt-audio');
-        if (hurtAudio) {
+        if (isSfxOn) {
             hurtAudio.currentTime = 0;
-            hurtAudio.volume = VOLUME_HURT;
-            if (isSfxOn) { hurtAudio.pause(); hurtAudio.currentTime = 0; hurtAudio.play().catch(()=>{}); }
+            hurtAudio.play().catch(()=>{});
         }
         wa_player_to_Health_ki -= amount;
         updateHealthBar();
@@ -1196,6 +1241,9 @@ let currentPlayerChargeAttackShootImgs = playerChargeAttackShootImgs;
 let currentPlayerBulletColor = PLAYER_Attack_shoot_size[2];
 let currentPlayerChargeBulletColor = 'rgba(255, 105, 68, 0.93)'; // 預設
 
+// ===== 玩家皮膚切換冷卻 =====
+let canSwitchSkin = true;
+
 function switchPlayerSkin() {
     isPlayer2 = !isPlayer2;
     if (isPlayer2) {
@@ -1314,10 +1362,8 @@ document.addEventListener('keydown', (e) => {
                 if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
                 chargeAudioTimeout = setTimeout(() => {
                     if (charging) {
-                        const chargeAudio = document.getElementById('charge-audio');
                         if (chargeAudio) {
                             chargeAudio.currentTime = 0;
-                            chargeAudio.volume = VOLUME_CHARGE;
                             if (isSfxOn) { chargeAudio.pause(); chargeAudio.currentTime = 0; chargeAudio.play().catch(()=>{}); }
                         }
                     }
@@ -1326,7 +1372,22 @@ document.addEventListener('keydown', (e) => {
         }
         // 新增C鍵切換player皮膚
         if (e.key === 'c' || e.key === 'C') {
+            // 檢查場上是否還有玩家子彈
+            if (bullets.length > 0) {
+                // 可選：給予提示，例如 alert 或音效
+                // alert('場上還有子彈，無法切換角色皮膚！');
+                return;
+            }
+            // 檢查冷卻
+            if (!canSwitchSkin) {
+                // 可選：給予提示，例如 alert('請稍後再切換！');
+                return;
+            }
             switchPlayerSkin();
+            // 播放切換音效
+            changeBtnAudio.play().catch(()=>{});
+            canSwitchSkin = false;
+            setTimeout(() => { canSwitchSkin = true; }, 100);
         }
     }
 });
@@ -1351,10 +1412,8 @@ document.addEventListener('keyup', (e) => {
             if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
                 chargeReady = true; // 發射集氣彈
                 // 播放集氣彈射擊音效
-                const shootAudio = document.getElementById('shoot-audio');
                 if (shootAudio) {
                     shootAudio.currentTime = 0;
-                    shootAudio.volume = VOLUME_SHOOT;
                     if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
                 }
             } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
@@ -1375,38 +1434,30 @@ document.addEventListener('keyup', (e) => {
                 });
                 player.shootAnimFrame = 1;
                 // 播放普通彈射擊音效
-                const shootAudio = document.getElementById('shoot-audio');
                 if (shootAudio) {
                     shootAudio.currentTime = 0;
-                    shootAudio.volume = VOLUME_SHOOT;
                     if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
                 }
             }
             charging = false;
             // 停止集氣音效｜集気音響停止
             if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
-            const chargeAudio = document.getElementById('charge-audio');
             if (chargeAudio) {
                 chargeAudio.pause();
                 chargeAudio.currentTime = 0;
-                chargeAudio.volume = VOLUME_CHARGE;
             }
         }
     }
 });
 
 // ===== 遊戲初始化 =====｜ゲーム初期化
-const bgm = document.getElementById('bgm');
-const bgm2 = document.getElementById('bgm2'); // 新增 boss 區 BGM
 
 //遊戲初始化，重設所有狀態並開始遊戲主循環｜ゲーム初期化、すべての状態をリセットし、ゲームのメインループを開始
 function startGame() {
     // 停止outro音樂
-    const outroAudio = document.getElementById('outro-audio');
     if (outroAudio) {
         outroAudio.pause();
         outroAudio.currentTime = 0;
-        outroAudio.volume = VOLUME_OUTRO;
         outroAudio.onended = null;
     }
     // 停止 boss 區 BGM｜ボスエリアBGM停止
@@ -1417,7 +1468,6 @@ function startGame() {
     // 音樂播放控制｜音楽再生制御
     if (bgm) {
         bgm.currentTime = 0;
-        bgm.volume = VOLUME_BGM;
         if (isBgmOn) { bgm.pause(); bgm.currentTime = 0; bgm.play().catch(()=>{}); }
     }
     // 重置遊戲狀態｜ゲーム状態をリセット
@@ -1565,10 +1615,8 @@ function update() {
             });
         }
         player.shootCooldown = player.shootDelay;
-        const shootAudio = document.getElementById('shoot-audio');
         if (shootAudio) {
             shootAudio.currentTime = 0;
-            shootAudio.volume = VOLUME_SHOOT;
             if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
         }
         player.shootAnimFrame = 14;
@@ -1636,10 +1684,8 @@ function update() {
         bossTimer++;
         if (bossTimer === 100) {
             // 播放boss出場音效 bosstimer 是boss出場延遲時間｜bosstimer はボス出場遅延時間
-            const bossAudio = document.getElementById('boss-audio');
             if (bossAudio) {
                 bossAudio.currentTime = 0;
-                bossAudio.volume = VOLUME_BOSS;
                 if (isSfxOn) { bossAudio.pause(); bossAudio.currentTime = 0; bossAudio.play().catch(()=>{}); }
             }
             // 延遲0.4秒後才讓boss出現｜0.4秒後にボスが出現する
@@ -1862,10 +1908,8 @@ function update() {
                 }
                 enemyHitFlash.set(enemy, 12); // 0.2秒閃爍｜0.2秒フラッシュ
                 // 播放boom音效（集氣彈也有）｜boom音效（集氣弾もあります）
-                const boomAudio = document.getElementById('boom-audio');
                 if (boomAudio) {
                     const clone = boomAudio.cloneNode();
-                    clone.volume = VOLUME_BOOM;
                     if (isSfxOn) { clone.pause(); clone.currentTime = 0; clone.play().catch(()=>{}); }
                 }
                 // ===== 新增爆炸動畫 =====
@@ -1899,10 +1943,8 @@ function update() {
             bossHitFlash = 12; // 0.2秒閃爍｜0.2秒フラッシュ    
             updateBossHealthBar();
             if (boss.health > 0) {
-                const boomAudio = document.getElementById('boom-audio');
                 if (boomAudio) {
                     boomAudio.currentTime = 0;
-                    boomAudio.volume = VOLUME_BOOM;
                     if (isSfxOn) { boomAudio.pause(); boomAudio.currentTime = 0; boomAudio.play().catch(()=>{}); }
                 }
             }
@@ -1926,10 +1968,8 @@ function update() {
                     bgm2.currentTime = 0;
                 }
                 // 播放bossdie音效｜ボスが死んだときの音
-                const bossdieAudio = document.getElementById('bossdie-audio');
                 if (bossdieAudio) {
                     bossdieAudio.currentTime = 0;
-                    bossdieAudio.volume = VOLUME_BOSSDIE;
                     if (isSfxOn) { bossdieAudio.pause(); bossdieAudio.currentTime = 0; bossdieAudio.play().catch(()=>{}); }
                 }
                 // 1. 黃白閃爍2秒｜1. 黄色のホワイトフラッシュ2秒
@@ -1971,10 +2011,8 @@ function update() {
                                     winGame();
                                     winScreen.style.opacity = 0;
                                     // 播放outro音樂｜outro音楽を再生
-                                    const outroAudio = document.getElementById('outro-audio');
                                     if (outroAudio) {
                                         outroAudio.currentTime = 0;
-                                        outroAudio.volume = VOLUME_OUTRO;
                                         if (isBgmOn) { outroAudio.pause(); outroAudio.currentTime = 0; outroAudio.play().catch(()=>{}); }
                                     }
                                     // 4. 2秒內白色遮罩淡出、勝利畫面同步淡入｜2秒で白色のカバーが薄くなり、勝利画面も同時に薄くなる
@@ -3041,10 +3079,8 @@ function gameOver() {
             bgm2.pause();
             bgm2.currentTime = 0;
         }
-        const gameOverAudio = document.getElementById('game-over-audio');
         if (gameOverAudio) {
             gameOverAudio.currentTime = 0;
-            gameOverAudio.volume = VOLUME_GAMEOVER;
             if (isSfxOn) { gameOverAudio.pause(); gameOverAudio.currentTime = 0; gameOverAudio.play().catch(()=>{}); }
         }
     }, 100); // 0.1秒後才顯示 game over 畫面｜0.1秒後にゲームオーバーの画面を表示
@@ -3075,10 +3111,8 @@ function winGame() {
         bgm2.currentTime = 0;
     }
     // 播放勝利音樂｜勝利の音楽を再生
-    const outroAudio = document.getElementById('outro-audio');
     if (outroAudio) {
         outroAudio.currentTime = 0;
-        outroAudio.volume = VOLUME_OUTRO;
         if (isBgmOn) { outroAudio.pause(); outroAudio.currentTime = 0; outroAudio.play().catch(()=>{}); }
         // 確保onended事件設置｜onendedイベントを確保
         outroAudio.onended = function() {
@@ -3646,10 +3680,8 @@ if (bgmOnInput2) {
     bgmOnInput2.addEventListener('change', function() {
         isBgmOn = this.checked ? 1 : 0;
         // 立即控制 BGM/OUTRO
-        const bgm = document.getElementById('bgm');
-        const outroAudio = document.getElementById('outro-audio');
         if (isBgmOn) {
-            if (bgm && gameRunning) { bgm.currentTime = 0; bgm.volume = VOLUME_BGM; bgm.play().catch(()=>{}); }
+            if (bgm && gameRunning) { bgm.currentTime = 0; bgm.play().catch(()=>{}); }
         } else {
             if (bgm) { bgm.pause(); }
             if (outroAudio) { outroAudio.pause(); }
@@ -3750,10 +3782,8 @@ function simulateKey(key, pressed) {
                 if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
                 chargeAudioTimeout = setTimeout(() => {
                     if (charging) {
-                        const chargeAudio = document.getElementById('charge-audio');
                         if (chargeAudio) {
                             chargeAudio.currentTime = 0;
-                            chargeAudio.volume = VOLUME_CHARGE;
                             if (isSfxOn) { chargeAudio.pause(); chargeAudio.currentTime = 0; chargeAudio.play().catch(()=>{}); }
                         }
                     }
@@ -3763,10 +3793,8 @@ function simulateKey(key, pressed) {
             if (charging && chargeFrame >= CHARGE_MIN_FRAME) {
                 chargeReady = true;
                 // (放開時才播放射擊音效)
-                const shootAudio = document.getElementById('shoot-audio');
                 if (shootAudio) {
                     shootAudio.currentTime = 0;
-                    shootAudio.volume = VOLUME_SHOOT;
                     if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
                 }
             } else if (charging && chargeFrame < CHARGE_CANCEL_FRAME && !chargeReady) {
@@ -3784,20 +3812,16 @@ function simulateKey(key, pressed) {
                 });
                 player.shootAnimFrame = 1;
                 // (放開時才播放射擊音效)
-                const shootAudio = document.getElementById('shoot-audio');
                 if (shootAudio) {
                     shootAudio.currentTime = 0;
-                    shootAudio.volume = VOLUME_SHOOT;
                     if (isSfxOn) { shootAudio.pause(); shootAudio.currentTime = 0; shootAudio.play().catch(()=>{}); }
                 }
             }
             charging = false;
             if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
-            const chargeAudio = document.getElementById('charge-audio');
             if (chargeAudio) {
                 chargeAudio.pause();
                 chargeAudio.currentTime = 0;
-                chargeAudio.volume = VOLUME_CHARGE;
             }
         }
     }
