@@ -81,10 +81,10 @@ const shootAudio     = new Audio('sound/shoot.mp3');
 
 const VOLUME_BGM = 0.40;  // 背景音樂音量
 const VOLUME_BGM2       = 0.55;  // Boss區域背景音樂音量
-const VOLUME_BOOM       = 0.40;  // 爆炸音效音量
+const VOLUME_BOOM       = 0.35;  // 爆炸音效音量
 const VOLUME_BOSS       = 0.85;  // Boss出場音效音量
 const VOLUME_BOSSDIE    = 0.40;  // Boss死亡音效音量
-const VOLUME_CHANGE_BTN = 0.6;   // 切換按鈕音效音量
+const VOLUME_CHANGE_BTN = 0.3;   // 切換按鈕音效音量
 const VOLUME_CHARGE     = 0.55;  // 集氣音效音量
 const VOLUME_GAMEOVER   = 0.75;  // 遊戲結束音效音量
 const VOLUME_HURT       = 0.70;  // 受傷音效音量
@@ -695,6 +695,7 @@ let player = {
 
     // 更新玩家位置 // プレイヤー位置の更新
     update: function() {
+        if (!gameRunning) return;
         if (playerDead) {
             this.x = playerDeadX;
             this.y = playerDeadY;
@@ -840,6 +841,7 @@ let player = {
         if (this.invincible > 0) return;
         // 播放受傷音效 // ダメージ効果音再生
         if (isSfxOn) {
+            if (!gameRunning) return;
             hurtAudio.volume = VOLUME_HURT;
             hurtAudio.currentTime = 0;
             hurtAudio.play().catch(()=>{});
@@ -1018,6 +1020,7 @@ const boss = {
     // Boss 行為模式 // ボス挙動パターン
     update: function() {
         // ===== 新增 Boss 固定座標功能 ===== // ===== ボス固定座標機能追加 =====
+        if (!gameRunning) return;
         if (bossFixedPosition) {
             this.x = bossSetX;
             this.y = bossSetY;
@@ -1447,6 +1450,7 @@ document.addEventListener('keyup', (e) => {
 
 // 各按鍵行為
 function handleJumpKeyDown(e) {
+    if (!gameRunning) return;
     if (!jumpKeyPressed) {
         jumpKeyDownFrame = globalAnimFrame;
         jumpKeyPressed = true;
@@ -1471,6 +1475,7 @@ function handleSpaceKeyDown(e) {
 }
 
 function handleSwitchSkinKeyDown(e) {
+    if (!gameRunning) return;
     if (bullets.length > 0 || !canSwitchSkin) return;
     switchPlayerSkin();
     playChangeBtnAudio();
@@ -1479,6 +1484,7 @@ function handleSwitchSkinKeyDown(e) {
 }
 
 function handleJumpKeyUp(e) {
+    if (!gameRunning) return;
     if (jumpKeyPressed) {
         const pressDuration = globalAnimFrame - jumpKeyDownFrame;
         if (pressDuration < 12 && player.vy < 0) player.vy /= 4;
@@ -1489,6 +1495,7 @@ function handleJumpKeyUp(e) {
 }
 
 function handleSpaceKeyUp(e) {
+    if (!gameRunning) return;
     allowChargeOnlyByShootKey = false;
     if (!charging) return;
     if (chargeFrame >= CHARGE_MIN_FRAME) {
@@ -1506,6 +1513,7 @@ function handleSpaceKeyUp(e) {
 
 // 工具函式
 function playChargeAudio() {
+    if (!gameRunning) return;
     if (charging && chargeAudio) {
         chargeAudio.volume = VOLUME_CHARGE;
         chargeAudio.currentTime = 0;
@@ -1513,6 +1521,7 @@ function playChargeAudio() {
     }
 }
 function playShootAudio() {
+    if (!gameRunning) return;
     if (shootAudio) {
         shootAudio.volume = VOLUME_SHOOT;
         shootAudio.currentTime = 0;
@@ -1520,10 +1529,12 @@ function playShootAudio() {
     }
 }
 function playChangeBtnAudio() {
+    if (!gameRunning) return;
     changeBtnAudio.volume = VOLUME_CHANGE_BTN;
     changeBtnAudio.play().catch(()=>{});
 }
 function stopChargeAudio() {
+    if (!gameRunning) return;
     if (chargeAudioTimeout) clearTimeout(chargeAudioTimeout);
     if (chargeAudio) {
         chargeAudio.pause();
@@ -1531,6 +1542,7 @@ function stopChargeAudio() {
     }
 }
 function fireNormalBullet() {
+    if (!gameRunning) return;
     bullets.push({
         x: player.x + player.width/2 + (player.direction === 1 ? 1 : -1) * PLAYER_Attack_shoot_startx - PLAYER_Attack_shoot_size[0]/2,
         y: player.y + player.height / 2 - PLAYER_Attack_shoot_size[1] / 2,
@@ -2036,6 +2048,7 @@ function update() {
                 enemyHitFlash.set(enemy, 12); // 0.2秒閃爍｜0.2秒フラッシュ
                 // 播放boom音效（集氣彈也有）｜boom音效（集氣弾もあります）
                 if (boomAudio) {
+                    if (!gameRunning) return;
                     const clone = boomAudio.cloneNode();
                     clone.volume = VOLUME_BOOM;
                     if (isSfxOn) { clone.pause(); clone.currentTime = 0; clone.play().catch(()=>{}); }
@@ -2072,6 +2085,7 @@ function update() {
             updateBossHealthBar();
             if (boss.health > 0) {
                 if (boomAudio) {
+                    if (!gameRunning) return;
                     boomAudio.volume = VOLUME_BOOM;
                     boomAudio.currentTime = 0;
                     if (isSfxOn) { boomAudio.pause(); boomAudio.currentTime = 0; boomAudio.play().catch(()=>{}); }
